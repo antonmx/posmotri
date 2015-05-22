@@ -10,18 +10,8 @@
     <height>384</height>
    </rect>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>250</width>
-    <height>200</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>500</width>
-    <height>440</height>
-   </size>
-  </property>
+  
+  
   <property name="focusPolicy">
    <enum>Qt::StrongFocus</enum>
   </property>
@@ -206,12 +196,7 @@
                <layout class="QVBoxLayout">
                 <item>
                  <widget class="QLabel" name="label_8">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Dimensions</string>
                   </property>
@@ -222,12 +207,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_4">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Type</string>
                   </property>
@@ -238,12 +218,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_5">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Unit</string>
                   </property>
@@ -254,12 +229,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_6">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Size</string>
                   </property>
@@ -270,12 +240,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_38">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Box Size</string>
                   </property>
@@ -412,18 +377,8 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+                
+                
                </widget>
               </item>
              </layout>
@@ -583,12 +538,7 @@
                <layout class="QVBoxLayout">
                 <item>
                  <widget class="QLabel" name="label_13">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Dimensions</string>
                   </property>
@@ -599,12 +549,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_14">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Type</string>
                   </property>
@@ -615,12 +560,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_15">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Unit</string>
                   </property>
@@ -631,12 +571,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_16">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Size</string>
                   </property>
@@ -647,12 +582,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_39">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Box Size</string>
                   </property>
@@ -789,18 +719,8 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+                
+                
                </widget>
               </item>
              </layout>
@@ -960,12 +880,7 @@
                <layout class="QVBoxLayout">
                 <item>
                  <widget class="QLabel" name="label_22">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Dimensions</string>
                   </property>
@@ -976,12 +891,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_23">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Type</string>
                   </property>
@@ -992,12 +902,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_24">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Unit</string>
                   </property>
@@ -1008,12 +913,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_25">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Size</string>
                   </property>
@@ -1024,12 +924,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_40">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Box Size</string>
                   </property>
@@ -1166,18 +1061,8 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+                
+                
                </widget>
               </item>
              </layout>
@@ -1334,12 +1219,7 @@
                <layout class="QVBoxLayout">
                 <item>
                  <widget class="QLabel" name="label_31">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Dimensions</string>
                   </property>
@@ -1350,12 +1230,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_32">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Type</string>
                   </property>
@@ -1366,12 +1241,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_33">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Unit</string>
                   </property>
@@ -1382,12 +1252,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_34">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Voxel Size</string>
                   </property>
@@ -1398,12 +1263,7 @@
                 </item>
                 <item>
                  <widget class="QLabel" name="label_37">
-                  <property name="maximumSize">
-                   <size>
-                    <width>16777215</width>
-                    <height>23</height>
-                   </size>
-                  </property>
+                  
                   <property name="text">
                    <string>Box Size</string>
                   </property>
@@ -1540,18 +1400,8 @@
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>80</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
+                
+                
                </widget>
               </item>
              </layout>

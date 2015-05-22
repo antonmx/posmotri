@@ -31,62 +31,6 @@ LightingWidget::setFlat()
       ui.lightposition->setMinimumSize(QSize(180,20));
     }
 
-  if (ui.applylighting->isChecked())
-    {
-      ui.lightingbox->show();
-      ui.applylighting->setFlat(false);
-    }
-  else
-    {
-      ui.lightingbox->hide();
-      ui.applylighting->setFlat(true);
-    }
-
-  if (ui.applycoloredshadow->isChecked())
-    {
-      ui.coloredshadowbox->show();
-      ui.applycoloredshadow->setFlat(false);
-    }
-  else
-    {
-      ui.coloredshadowbox->hide();
-      ui.applycoloredshadow->setFlat(true);
-    }
-
-  if (ui.applybackplane->isChecked())
-    {
-      ui.backplanebox->show();
-      ui.applybackplane->setFlat(false);
-    }
-  else
-    {
-      ui.backplanebox->hide();
-      ui.applybackplane->setFlat(true);
-    }
-
-
-  if (ui.applyshadow->isChecked())
-    {
-      ui.shadowbox->show();
-      ui.applyshadow->setFlat(false);
-    }
-  else
-    {
-      ui.shadowbox->hide();
-      ui.applyshadow->setFlat(true);
-    }
-
-  if (ui.peel->isChecked())
-    {
-      ui.peelbox->show();
-      ui.peel->setFlat(false);
-    }
-  else
-    {
-      ui.peelbox->hide();
-      ui.peel->setFlat(true);
-    }
-
   ui.lightposition->adjustSize();
   ui.applylighting->adjustSize();
   ui.applycoloredshadow->adjustSize();

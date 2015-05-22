@@ -485,8 +485,6 @@ Viewer::Viewer(QWidget *parent) :
 
   m_paintTex = 0;
   glGenTextures(1, &m_lutTex);
-  glActiveTexture(GL_TEXTURE3);
-
 
   m_lutImage = QImage(256, 256, QImage::Format_RGB32);
 

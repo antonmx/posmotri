@@ -16,12 +16,7 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="maximumSize">
-   <size>
-    <width>1000</width>
-    <height>16777215</height>
-   </size>
-  </property>
+  
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -45,18 +40,8 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>20</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>600</width>
-         <height>200</height>
-        </size>
-       </property>
+       
+       
        <property name="focusPolicy">
         <enum>Qt::NoFocus</enum>
        </property>
@@ -93,18 +78,8 @@
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>70</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>16777215</width>
-            <height>90</height>
-           </size>
-          </property>
+          
+          
           <property name="title">
            <string>Command String</string>
           </property>

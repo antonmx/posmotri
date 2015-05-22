@@ -31,7 +31,7 @@ find_package(GLUT REQUIRED)
 include_directories(${GLUT_INCLUDE_DIR})
 
 
-add_executable(vzglyad
+add_executable(posmotri
   boundingbox.cpp
   blendshaderfactory.cpp
   brickinformation.cpp
@@ -158,7 +158,7 @@ add_executable(vzglyad
   gilightobjectinfo.cpp
 )
 
-target_link_libraries(vzglyad
+target_link_libraries(posmotri
   ${QGLVIEWER_LIBRARIES}
   ${Qt5OpenGL_LIBRARIES}
   ${Qt5Xml_LIBRARIES}
@@ -170,5 +170,5 @@ target_link_libraries(vzglyad
 )
 
 
-install(TARGETS vzglyad RUNTIME DESTINATION bin)
+install(TARGETS posmotri RUNTIME DESTINATION bin)
 
