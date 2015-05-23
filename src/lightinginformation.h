@@ -1,8 +1,6 @@
 #ifndef LIGHTINGINFORMATION_H
 #define LIGHTINGINFORMATION_H
 
-#include <GL/glew.h>
-
 #include <QGLViewer/vec.h>
 #include <QGLViewer/quaternion.h>
 using namespace qglviewer;

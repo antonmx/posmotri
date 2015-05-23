@@ -2,9 +2,7 @@
 #define LIGHTINGWIDGET_H
 
 #include "lightinginformation.h"
-#include "directionvectorwidget.h"
 #include "ui_lightingwidget.h"
-
 
 class LightingWidget : public QWidget
 {
@@ -42,9 +40,8 @@ class LightingWidget : public QWidget
   void keyPressEvent(QKeyEvent*);
 
  private slots :
-  void lightDirectionChanged(float, Vec);
+  void lightDirectionChanged(qglviewer::Vec);
 
-  void on_lightposition_clicked(bool);
   void on_applyemissive_clicked(bool);
   void on_applylighting_clicked(bool);
   void on_applyshadow_clicked(bool);
@@ -75,7 +72,6 @@ class LightingWidget : public QWidget
   void on_backplaneshadowscale_sliderReleased();
   void on_backplanecontrast_sliderReleased();
 
-  void setFlat();
   void highlightsChanged();
   void shadowColor();
 

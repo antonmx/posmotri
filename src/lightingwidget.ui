@@ -2,33 +2,19 @@
 <ui version="4.0">
  <class>LightingWidget</class>
  <widget class="QWidget" name="LightingWidget">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>1180</width>
-    <height>1089</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Shader Widget</string>
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QGroupBox" name="lightposition">
-     <property name="title">
-      <string>Light Position</string>
-     </property>
-     <property name="flat">
-      <bool>true</bool>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
+    <widget class="QCheckBox" name="lightposition">
+     <property name="text">
+      <string>Light position</string>
      </property>
     </widget>
+   </item>
+   <item>
+    <widget class="DirectionVectorWidget" name="lightpositionW" native="true"/>
    </item>
    <item>
     <widget class="QCheckBox" name="applyemissive">
@@ -38,16 +24,14 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="peel">
-     <property name="title">
+    <widget class="QCheckBox" name="peel">
+     <property name="text">
       <string>Reveal</string>
      </property>
-     <property name="checkable">
-      <bool>true</bool>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="peelW" native="true">
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="0">
        <widget class="QLabel" name="label_12">
@@ -155,28 +139,41 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="applylighting">
-     <property name="title">
+    <widget class="QCheckBox" name="applylighting">
+     <property name="text">
       <string>Lighting</string>
-     </property>
-     <property name="checkable">
-      <bool>true</bool>
      </property>
      <property name="checked">
       <bool>true</bool>
      </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="applylightingW" native="true">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="text">
-         <string>ambient</string>
+      <item row="0" column="1">
+       <widget class="QSlider" name="ambient">
+        <property name="maximum">
+         <number>10</number>
+        </property>
+        <property name="pageStep">
+         <number>1</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_2">
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>specular</string>
+         <string>hilite size</string>
         </property>
        </widget>
       </item>
@@ -218,32 +215,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QSlider" name="ambient">
-        <property name="maximum">
-         <number>10</number>
-        </property>
-        <property name="pageStep">
-         <number>1</number>
-        </property>
-        <property name="value">
-         <number>10</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksAbove</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>hilite size</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label">
         <property name="text">
@@ -270,140 +241,152 @@
         </property>
        </widget>
       </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>ambient</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>specular</string>
+        </property>
+       </widget>
+      </item>
       <item row="4" column="0" colspan="2">
-       <widget class="QGroupBox" name="applyshadow">
-        <property name="title">
+       <widget class="QCheckBox" name="applyshadow">
+        <property name="text">
          <string>Shadows</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
         </property>
         <property name="checked">
          <bool>true</bool>
         </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QWidget" name="applyshadowW" native="true">
         <layout class="QVBoxLayout" name="_2">
          <item>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="0" column="0">
-            <widget class="QLabel" name="label_5">
-             <property name="text">
-              <string>shadow blur</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSlider" name="shadowblur">
-             <property name="maximum">
-              <number>5</number>
-             </property>
-             <property name="pageStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>1</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::TicksAbove</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="label_6">
-             <property name="text">
-              <string>shadow buffer size</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSlider" name="shadowscale">
-             <property name="maximum">
-              <number>8</number>
-             </property>
-             <property name="pageStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::TicksAbove</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSlider" name="shadowcontrast">
-             <property name="maximum">
-              <number>10</number>
-             </property>
-             <property name="pageStep">
-              <number>1</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::TicksAbove</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_7">
-             <property name="text">
-              <string>shadow contrast</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="label_8">
-             <property name="text">
-              <string>light cone angle</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSlider" name="shadowfov">
-             <property name="maximum">
-              <number>10</number>
-             </property>
-             <property name="pageStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>5</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::TicksAbove</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
+          <widget class="QWidget" name="" native="true">
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>shadow blur</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSlider" name="shadowblur">
+              <property name="maximum">
+               <number>5</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>shadow buffer size</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSlider" name="shadowscale">
+              <property name="maximum">
+               <number>8</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QSlider" name="shadowcontrast">
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>shadow contrast</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>light cone angle</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QSlider" name="shadowfov">
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="pageStep">
+               <number>2</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="applycoloredshadow">
-           <property name="title">
+          <widget class="QCheckBox" name="applycoloredshadow">
+           <property name="text">
             <string>Shadow Color Attenuation</string>
            </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="applycoloredshadowW" native="true">
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="3" column="1">
              <widget class="QSlider" name="blue">
@@ -494,16 +477,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QGroupBox" name="applybackplane">
-           <property name="title">
+          <widget class="QCheckBox" name="applybackplane">
+           <property name="text">
             <string>Backplane</string>
            </property>
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="checked">
-            <bool>false</bool>
-           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QWidget" name="applybackplaneW" native="true">
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="1" column="1">
              <widget class="QSlider" name="backplanecontrast">
@@ -568,6 +549,111 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>DirectionVectorWidget</class>
+   <extends>QWidget</extends>
+   <header>directionvectorwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>lightposition</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lightpositionW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>22</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>96</x>
+     <y>83</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peel</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>peelW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>18</x>
+     <y>304</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>29</x>
+     <y>331</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applylighting</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>applylightingW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>39</x>
+     <y>544</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>90</x>
+     <y>575</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applyshadow</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>applyshadowW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>62</x>
+     <y>680</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>61</x>
+     <y>704</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applycoloredshadow</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>applycoloredshadowW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>167</x>
+     <y>824</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>136</x>
+     <y>848</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>applybackplane</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>applybackplaneW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>90</x>
+     <y>983</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>84</x>
+     <y>1001</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

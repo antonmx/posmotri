@@ -31,6 +31,9 @@ find_package(GLUT REQUIRED)
 include_directories(${GLUT_INCLUDE_DIR})
 
 
+qt5_wrap_ui(ui_directionvectorwidget.h directionvectorwidget.h)
+
+
 add_executable(posmotri
   boundingbox.cpp
   blendshaderfactory.cpp
@@ -78,7 +81,6 @@ add_executable(posmotri
   keyframe.cpp
   keyframeeditor.cpp
   keyframeinformation.cpp
-  lightdisc.cpp
   lightinginformation.cpp
   lightingwidget.cpp
   load2volumes.cpp

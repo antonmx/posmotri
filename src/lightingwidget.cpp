@@ -1,46 +1,20 @@
+
 #include "lightingwidget.h"
 #include "propertyeditor.h"
+#include <QtGui>
 
-LightingWidget::LightingWidget(QWidget *parent) :
-  QWidget(parent)
+LightingWidget::LightingWidget(QWidget *parent)
+  : QWidget(parent)
 {
   ui.setupUi(this);
-
-  m_lightPosition = new DirectionVectorWidget(ui.lightposition);  
-  m_lightPosition->setRange(-1.0, 3.0, 0.0);
-
-  connect(m_lightPosition, SIGNAL(directionChanged(float, Vec)),
-	  this, SLOT(lightDirectionChanged(float, Vec)));
-
-  setFlat();
+  ui.lightpositionW->hide();
+  ui.peelW->hide();
+  ui.applycoloredshadowW->hide();
+  ui.applybackplaneW->hide();
+  connect(ui.lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)),
+	                     SLOT(lightDirectionChanged(qglviewer::Vec)));
 }
 
-void
-LightingWidget::setFlat()
-{
-  if (ui.lightposition->isChecked())
-    {
-      m_lightPosition->show();
-      ui.lightposition->setFlat(false);
-      ui.lightposition->setMinimumSize(QSize(180,180));
-    }
-  else
-    {
-      m_lightPosition->hide();
-      ui.lightposition->setFlat(true);
-      ui.lightposition->setMinimumSize(QSize(180,20));
-    }
-
-  ui.lightposition->adjustSize();
-  ui.applylighting->adjustSize();
-  ui.applycoloredshadow->adjustSize();
-  ui.applybackplane->adjustSize();
-  ui.applyshadow->adjustSize();
-  ui.peel->adjustSize();
-
-
-  update();
-}
 
 void
 LightingWidget::setLightInfo(LightingInformation lightInfo)
@@ -74,25 +48,17 @@ LightingWidget::setLightInfo(LightingInformation lightInfo)
   ui.backplaneshadowscale->setValue(lightInfo.backplaneShadowScale*5);
   ui.backplanecontrast->setValue(lightInfo.backplaneIntensity*10);
 
-  m_lightPosition->setVector(lightInfo.userLightVector);
-  m_lightPosition->setDistance(lightInfo.lightDistanceOffset);
+  m_lightPosition->setVector( lightInfo.lightDistanceOffset * lightInfo.userLightVector);
 
-  setFlat();
 }
 
-void LightingWidget::lightDirectionChanged(float len, Vec v)
-{
+void LightingWidget::lightDirectionChanged(Vec v) {
   emit directionChanged(v);
-  emit lightDistanceOffset(len);
+  emit lightDistanceOffset(v.norm());
 }
 
-void LightingWidget::on_lightposition_clicked(bool flag) { setFlat(); }
-
-
-void LightingWidget::on_peel_clicked(bool flag)
-{
+void LightingWidget::on_peel_clicked(bool flag) {
   emit peel(flag);
-  setFlat();
 }
 void LightingWidget::on_peelmin_sliderReleased() { peelSliderReleased(); }
 void LightingWidget::on_peelmax_sliderReleased() { peelSliderReleased(); }
@@ -107,10 +73,8 @@ void LightingWidget::peelSliderReleased()
   emit peelInfo(pidx, emin, emax, emix);
 }
 
-void LightingWidget::on_applylighting_clicked(bool flag)
-{
+void LightingWidget::on_applylighting_clicked(bool flag) {
   emit applyLighting(flag);
-  setFlat();
 }
 void LightingWidget::on_ambient_sliderReleased() { highlightsChanged(); }
 void LightingWidget::on_diffuse_sliderReleased() { highlightsChanged(); }
@@ -130,10 +94,8 @@ void LightingWidget::highlightsChanged()
 }
 
 
-void LightingWidget::on_applyshadow_clicked(bool flag)
-{
+void LightingWidget::on_applyshadow_clicked(bool flag) {
   emit applyShadow(flag);
-  setFlat();
 }
 void LightingWidget::on_shadowblur_sliderReleased()
 {
@@ -157,10 +119,8 @@ void LightingWidget::on_shadowfov_sliderReleased()
 }
 
 
-void LightingWidget::on_applycoloredshadow_clicked(bool flag)
-{
+void LightingWidget::on_applycoloredshadow_clicked(bool flag) {
   emit applyColoredShadow(flag);
-  setFlat();
 }
 void LightingWidget::on_linkcolors_clicked(bool flag)
 {
@@ -205,10 +165,8 @@ void LightingWidget::shadowColor()
 }
 
 
-void LightingWidget::on_applybackplane_clicked(bool flag)
-{
+void LightingWidget::on_applybackplane_clicked(bool flag) {
   emit applyBackplane(flag);
-  setFlat();
 }
 void LightingWidget::on_backplaneshadowscale_sliderReleased()
 {

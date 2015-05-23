@@ -1,6 +1,6 @@
 
-#include "staticfunctions.h"
 #include "gradienteditorwidget.h"
+#include "staticfunctions.h"
 #include <QResizeEvent>
 
 void
