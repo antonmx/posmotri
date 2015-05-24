@@ -14,7 +14,11 @@
     </widget>
    </item>
    <item>
-    <widget class="DirectionVectorWidget" name="lightpositionW" native="true"/>
+    <widget class="DirectionVectorWidget" name="lightpositionW">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QCheckBox" name="applyemissive">
@@ -31,7 +35,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="peelW" native="true">
+    <widget class="QFrame" name="peelW">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="1" column="0">
        <widget class="QLabel" name="label_12">
@@ -149,7 +156,10 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="applylightingW" native="true">
+    <widget class="QFrame" name="applylightingW">
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
        <widget class="QSlider" name="ambient">
@@ -266,10 +276,13 @@
        </widget>
       </item>
       <item row="5" column="0" colspan="2">
-       <widget class="QWidget" name="applyshadowW" native="true">
+       <widget class="QFrame" name="applyshadowW">
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
         <layout class="QVBoxLayout" name="_2">
          <item>
-          <widget class="QWidget" name="" native="true">
+          <widget class="QWidget" name="widget" native="true">
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="0" column="0">
              <widget class="QLabel" name="label_5">
@@ -386,7 +399,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="applycoloredshadowW" native="true">
+          <widget class="QFrame" name="applycoloredshadowW">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="3" column="1">
              <widget class="QSlider" name="blue">
@@ -484,7 +500,10 @@
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="applybackplaneW" native="true">
+          <widget class="QFrame" name="applybackplaneW">
+           <property name="frameShape">
+            <enum>QFrame::StyledPanel</enum>
+           </property>
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="1" column="1">
              <widget class="QSlider" name="backplanecontrast">
@@ -547,12 +566,28 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::MinimumExpanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>0</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
   </layout>
  </widget>
  <customwidgets>
   <customwidget>
    <class>DirectionVectorWidget</class>
-   <extends>QWidget</extends>
+   <extends>QFrame</extends>
    <header>directionvectorwidget.h</header>
    <container>1</container>
   </customwidget>
@@ -560,34 +595,18 @@
  <resources/>
  <connections>
   <connection>
-   <sender>lightposition</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lightpositionW</receiver>
-   <slot>setVisible(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>54</x>
-     <y>22</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>96</x>
-     <y>83</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>peel</sender>
    <signal>toggled(bool)</signal>
    <receiver>peelW</receiver>
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>18</x>
-     <y>304</y>
+     <x>50</x>
+     <y>180</y>
     </hint>
     <hint type="destinationlabel">
-     <x>29</x>
-     <y>331</y>
+     <x>49</x>
+     <y>206</y>
     </hint>
    </hints>
   </connection>
@@ -598,12 +617,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>39</x>
-     <y>544</y>
+     <x>78</x>
+     <y>348</y>
     </hint>
     <hint type="destinationlabel">
-     <x>90</x>
-     <y>575</y>
+     <x>71</x>
+     <y>363</y>
     </hint>
    </hints>
   </connection>
@@ -614,12 +633,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>62</x>
-     <y>680</y>
+     <x>71</x>
+     <y>483</y>
     </hint>
     <hint type="destinationlabel">
-     <x>61</x>
-     <y>704</y>
+     <x>64</x>
+     <y>505</y>
     </hint>
    </hints>
   </connection>
@@ -630,12 +649,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>167</x>
-     <y>824</y>
+     <x>82</x>
+     <y>647</y>
     </hint>
     <hint type="destinationlabel">
-     <x>136</x>
-     <y>848</y>
+     <x>74</x>
+     <y>668</y>
     </hint>
    </hints>
   </connection>
@@ -646,12 +665,28 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>90</x>
-     <y>983</y>
+     <x>78</x>
+     <y>804</y>
     </hint>
     <hint type="destinationlabel">
-     <x>84</x>
-     <y>1001</y>
+     <x>78</x>
+     <y>826</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>lightposition</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lightpositionW</receiver>
+   <slot>setVisible(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>23</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>41</x>
+     <y>53</y>
     </hint>
    </hints>
   </connection>

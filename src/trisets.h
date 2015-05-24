@@ -3,7 +3,7 @@
 
 //#include <QtGui>
 
-#include <GL/glew.h>
+
 #include "trisetgrabber.h"
 #include "cropobject.h"
 

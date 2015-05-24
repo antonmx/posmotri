@@ -48,7 +48,7 @@ LightingWidget::setLightInfo(LightingInformation lightInfo)
   ui.backplaneshadowscale->setValue(lightInfo.backplaneShadowScale*5);
   ui.backplanecontrast->setValue(lightInfo.backplaneIntensity*10);
 
-  m_lightPosition->setVector( lightInfo.lightDistanceOffset * lightInfo.userLightVector);
+  ui.lightpositionW->setVector( lightInfo.lightDistanceOffset * lightInfo.userLightVector);
 
 }
 

@@ -78,8 +78,6 @@ class LightingWidget : public QWidget
  private :
   Ui::LightingWidget ui;
 
-  DirectionVectorWidget *m_lightPosition;
-
   void peelSliderReleased();
   void showHelp();
 };

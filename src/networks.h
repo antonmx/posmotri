@@ -3,7 +3,7 @@
 
 //#include <QtGui>
 
-#include <GL/glew.h>
+
 #include "networkgrabber.h"
 
 class Networks : public QObject

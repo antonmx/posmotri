@@ -463,28 +463,28 @@ p, li { white-space: pre-wrap; }
    <slot>setNum(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>361</x>
-     <y>276</y>
+     <x>514</x>
+     <y>110</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1173</x>
-     <y>276</y>
+     <x>695</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>m_still</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>m_stillSB</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>682</x>
-     <y>501</y>
+     <x>628</x>
+     <y>179</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1144</x>
-     <y>515</y>
+     <x>695</x>
+     <y>185</y>
     </hint>
    </hints>
   </connection>
@@ -495,28 +495,28 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1135</x>
-     <y>497</y>
+     <x>695</x>
+     <y>185</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1004</x>
-     <y>498</y>
+     <x>628</x>
+     <y>179</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>m_drag</sender>
-   <signal>sliderMoved(int)</signal>
+   <signal>valueChanged(int)</signal>
    <receiver>m_dragSB</receiver>
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>429</x>
-     <y>742</y>
+     <x>582</x>
+     <y>254</y>
     </hint>
     <hint type="destinationlabel">
-     <x>1135</x>
-     <y>746</y>
+     <x>695</x>
+     <y>260</y>
     </hint>
    </hints>
   </connection>
@@ -527,12 +527,12 @@ p, li { white-space: pre-wrap; }
    <slot>setValue(int)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>1148</x>
-     <y>752</y>
+     <x>695</x>
+     <y>260</y>
     </hint>
     <hint type="destinationlabel">
-     <x>937</x>
-     <y>750</y>
+     <x>628</x>
+     <y>254</y>
     </hint>
    </hints>
   </connection>

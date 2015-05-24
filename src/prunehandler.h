@@ -1,7 +1,7 @@
 #ifndef PRUNEHANDLER_H
 #define PRUNEHANDLER_H
 
-#include <GL/glew.h>
+
 #include <QVariant>
 
 #include <QGLViewer/qglviewer.h>

@@ -2,7 +2,7 @@
 #define LIGHTSHADERFACTORY_H
 
 
-#include <GL/glew.h>
+
 #include <QString>
 
 class LightShaderFactory

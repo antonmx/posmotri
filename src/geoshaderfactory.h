@@ -1,7 +1,7 @@
 #ifndef GEOSHADERFACTORY_H
 #define GEOSHADERFACTORY_H
 
-#include <GL/glew.h>
+
 //#include <QtGui>
 #include "cropobject.h"
 

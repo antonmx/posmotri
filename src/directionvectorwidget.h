@@ -2,6 +2,7 @@
 #define DIRECTIONVECTORWIDGET_H
 
 #include <QGLViewer/vec.h>
+#include <QFrame>
 
 
 class LightDisc : public QWidget {
@@ -32,6 +33,7 @@ private slots:
   void mousePressEvent(QMouseEvent*);
   void mouseMoveEvent(QMouseEvent*);
   void paintEvent(QPaintEvent*);
+  void resizeEvent(QResizeEvent*);
   
 };
 
@@ -40,7 +42,7 @@ private slots:
 #include "ui_directionvectorwidget.h"
 
 
-class DirectionVectorWidget : public QWidget {
+class DirectionVectorWidget : public QFrame {
  Q_OBJECT;
  
 private :
@@ -50,16 +52,18 @@ public :
   
   DirectionVectorWidget(QWidget *parent=NULL);
 
-  void setVector(qglviewer::Vec);
+  void setVector(const qglviewer::Vec &);
   qglviewer::Vec vector();
 
 signals :
   void directionChanged(qglviewer::Vec);
   
 private slots :
+  
   void updateDirection(QPointF);
   void onDirectionChange();
   void onLenChange();
+  void resizeEvent(QResizeEvent*);
   
 };
 

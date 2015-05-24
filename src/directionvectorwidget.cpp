@@ -37,12 +37,12 @@ void LightDisc::paintEvent(QPaintEvent *event) {
   QRectF drawRect( rect().topLeft(), QSizeF(m_size,m_size) ) ;
   
   QRadialGradient radialGradient( drawRect.center(), m_size,
-    drawRect.center() + m_size * QPointF( m_direction.x(), -m_direction.y() ) /2 );  
+    drawRect.center() + m_size * QPointF( -m_direction.x(), m_direction.y() ) /2 );  
   radialGradient.setColorAt(0.0, m_backlit ? Qt::black : Qt::white );
   radialGradient.setColorAt(0.5, Qt::gray);
   radialGradient.setColorAt(1.0, m_backlit ? Qt::white : Qt::black );
   p.setBrush(QBrush(radialGradient));
-  p.setPen(Qt::darkGray);
+  p.setPen(Qt::darkGray);  
   p.drawEllipse(drawRect);
 
   p.setBrush(Qt::transparent);
@@ -53,6 +53,7 @@ void LightDisc::paintEvent(QPaintEvent *event) {
   p.drawLine(0, m_size/2, m_size, m_size/2);
   p.drawLine(m_size/2, 0, m_size/2, m_size);
   
+  
 }
 
 void LightDisc::onMouseSet(const QPointF & pos) {
@@ -61,7 +62,7 @@ void LightDisc::onMouseSet(const QPointF & pos) {
     const float len = sqrt(ecor.x()*ecor.x() + ecor.y()*ecor.y());
     if (len > m_size/2)
       return;
-    setDirection(QPointF( 2*ecor.x()/m_size, -2*ecor.y()/m_size)) ; 
+    setDirection(QPointF( -2*ecor.x()/m_size, 2*ecor.y()/m_size)) ; 
 }
 
 void LightDisc::mousePressEvent(QMouseEvent *event) {
@@ -80,10 +81,18 @@ void LightDisc::mouseMoveEvent(QMouseEvent *event) {
 }
 
 
+void LightDisc::resizeEvent(QResizeEvent *event) {
+  setMaximumSize(QWIDGETSIZE_MAX, width());
+}
+
+
+
+
+
 
 
 DirectionVectorWidget::DirectionVectorWidget(QWidget *parent)
- : QWidget(parent)
+: QFrame(parent)
 {	
   ui.setupUi(this);  
   connect(ui.lightDisc, SIGNAL(directionChanged(QPointF)), SLOT(updateDirection(QPointF)));
@@ -92,40 +101,39 @@ DirectionVectorWidget::DirectionVectorWidget(QWidget *parent)
   connect(ui.len, SIGNAL(valueChanged(double)), SLOT(onLenChange()));
 }
 
-void DirectionVectorWidget::setVector(Vec vo) {
-  ui.len->setValue(vo.normalize());
-  ui.zangle->setValue( RAD2DEG(acos(vo.z)) );
-  if (vo.y != 0.0  ||  vo.x != 0.0 )
-    ui.yangle->setValue( RAD2DEG(acos(vo.y/sqrt(vo.y*vo.y+vo.x*vo.x))) );  
+void DirectionVectorWidget::setVector(const Vec & vv) {
+  const qreal norm = vv.norm();
+  ui.len->setValue(norm);
+  if ( norm != 0 ) {
+    Vec vo = vv/norm;
+    ui.zangle->setValue( RAD2DEG(acos(vo.z)) );
+    ui.yangle->setValue( copysign( RAD2DEG(acos(-vo.y/sqrt(vo.y*vo.y+vo.x*vo.x))), -vo.x ) );  
+  }
 }
 
 Vec DirectionVectorWidget::vector() {
   const float cosz = cos( DEG2RAD(ui.zangle->value()) );
   const float cosy = cos( DEG2RAD(ui.yangle->value()) );  
   const float z = cosz;
-  const float y = cosy*sqrt(1-cosz*cosz);  
-  const float x = copysign( sqrt( (1-cosz*cosz)*(1-cosy*cosy) ), ui.yangle->value() );
+  const float y = -cosy*sqrt(1-cosz*cosz);  
+  const float x = -copysign( sqrt( (1-cosz*cosz)*(1-cosy*cosy) ), ui.yangle->value() );
   return  ui.len->value() * Vec(x,y,z);
 }
 
 
-void DirectionVectorWidget::updateDirection(QPointF pt) {  
-  float psq = pt.y()*pt.y() + pt.x()*pt.x();
-  float zangle = RAD2DEG(acos( sqrt(1-psq) ));
-  if (ui.zangle->value() > 90)
-    zangle = 180-zangle;
-  ui.zangle->setValue(zangle);
-  if ( psq > 0.0 )
-    ui.yangle->setValue( copysign( RAD2DEG(acos( pt.y() / sqrt(psq) )), pt.x() ) );
+void DirectionVectorWidget::updateDirection(QPointF pt) {
+  const qreal zabs = sqrt(1-pt.y()*pt.y()-pt.x()*pt.x());
+  setVector( Vec(pt.x(), pt.y(), copysign( zabs, 90 - ui.zangle->value() ) ) );
   emit directionChanged(vector());
 }
 
 
 void DirectionVectorWidget::onDirectionChange() {
-  Vec vn=vector().unit();
+  const Vec vo=vector();
+  const Vec vn = vo.norm() == 0 ? vo : vo.unit();
   ui.lightDisc->setDirection( QPointF(vn.x, vn.y) );
   ui.lightDisc->setBacklit(vn.z < 0);
-  emit directionChanged(vector());
+  emit directionChanged(vo);
 }
 
 
@@ -133,4 +141,9 @@ void DirectionVectorWidget::onLenChange() {
   emit directionChanged(vector());
 }
 
+
+void DirectionVectorWidget::resizeEvent(QResizeEvent *event) {
+  setMaximumSize(QWIDGETSIZE_MAX,
+		 width() + ui.nums->height() + layout()->minimumSize().height());
+}
 

@@ -7,7 +7,6 @@
 #include "propertyeditor.h"
 #include <QMessageBox>
 #include <QDomDocument>
-//#include <QtGui>
 
 
 

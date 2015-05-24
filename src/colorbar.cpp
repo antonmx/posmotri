@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+
 //#include <QtGui>
 
 #include "colorbar.h"

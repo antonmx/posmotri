@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <GL/glew.h>
 #include "glewinitialisation.h"
 #include <QMessageBox>

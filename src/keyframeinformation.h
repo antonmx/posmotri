@@ -1,7 +1,7 @@
 #ifndef KEYFRAMEINFORMATION_H
 #define KEYFRAMEINFORMATION_H
 
-#include <GL/glew.h>
+
 #include <QObject>
 #include <QGLViewer/qglviewer.h>
 using namespace qglviewer;

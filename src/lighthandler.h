@@ -1,7 +1,7 @@
 #ifndef LIGHTHANDLER_H
 #define LIGHTHANDLER_H
 
-#include <GL/glew.h>
+
 //#include <QtGui>
 
 #include <QGLViewer/qglviewer.h>

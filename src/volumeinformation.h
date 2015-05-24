@@ -1,7 +1,7 @@
 #ifndef VOLUMEINFORMATION_H
 #define VOLUMEINFORMATION_H
 
-#include <GL/glew.h>
+
 
 #include <QGLViewer/vec.h>
 using namespace qglviewer;

@@ -10,7 +10,6 @@
 #include "pruneshaderfactory.h"
 #include "cropshaderfactory.h"
 #include <QMessageBox>
-//#include <QtGui>
 
 
 

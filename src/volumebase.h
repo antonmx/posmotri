@@ -1,7 +1,7 @@
 #ifndef VOLUMEBASE_H
 #define VOLUMEBASE_H
 
-#include <GL/glew.h>
+
 
 #include <QGLViewer/vec.h>
 using namespace qglviewer;

@@ -1,7 +1,7 @@
 #ifndef VIEWER_H
 #define VIEWER_H
 
-#include <GL/glew.h>
+
 
 #include "glewinitialisation.h"
 

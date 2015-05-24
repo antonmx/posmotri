@@ -1,7 +1,7 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#include <GL/glew.h>
+
 #include <QStatusBar>
 #include <QProgressBar>
 #include <QBitArray>

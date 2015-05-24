@@ -1,7 +1,7 @@
 #ifndef PRUNESHADERFACTORY_H
 #define PRUNESHADERFACTORY_H
 
-#include <GL/glew.h>
+
 #include <QString>
 
 class PruneShaderFactory

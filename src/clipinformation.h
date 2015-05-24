@@ -1,7 +1,7 @@
 #ifndef CLIPINFORMATION_H
 #define CLIPINFORMATION_H
 
-#include <GL/glew.h>
+
 
 #include <QGLViewer/vec.h>
 #include <QGLViewer/quaternion.h>

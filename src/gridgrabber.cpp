@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+
 #include "global.h"
 #include "gridgrabber.h"
 #include "staticfunctions.h"

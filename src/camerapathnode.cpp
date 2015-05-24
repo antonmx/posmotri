@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+
 #include "camerapathnode.h"
 #include <QKeyEvent>
 #include <QGLViewer/manipulatedFrame.h>

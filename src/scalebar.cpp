@@ -1,4 +1,4 @@
-#include <GL/glew.h>
+
 #include "scalebar.h"
 #include "global.h"
 #include "volumeinformation.h"

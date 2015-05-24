@@ -1,6 +1,3 @@
-//#include <qopengl.h>
-//#include <QOpenGLFunctions>
-
 #include <GL/glew.h>
 
 #include "viewer.h"

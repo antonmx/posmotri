@@ -2,7 +2,7 @@
 #define TICK_H
 
 //#include <QtGui>
-#include <GL/glew.h>
+
 
 #ifdef Q_WS_MAC
 #include <GLUT/glut.h>
