@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>638</width>
-    <height>406</height>
+    <width>285</width>
+    <height>228</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -122,39 +122,13 @@ Set the slider position to a smaller value in order to maintain interactivity.  
           </widget>
          </item>
          <item row="1" column="2">
-          <widget class="QMSpinBox" name="m_stillSB">
-           <property name="minimum">
-            <number>-5</number>
-           </property>
-           <property name="maximum">
-            <number>16</number>
-           </property>
-           <property name="value">
-            <number>7</number>
-           </property>
-          </widget>
+          <widget class="QSpinBox" name="m_still_SB"/>
          </item>
          <item row="2" column="2">
-          <widget class="QMSpinBox" name="m_dragSB">
-           <property name="minimum">
-            <number>-5</number>
-           </property>
-           <property name="maximum">
-            <number>16</number>
-           </property>
-           <property name="value">
-            <number>6</number>
-           </property>
-          </widget>
+          <widget class="QSpinBox" name="m_drag_SB"/>
          </item>
          <item row="0" column="2">
-          <widget class="QMSpinBox" name="spinBox_2">
-           <property name="minimum">
-            <number>128</number>
-           </property>
-           <property name="maximum">
-            <number>16000</number>
-           </property>
+          <widget class="QSpinBox" name="m_textureMemorySize_SB">
            <property name="singleStep">
             <number>32</number>
            </property>
@@ -452,161 +426,6 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>QMSpinBox</class>
-   <extends>QSpinBox</extends>
-   <header>PromotedWidgets.h</header>
-   <slots>
-    <slot>setRange(int,int)</slot>
-   </slots>
-  </customwidget>
- </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>m_still</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>m_stillSB</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_stillSB</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>m_still</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_drag</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>m_dragSB</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_dragSB</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>m_drag</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_still</sender>
-   <signal>rangeChanged(int,int)</signal>
-   <receiver>m_stillSB</receiver>
-   <slot>setRange(int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_drag</sender>
-   <signal>rangeChanged(int,int)</signal>
-   <receiver>m_dragSB</receiver>
-   <slot>setRange(int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_textureMemorySize</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>spinBox_2</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_textureMemorySize</sender>
-   <signal>rangeChanged(int,int)</signal>
-   <receiver>spinBox_2</receiver>
-   <slot>setRange(int,int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>spinBox_2</sender>
-   <signal>valueChanged(int)</signal>
-   <receiver>m_textureMemorySize</receiver>
-   <slot>setValue(int)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>127</x>
-     <y>99</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

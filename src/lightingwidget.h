@@ -3,6 +3,7 @@
 
 #include "lightinginformation.h"
 #include "ui_lightingwidget.h"
+#include "PromotedWidgets.h"
 
 class LightingWidget : public QWidget {
  Q_OBJECT;
@@ -64,10 +65,6 @@ class LightingWidget : public QWidget {
   void on_shadowcontrast_sliderReleased();
   void on_shadowfov_sliderReleased();
 
-  void on_red_sliderReleased();
-  void on_green_sliderReleased();
-  void on_blue_sliderReleased();
-
   void on_backplaneshadowscale_sliderReleased();
   void on_backplanecontrast_sliderReleased();
 
@@ -79,6 +76,24 @@ class LightingWidget : public QWidget {
 
   void peelSliderReleased();
   void showHelp();
+  
+  QSpinSlide * peelminLink;
+  QSpinSlide * peelmaxLink;
+  QSpinSlide * peelmixLink;
+  QSpinSlide * ambientLink;
+  QSpinSlide * diffuseLink;
+  QSpinSlide * specularLink;
+  QSpinSlide * specularcoeffLink;
+  QSpinSlide * shadowblurLink;
+  QSpinSlide * shadowscaleLink;
+  QSpinSlide * shadowcontrastLink;
+  QSpinSlide * shadowfovLink;
+  QSpinSlide * redLink;
+  QSpinSlide * greenLink;
+  QSpinSlide * blueLink;
+  QSpinSlide * backplaneshadowscaleLink;
+  QSpinSlide * backplanecontrastLink;
+
 };
 
 #endif

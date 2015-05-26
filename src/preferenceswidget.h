@@ -3,23 +3,24 @@
 
 #include "ui_preferenceswidget.h"
 #include "tagcoloreditor.h"
+#include "PromotedWidgets.h"
 
 class PreferencesWidget : public QWidget {
   Q_OBJECT;
 
- public :
+public :
   PreferencesWidget(QWidget *parent=NULL);
 
   void getTick(int&, int&, QString&, QString&, QString&) const ;
   void setTick(int sz, int st, const QString & xl, const QString & yl, const QString & zl);
 
- signals :
+signals :
   void updateLookupTable();
   void updateGL();
   void stereoSettingsChanged(float, float, float);
   void tagColorChanged();
 
- public slots :
+public slots :
   void setRenderQualityValues(float, float);
   void setStereoSettings(float, float, float);
   void updateTextureMemory();
@@ -40,6 +41,10 @@ private slots:
 
   static float imageQualityValue(int);
   static int renderQualityValue(float);
+  
+  QSpinSlide * textureMemorySizeLink;
+  QSpinSlide * stilLink;
+  QSpinSlide * dragLink;
 
   void showHelp();
 };

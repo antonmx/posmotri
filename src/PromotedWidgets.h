@@ -21,23 +21,27 @@
 #define PROMOTEDWIDGETS_H
 
 #include <QSpinBox>
+#include <QSlider>
+#include <QHBoxLayout>
 #include <QDoubleSpinBox>
 
 
-class QMSpinBox :  public QSpinBox {
+class QSpinSlide : public QObject {
   Q_OBJECT;
+private:
+  QSpinBox * sbox;
+  QSlider  * slide;
+  int oldvalue;
 public:
-  QMSpinBox(QWidget * parent = 0) : QSpinBox(parent) {}
+  explicit QSpinSlide (QSlider  * _slide, QSpinBox * _box,  QObject * parent=0);
+  int value() const;
 public slots:
-  void  setRange(int minimum, int maximum) { QSpinBox::setRange(minimum,  maximum); }
-};
-
-class QMDoubleSpinBox :  public QDoubleSpinBox {
-  Q_OBJECT;
-public:
-  QMDoubleSpinBox(QWidget * parent = 0) : QDoubleSpinBox(parent) {}
-public slots:
-  void  setRange(double minimum, double maximum) { QDoubleSpinBox::setRange(minimum,  maximum); }
+  void setValue(int);
+  void setRange(int, int);
+signals:
+  void valueChanged(int);
+private slots:
+  void retranslateNewValue(QWidget *oldwdg=0);
 };
 
 #endif // PROMOTEDWIDGETS_H

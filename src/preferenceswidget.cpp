@@ -10,29 +10,33 @@
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
   : QWidget(parent)
-  ,  m_tagColorEditor(new TagColorEditor)
+  , m_tagColorEditor(new TagColorEditor)
 {
   ui.setupUi(this);
 
   ui.tabWidget->widget(3)->layout()->addWidget(m_tagColorEditor);
   connect(m_tagColorEditor, SIGNAL(tagColorChanged()), SIGNAL(tagColorChanged()));
   connect(m_tagColorEditor, SIGNAL(tagColorChanged()), SIGNAL(updateGL()));
-
-  onTickChanged();
-  //updateTextureMemory();
-
-
-  connect( ui.m_textureMemorySize,  SIGNAL(sliderReleased()),  SLOT(onImageQualityChanged()));
-  connect( ui.m_still,  SIGNAL(sliderReleased()),  SLOT( onImageQualityChanged() ));
-  connect( ui.m_drag,  SIGNAL(sliderReleased()),  SLOT( onImageQualityChanged() ));
+ 
+  textureMemorySizeLink = new QSpinSlide(ui.m_textureMemorySize, ui.m_textureMemorySize_SB, this);
+  stilLink = new QSpinSlide(ui.m_still, ui.m_still_SB, this);
+  dragLink = new QSpinSlide(ui.m_drag, ui.m_drag_SB, this);  
+  connect( textureMemorySizeLink,  SIGNAL(valueChanged(int)),  SLOT(onImageQualityChanged()));
+  connect( stilLink,  SIGNAL(valueChanged(int)),  SLOT( onImageQualityChanged() ));
+  connect( dragLink,  SIGNAL(valueChanged(int)),  SLOT( onImageQualityChanged() ));
+  
   connect( ui.m_tickSize,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_tickStep,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_labelX,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_labelY,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_labelZ,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_eyeSeparation,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
-  connect( ui.m_focus,  SIGNAL(valueChanged(double)),  SLOT(onStereoChanged()));
-  connect( ui.m_screenWidth,  SIGNAL(valueChanged(double)),  SLOT(onStereoChanged()));
+  connect( ui.m_focus,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
+  connect( ui.m_screenWidth,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
+  
+  onTickChanged();
+  updateTextureMemory();
+
 
 }
 
@@ -43,7 +47,7 @@ void PreferencesWidget::updateTagColors() {
 
 
 void PreferencesWidget::updateTextureMemory() {
-  ui.m_textureMemorySize->setValue(Global::textureMemorySize());
+  textureMemorySizeLink->setValue(Global::textureMemorySize());
 }
 
 
@@ -57,9 +61,9 @@ void PreferencesWidget::setStereoSettings(float dist, float es, float width) {
 
 
 void PreferencesWidget::onImageQualityChanged() {
-  Global::setStepsizeDrag(imageQualityValue(ui.m_drag->value()));
-  Global::setStepsizeStill(imageQualityValue(ui.m_still->value()));
-  Global::setTextureMemorySize(ui.m_textureMemorySize->value());
+  Global::setStepsizeDrag(imageQualityValue(dragLink->value()));
+  Global::setStepsizeStill(imageQualityValue(stilLink->value()));
+  Global::setTextureMemorySize(textureMemorySizeLink->value());
   Global::calculate3dTextureSize();
   emit updateLookupTable();
   emit updateGL();
@@ -80,8 +84,8 @@ float PreferencesWidget::imageQualityValue(int v) {
 
 
 void PreferencesWidget::setRenderQualityValues(float still, float drag) {
-  ui.m_still->setValue(renderQualityValue(still));
-  ui.m_drag->setValue(renderQualityValue(drag));
+  stilLink->setValue(renderQualityValue(still));
+  dragLink->setValue(renderQualityValue(drag));
 }
 
 

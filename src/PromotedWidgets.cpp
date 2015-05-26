@@ -19,3 +19,47 @@
 
 #include "PromotedWidgets.h"
 
+#include <QApplication>
+#include <QDebug>
+
+QSpinSlide::QSpinSlide (QSlider * _slide, QSpinBox * _box,  QObject * parent)
+  : QObject (parent)
+  , slide(_slide)
+  , sbox(_box)
+{
+  setValue(slide->value());
+  setRange(slide->minimum(), slide->maximum());
+  connect(sbox, SIGNAL(valueChanged(int)), slide, SLOT(setValue(int)));
+  connect(slide, SIGNAL(valueChanged(int)), sbox, SLOT(setValue(int)));
+  connect(sbox, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
+  connect(slide, SIGNAL(sliderReleased()), SLOT(retranslateNewValue()));
+  connect(slide, SIGNAL(rangeChanged(int,int)), SLOT(setRange(int,int)));
+}
+
+int QSpinSlide::value() const {
+  return sbox->value();
+}
+
+void QSpinSlide::setValue(int val) {
+  oldvalue = val;
+  sbox->setValue(val);
+  slide->setValue(val);
+}
+
+void QSpinSlide::setRange(int minimum, int maximum) {
+  sbox->setRange(minimum, maximum);
+  slide->setRange(minimum, maximum);
+}
+
+void QSpinSlide::retranslateNewValue(QWidget * oldwdg) {
+  QCoreApplication::processEvents(); // to allow connected "valueChanged" get processed.
+  int val=oldvalue;
+  if ( sender() == sbox || oldwdg == sbox)
+    val = sbox->value();
+  else if ( sender() == slide )
+    val = slide->value();
+  if (val != oldvalue)
+    emit valueChanged(oldvalue=val);
+}
+
+

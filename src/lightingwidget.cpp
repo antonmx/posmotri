@@ -12,7 +12,29 @@ LightingWidget::LightingWidget(QWidget *parent)
   ui.peelW->hide();
   ui.applycoloredshadowW->hide();
   ui.applybackplaneW->hide();
+  
+  peelminLink = new QSpinSlide(ui.peelmin_, ui.peelmin_SB, this);
+  peelmaxLink = new QSpinSlide(ui.peelmax_, ui.peelmax_SB, this);
+  peelmixLink = new QSpinSlide(ui.peelmix_, ui.peelmix_SB, this);
+  ambientLink = new QSpinSlide(ui.ambient_, ui.ambient_SB, this);
+  diffuseLink = new QSpinSlide(ui.diffuse_, ui.diffuse_SB, this);
+  specularLink = new QSpinSlide(ui.specular_, ui.specular_SB, this);
+  specularcoeffLink = new QSpinSlide(ui.specularcoeff_, ui.specularcoeff_SB, this);
+  shadowblurLink = new QSpinSlide(ui.shadowblur_, ui.shadowblur_SB, this);
+  shadowscaleLink = new QSpinSlide(ui.shadowscale_, ui.shadowscale_SB, this);
+  shadowcontrastLink = new QSpinSlide(ui.shadowcontrast_, ui.shadowcontrast_SB, this);
+  shadowfovLink = new QSpinSlide(ui.shadowfov_, ui.shadowfov_SB, this);
+  redLink = new QSpinSlide(ui.red_, ui.red_SB, this);
+  greenLink = new QSpinSlide(ui.green_, ui.green_SB, this);
+  blueLink = new QSpinSlide(ui.blue_, ui.blue_SB, this);
+  backplaneshadowscaleLink = new QSpinSlide(ui.backplaneshadowscale_, ui.backplaneshadowscale_SB, this);
+  backplanecontrastLink = new QSpinSlide(ui.backplanecontrast_, ui.backplanecontrast_SB, this);
 
+  connect( redLink, SIGNAL(valueChanged(int)), SLOT(shadowColor()));
+  connect( blueLink, SIGNAL(valueChanged(int)), SLOT(shadowColor()));
+  connect( greenLink, SIGNAL(valueChanged(int)), SLOT(shadowColor()));
+  
+  
   connect(ui.lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)), SLOT(lightDirectionChanged(qglviewer::Vec)));
 
 }
@@ -22,32 +44,31 @@ void
 LightingWidget::setLightInfo(LightingInformation lightInfo)
 {
   ui.applylighting->setChecked(lightInfo.applyLighting);
-  ui.ambient->setValue(lightInfo.highlights.ambient*10);
-  ui.diffuse->setValue(lightInfo.highlights.diffuse*10);
-  ui.specular->setValue(lightInfo.highlights.specular*10);
-  ui.specularcoeff->setValue(ui.specularcoeff->maximum()-
-      		    lightInfo.highlights.specularCoefficient);
+  ambientLink->setValue(lightInfo.highlights.ambient*10);
+  diffuseLink->setValue(lightInfo.highlights.diffuse*10);
+  specularLink->setValue(lightInfo.highlights.specular*10);
+  specularcoeffLink->setValue(ui.specularcoeff_->maximum() - lightInfo.highlights.specularCoefficient);
 
   ui.peel->setChecked(lightInfo.peel);
-  ui.peelmin->setValue(lightInfo.peelMin*100);
-  ui.peelmax->setValue(lightInfo.peelMax*100);
-  ui.peelmix->setValue(lightInfo.peelMix*100);
+  peelminLink->setValue(lightInfo.peelMin*100);
+  peelmaxLink->setValue(lightInfo.peelMax*100);
+  peelmixLink->setValue(lightInfo.peelMix*100);
   ui.peeltype->setCurrentIndex(lightInfo.peelType);
 
   ui.applyshadow->setChecked(lightInfo.applyShadows);
-  ui.shadowblur->setValue(lightInfo.shadowBlur);
-  ui.shadowscale->setValue((lightInfo.shadowScale-0.2)*10);
-  ui.shadowcontrast->setValue(lightInfo.shadowIntensity*10);
-  ui.shadowfov->setValue(lightInfo.shadowFovOffset*25+5);
+  shadowblurLink->setValue(lightInfo.shadowBlur);
+  shadowscaleLink->setValue((lightInfo.shadowScale-0.2)*10);
+  shadowcontrastLink->setValue(lightInfo.shadowIntensity*10);
+  shadowfovLink->setValue(lightInfo.shadowFovOffset*25+5);
 
   ui.applycoloredshadow->setChecked(lightInfo.applyColoredShadows);
-  ui.red->setValue(lightInfo.colorAttenuation.x*50);
-  ui.green->setValue(lightInfo.colorAttenuation.y*50);
-  ui.blue->setValue(lightInfo.colorAttenuation.z*50);
+  redLink->setValue(lightInfo.colorAttenuation.x*50);
+  greenLink->setValue(lightInfo.colorAttenuation.y*50);
+  blueLink->setValue(lightInfo.colorAttenuation.z*50);
 
   ui.applybackplane->setChecked(lightInfo.applyBackplane);
-  ui.backplaneshadowscale->setValue(lightInfo.backplaneShadowScale*5);
-  ui.backplanecontrast->setValue(lightInfo.backplaneIntensity*10);
+  backplaneshadowscaleLink->setValue(lightInfo.backplaneShadowScale*5);
+  backplanecontrastLink->setValue(lightInfo.backplaneIntensity*10);
 
   ui.lightpositionW->setVector( lightInfo.lightDistanceOffset * lightInfo.userLightVector);
 
@@ -68,9 +89,9 @@ void LightingWidget::on_peeltype_currentIndexChanged(int idx) { peelSliderReleas
 void LightingWidget::peelSliderReleased()
 {
   int pidx = ui.peeltype->currentIndex();
-  float emin = (float)ui.peelmin->value()*0.01;
-  float emax = (float)ui.peelmax->value()*0.01;
-  float emix = (float)ui.peelmix->value()*0.01;
+  float emin = (float)peelminLink->value()*0.01;
+  float emax = (float)peelmaxLink->value()*0.01;
+  float emix = (float)peelmixLink->value()*0.01;
   emit peelInfo(pidx, emin, emax, emix);
 }
 
@@ -85,11 +106,10 @@ void LightingWidget::highlightsChanged()
 {
   Highlights hl;
 
-  hl.ambient = (float)ui.ambient->value()*0.1;
-  hl.diffuse = (float)ui.diffuse->value()*0.1;
-  hl.specular = (float)ui.specular->value()*0.1;
-  hl.specularCoefficient = ui.specularcoeff->maximum()-
-                               ui.specularcoeff->value();
+  hl.ambient  = (float)ambientLink->value()*0.1;
+  hl.diffuse  = (float)diffuseLink->value()*0.1;
+  hl.specular = (float)specularLink->value()*0.1;
+  hl.specularCoefficient = ui.specularcoeff_->maximum()-specularcoeffLink->value();
 
   emit highlights(hl);
 }
@@ -100,22 +120,22 @@ void LightingWidget::on_applyshadow_clicked(bool flag) {
 }
 void LightingWidget::on_shadowblur_sliderReleased()
 {
-  float v = (float)ui.shadowblur->value();
+  float v = (float)shadowblurLink->value();
   emit shadowBlur(v);
 }
 void LightingWidget::on_shadowscale_sliderReleased()
 {
-  float v = (float)ui.shadowscale->value()*0.1 + 0.2;
+  float v = (float)shadowscaleLink->value()*0.1 + 0.2;
   emit shadowScale(v);
 }
 void LightingWidget::on_shadowcontrast_sliderReleased()
 {
-  float v = (float)ui.shadowcontrast->value()*0.1;
+  float v = (float)shadowcontrastLink->value()*0.1;
   emit shadowIntensity(v);
 }
 void LightingWidget::on_shadowfov_sliderReleased()
 {
-  float v = (float)(ui.shadowfov->value()-5)*0.04;
+  float v = (float)(shadowfovLink->value()-5)*0.04;
   emit shadowFOV(v);
 }
 
@@ -123,45 +143,33 @@ void LightingWidget::on_shadowfov_sliderReleased()
 void LightingWidget::on_applycoloredshadow_clicked(bool flag) {
   emit applyColoredShadow(flag);
 }
-void LightingWidget::on_linkcolors_clicked(bool flag)
-{
-  on_red_sliderReleased();
-}
-void LightingWidget::on_red_sliderReleased()
-{
-  if (ui.linkcolors->isChecked())
-    {
-      ui.green->setValue(ui.red->value());
-      ui.blue->setValue(ui.red->value());
-    }
 
-  shadowColor();
-}
-void LightingWidget::on_green_sliderReleased()
-{
-  if (ui.linkcolors->isChecked())
-    {
-      ui.red->setValue(ui.green->value());
-      ui.blue->setValue(ui.green->value());
-    }
 
-  shadowColor();
+void LightingWidget::on_linkcolors_clicked(bool flag) {
+  if ( ui.linkcolors->isChecked() ) {
+    blueLink->setValue(redLink->value());
+    greenLink->setValue(redLink->value());
+    connect( redLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
+    connect( redLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
+    connect( blueLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
+    connect( blueLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
+    connect( greenLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
+    connect( greenLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
+  } else {
+    disconnect( redLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
+    disconnect( redLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
+    disconnect( blueLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
+    disconnect( blueLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
+    disconnect( greenLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
+    disconnect( greenLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
+  }
 }
-void LightingWidget::on_blue_sliderReleased()
-{
-  if (ui.linkcolors->isChecked())
-    {
-      ui.green->setValue(ui.blue->value());
-      ui.red->setValue(ui.blue->value());
-    }
 
-  shadowColor();
-}
-void LightingWidget::shadowColor()
-{
-  float r = 0.02*ui.red->value();
-  float g = 0.02*ui.green->value();
-  float b = 0.02*ui.blue->value();
+void LightingWidget::shadowColor() {
+  QCoreApplication::processEvents(); // to allow linked colors to update.
+  float r = 0.02*redLink->value();
+  float g = 0.02*greenLink->value();
+  float b = 0.02*blueLink->value();
   emit shadowColorAttenuation(r,g,b);
 }
 
@@ -171,12 +179,12 @@ void LightingWidget::on_applybackplane_clicked(bool flag) {
 }
 void LightingWidget::on_backplaneshadowscale_sliderReleased()
 {
-  float v = (float)ui.backplaneshadowscale->value()*0.2;
+  float v = (float)backplaneshadowscaleLink->value()*0.2;
   emit backplaneShadowScale(v);
 }
 void LightingWidget::on_backplanecontrast_sliderReleased()
 {
-  float v = (float)ui.backplanecontrast->value()*0.1;
+  float v = (float)backplanecontrastLink->value()*0.1;
   emit backplaneIntensity(v);
 }
 
