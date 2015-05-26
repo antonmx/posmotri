@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>LightingWidget</class>
  <widget class="QWidget" name="LightingWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>880</width>
+    <height>1410</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Shader Widget</string>
   </property>
@@ -21,7 +29,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="applyemissive">
+    <widget class="QCheckBox" name="applyemissiveD">
      <property name="text">
       <string>Emissive</string>
      </property>
@@ -47,23 +55,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
-       <widget class="QComboBox" name="peeltype">
-        <property name="editable">
-         <bool>false</bool>
-        </property>
-        <item>
-         <property name="text">
-          <string>Peel</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Keep Inside</string>
-         </property>
-        </item>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_17">
         <property name="text">
@@ -71,8 +62,50 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_13">
+        <property name="text">
+         <string>backface</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_16">
+        <property name="text">
+         <string>mix</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QSlider" name="peelmix">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::TicksAbove</enum>
+        </property>
+        <property name="tickInterval">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QSlider" name="peelmin">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="minimum">
          <number>-110</number>
         </property>
@@ -92,6 +125,12 @@
       </item>
       <item row="2" column="1">
        <widget class="QSlider" name="peelmax">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="minimum">
          <number>-110</number>
         </property>
@@ -112,34 +151,48 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_13">
-        <property name="text">
-         <string>backface</string>
+      <item row="1" column="2">
+       <widget class="QMSpinBox" name="spinBox">
+        <property name="minimum">
+         <number>-110</number>
+        </property>
+        <property name="maximum">
+         <number>110</number>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_16">
-        <property name="text">
-         <string>mix</string>
+      <item row="2" column="2">
+       <widget class="QMSpinBox" name="spinBox_2">
+        <property name="minimum">
+         <number>-110</number>
+        </property>
+        <property name="maximum">
+         <number>110</number>
         </property>
        </widget>
       </item>
-      <item row="3" column="1">
-       <widget class="QSlider" name="peelmix">
+      <item row="3" column="2">
+       <widget class="QMSpinBox" name="spinBox_3">
         <property name="maximum">
          <number>100</number>
         </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="2">
+       <widget class="QComboBox" name="peeltype">
+        <property name="editable">
+         <bool>false</bool>
         </property>
-        <property name="tickPosition">
-         <enum>QSlider::TicksAbove</enum>
-        </property>
-        <property name="tickInterval">
-         <number>10</number>
-        </property>
+        <item>
+         <property name="text">
+          <string>Peel</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Keep Inside</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>
@@ -163,6 +216,12 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="1">
        <widget class="QSlider" name="ambient">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximum">
          <number>10</number>
         </property>
@@ -189,6 +248,12 @@
       </item>
       <item row="2" column="1">
        <widget class="QSlider" name="specular">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximum">
          <number>10</number>
         </property>
@@ -208,6 +273,12 @@
       </item>
       <item row="3" column="1">
        <widget class="QSlider" name="specularcoeff">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximum">
          <number>9</number>
         </property>
@@ -234,6 +305,12 @@
       </item>
       <item row="1" column="1">
        <widget class="QSlider" name="diffuse">
+        <property name="minimumSize">
+         <size>
+          <width>200</width>
+          <height>0</height>
+         </size>
+        </property>
         <property name="maximum">
          <number>10</number>
         </property>
@@ -265,17 +342,41 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0" colspan="2">
-       <widget class="QCheckBox" name="applyshadow">
-        <property name="text">
-         <string>Shadows</string>
+      <item row="0" column="2">
+       <widget class="QMSpinBox" name="spinBox_4">
+        <property name="maximum">
+         <number>10</number>
         </property>
-        <property name="checked">
-         <bool>true</bool>
+        <property name="value">
+         <number>10</number>
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="2">
+      <item row="1" column="2">
+       <widget class="QMSpinBox" name="spinBox_5">
+        <property name="maximum">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QMSpinBox" name="spinBox_6">
+        <property name="maximum">
+         <number>10</number>
+        </property>
+        <property name="value">
+         <number>10</number>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QMSpinBox" name="spinBox_7">
+        <property name="value">
+         <number>2</number>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="3">
        <widget class="QFrame" name="applyshadowW">
         <property name="frameShape">
          <enum>QFrame::StyledPanel</enum>
@@ -284,15 +385,46 @@
          <item>
           <widget class="QWidget" name="widget" native="true">
            <layout class="QGridLayout" name="gridLayout_3">
+            <item row="1" column="1">
+             <widget class="QSlider" name="shadowscale">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximum">
+               <number>8</number>
+              </property>
+              <property name="pageStep">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="tickPosition">
+               <enum>QSlider::TicksAbove</enum>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0">
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>shadow blur</string>
+               <string>blur</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
              <widget class="QSlider" name="shadowblur">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>5</number>
               </property>
@@ -313,31 +445,18 @@
             <item row="1" column="0">
              <widget class="QLabel" name="label_6">
               <property name="text">
-               <string>shadow buffer size</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSlider" name="shadowscale">
-              <property name="maximum">
-               <number>8</number>
-              </property>
-              <property name="pageStep">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>5</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="tickPosition">
-               <enum>QSlider::TicksAbove</enum>
+               <string>buffer size</string>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
              <widget class="QSlider" name="shadowcontrast">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>10</number>
               </property>
@@ -358,19 +477,25 @@
             <item row="2" column="0">
              <widget class="QLabel" name="label_7">
               <property name="text">
-               <string>shadow contrast</string>
+               <string>contrast</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
              <widget class="QLabel" name="label_8">
               <property name="text">
-               <string>light cone angle</string>
+               <string>cone angle</string>
               </property>
              </widget>
             </item>
             <item row="3" column="1">
              <widget class="QSlider" name="shadowfov">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>10</number>
               </property>
@@ -385,6 +510,46 @@
               </property>
               <property name="tickPosition">
                <enum>QSlider::TicksAbove</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QMSpinBox" name="spinBox_8">
+              <property name="maximum">
+               <number>5</number>
+              </property>
+              <property name="value">
+               <number>1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QMSpinBox" name="spinBox_9">
+              <property name="maximum">
+               <number>8</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QMSpinBox" name="spinBox_10">
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QMSpinBox" name="spinBox_11">
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>5</number>
               </property>
              </widget>
             </item>
@@ -406,6 +571,12 @@
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="3" column="1">
              <widget class="QSlider" name="blue">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>100</number>
               </property>
@@ -432,6 +603,12 @@
             </item>
             <item row="2" column="1">
              <widget class="QSlider" name="green">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>100</number>
               </property>
@@ -458,6 +635,12 @@
             </item>
             <item row="1" column="1">
              <widget class="QSlider" name="red">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>100</number>
               </property>
@@ -489,6 +672,36 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="2">
+             <widget class="QMSpinBox" name="spinBox_12">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QMSpinBox" name="spinBox_13">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QMSpinBox" name="spinBox_14">
+              <property name="maximum">
+               <number>100</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
@@ -507,6 +720,12 @@
            <layout class="QGridLayout" name="gridLayout_5">
             <item row="1" column="1">
              <widget class="QSlider" name="backplanecontrast">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="maximum">
                <number>10</number>
               </property>
@@ -533,6 +752,12 @@
             </item>
             <item row="0" column="1">
              <widget class="QSlider" name="backplaneshadowscale">
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="minimum">
                <number>5</number>
               </property>
@@ -557,10 +782,40 @@
               </property>
              </widget>
             </item>
+            <item row="0" column="2">
+             <widget class="QMSpinBox" name="spinBox_15">
+              <property name="minimum">
+               <number>5</number>
+              </property>
+              <property name="maximum">
+               <number>15</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QMSpinBox" name="spinBox_16">
+              <property name="maximum">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>10</number>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="3">
+       <widget class="QCheckBox" name="applyshadow">
+        <property name="text">
+         <string>Shadows</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
        </widget>
       </item>
      </layout>
@@ -591,6 +846,14 @@
    <header>directionvectorwidget.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>QMSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>PromotedWidgets.h</header>
+   <slots>
+    <slot>setRange(int,int)</slot>
+   </slots>
+  </customwidget>
  </customwidgets>
  <resources/>
  <connections>
@@ -601,8 +864,8 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>50</x>
-     <y>180</y>
+     <x>63</x>
+     <y>160</y>
     </hint>
     <hint type="destinationlabel">
      <x>49</x>
@@ -617,12 +880,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>78</x>
-     <y>348</y>
+     <x>91</x>
+     <y>402</y>
     </hint>
     <hint type="destinationlabel">
-     <x>71</x>
-     <y>363</y>
+     <x>84</x>
+     <y>774</y>
     </hint>
    </hints>
   </connection>
@@ -633,12 +896,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>71</x>
-     <y>483</y>
+     <x>98</x>
+     <y>685</y>
     </hint>
     <hint type="destinationlabel">
-     <x>64</x>
-     <y>505</y>
+     <x>91</x>
+     <y>1136</y>
     </hint>
    </hints>
   </connection>
@@ -649,12 +912,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>82</x>
-     <y>647</y>
+     <x>123</x>
+     <y>967</y>
     </hint>
     <hint type="destinationlabel">
-     <x>74</x>
-     <y>668</y>
+     <x>115</x>
+     <y>1062</y>
     </hint>
    </hints>
   </connection>
@@ -665,12 +928,12 @@
    <slot>setVisible(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>78</x>
-     <y>804</y>
+     <x>119</x>
+     <y>1234</y>
     </hint>
     <hint type="destinationlabel">
-     <x>78</x>
-     <y>826</y>
+     <x>119</x>
+     <y>1342</y>
     </hint>
    </hints>
   </connection>
@@ -685,8 +948,776 @@
      <y>23</y>
     </hint>
     <hint type="destinationlabel">
-     <x>41</x>
-     <y>53</y>
+     <x>54</x>
+     <y>68</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peelmin</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>502</x>
+     <y>249</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>785</x>
+     <y>247</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peelmin</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>404</x>
+     <y>248</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>838</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peelmax</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_2</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>387</x>
+     <y>303</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>805</x>
+     <y>305</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peelmax</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_2</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>490</x>
+     <y>298</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>789</x>
+     <y>303</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peelmix</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_3</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>552</x>
+     <y>357</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>794</x>
+     <y>346</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>peelmix</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_3</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>446</x>
+     <y>354</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>799</x>
+     <y>360</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>peelmin</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>800</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>473</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_2</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>peelmax</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>813</x>
+     <y>291</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>410</x>
+     <y>301</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_3</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>peelmix</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>788</x>
+     <y>338</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>381</x>
+     <y>351</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ambient</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_4</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>633</x>
+     <y>470</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>824</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ambient</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_4</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>527</x>
+     <y>472</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>834</x>
+     <y>469</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_4</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>ambient</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>828</x>
+     <y>475</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>444</x>
+     <y>471</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>diffuse</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_5</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>598</x>
+     <y>527</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>813</x>
+     <y>533</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>diffuse</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_5</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>513</x>
+     <y>513</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>789</x>
+     <y>513</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_5</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>diffuse</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>811</x>
+     <y>525</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>418</x>
+     <y>517</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>specular</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_6</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>612</x>
+     <y>569</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>826</x>
+     <y>570</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>specular</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_6</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>461</x>
+     <y>574</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>805</x>
+     <y>582</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_6</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>specular</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>824</x>
+     <y>570</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>398</x>
+     <y>565</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>specularcoeff</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_7</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>640</x>
+     <y>622</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>818</x>
+     <y>622</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_7</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>specularcoeff</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>820</x>
+     <y>614</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>447</x>
+     <y>622</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>specularcoeff</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_7</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>387</x>
+     <y>621</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>832</x>
+     <y>624</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_8</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>shadowblur</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>780</x>
+     <y>734</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>621</x>
+     <y>740</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowblur</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_8</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>537</x>
+     <y>740</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>801</x>
+     <y>748</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowblur</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_8</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>444</x>
+     <y>739</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>799</x>
+     <y>744</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowscale</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_9</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>512</x>
+     <y>796</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>789</x>
+     <y>781</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_9</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>shadowscale</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>794</x>
+     <y>802</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>441</x>
+     <y>788</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowscale</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_9</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>396</x>
+     <y>785</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>795</x>
+     <y>790</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_10</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>shadowcontrast</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>783</x>
+     <y>842</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>643</x>
+     <y>844</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowcontrast</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_10</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>559</x>
+     <y>842</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>851</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowcontrast</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_10</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>491</x>
+     <y>845</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>781</x>
+     <y>846</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_11</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>shadowfov</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>763</x>
+     <y>885</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>633</x>
+     <y>890</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowfov</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_11</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>502</x>
+     <y>891</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>782</x>
+     <y>891</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>shadowfov</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_11</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>433</x>
+     <y>880</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>808</x>
+     <y>899</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_12</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>red</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>776</x>
+     <y>1056</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>650</x>
+     <y>1054</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>red</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_12</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>540</x>
+     <y>1060</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>1062</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>red</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_12</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>466</x>
+     <y>1061</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>1056</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_13</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>green</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>771</x>
+     <y>1110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>648</x>
+     <y>1108</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>green</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_13</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>427</x>
+     <y>1103</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>795</x>
+     <y>1101</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>green</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_13</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>380</x>
+     <y>1104</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>800</x>
+     <y>1114</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_14</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>blue</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>785</x>
+     <y>1157</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>627</x>
+     <y>1151</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>blue</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_14</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>548</x>
+     <y>1149</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>792</x>
+     <y>1161</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>blue</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_14</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>410</x>
+     <y>1152</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>800</x>
+     <y>1155</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_15</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>backplaneshadowscale</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>775</x>
+     <y>1277</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>595</x>
+     <y>1276</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backplaneshadowscale</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_15</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>562</x>
+     <y>1273</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>793</x>
+     <y>1276</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backplaneshadowscale</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_15</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>422</x>
+     <y>1278</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>806</x>
+     <y>1280</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backplanecontrast</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>spinBox_16</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>693</x>
+     <y>1325</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>794</x>
+     <y>1315</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>spinBox_16</sender>
+   <signal>valueChanged(int)</signal>
+   <receiver>backplanecontrast</receiver>
+   <slot>setValue(int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>805</x>
+     <y>1331</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>521</x>
+     <y>1330</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>backplanecontrast</sender>
+   <signal>rangeChanged(int,int)</signal>
+   <receiver>spinBox_16</receiver>
+   <slot>setRange(int,int)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>550</x>
+     <y>1333</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>795</x>
+     <y>1333</y>
     </hint>
    </hints>
   </connection>

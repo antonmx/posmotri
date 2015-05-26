@@ -110,6 +110,7 @@ add_executable(posmotri
   pluginthread.cpp
   preferenceswidget.cpp
   profileviewer.cpp
+  PromotedWidgets.cpp
   prunehandler.cpp
   pruneshaderfactory.cpp
   rawvolume.cpp

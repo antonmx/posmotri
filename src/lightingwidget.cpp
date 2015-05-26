@@ -6,20 +6,21 @@
 LightingWidget::LightingWidget(QWidget *parent)
   : QWidget(parent)
 {
+
   ui.setupUi(this);
   ui.lightpositionW->hide();
   ui.peelW->hide();
   ui.applycoloredshadowW->hide();
   ui.applybackplaneW->hide();
-  connect(ui.lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)),
-	                     SLOT(lightDirectionChanged(qglviewer::Vec)));
+
+  connect(ui.lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)), SLOT(lightDirectionChanged(qglviewer::Vec)));
+
 }
 
 
 void
 LightingWidget::setLightInfo(LightingInformation lightInfo)
 {
-  ui.applyemissive->setChecked(lightInfo.applyEmissive);
   ui.applylighting->setChecked(lightInfo.applyLighting);
   ui.ambient->setValue(lightInfo.highlights.ambient*10);
   ui.diffuse->setValue(lightInfo.highlights.diffuse*10);
@@ -160,7 +161,7 @@ void LightingWidget::shadowColor()
 {
   float r = 0.02*ui.red->value();
   float g = 0.02*ui.green->value();
-  float b = 0.02*ui.blue->value(); 
+  float b = 0.02*ui.blue->value();
   emit shadowColorAttenuation(r,g,b);
 }
 
@@ -225,13 +226,13 @@ LightingWidget::showHelp()
 	    }
 	  line = in.readLine();
 	}
-    }  
+    }
   plist["commandhelp"] = vlist;
 
 
   QStringList keys;
   keys << "commandhelp";
-  
+
   propertyEditor.set("Shader Help", plist, keys);
   propertyEditor.exec();
 }

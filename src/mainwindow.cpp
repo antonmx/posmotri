@@ -267,7 +267,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   //----------------------------------------------------------
   m_preferencesWidget = new PreferencesWidget();
-  m_preferencesWidget->updateStereoSettings(
+  m_preferencesWidget->setStereoSettings(
                  m_Viewer->camera()->focusDistance(),
                  m_Viewer->camera()->IODistance(),
                  m_Viewer->camera()->physicalScreenWidth());
@@ -317,6 +317,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
   QTimer::singleShot(2000, this, SLOT(GlewInit()));
 
+  connect(m_preferencesWidget, SIGNAL(updateGL()),  m_Viewer, SLOT(update()));
+  connect(m_preferencesWidget, SIGNAL(updateLookupTable()), m_Viewer, SLOT(updateLookupTable()));
+  connect(m_preferencesWidget, SIGNAL(stereoSettingsChanged(float, float, float)),  m_Viewer, SLOT(updateStereoSettings(float, float, float)));
+  connect(m_preferencesWidget, SIGNAL(tagColorChanged()), m_Viewer, SLOT(updateTagColors()));
+  connect(m_Viewer, SIGNAL(stereoSettings(float, float, float)),  m_preferencesWidget, SLOT(setStereoSettings(float, float, float)));
 
   #include "connectbricks.h"
   #include "connectbrickswidget.h"
@@ -324,7 +329,6 @@ MainWindow::MainWindow(QWidget *parent) :
   #include "connectkeyframe.h"
   #include "connectkeyframeeditor.h"
   #include "connectlightingwidget.h"
-  #include "connectpreferences.h"
   #include "connectshowmessage.h"
   #include "connecttfeditor.h"
   #include "connecttfmanager.h"
@@ -2812,7 +2816,7 @@ MainWindow::saveSettings()
     QMessageBox::information(0, "Cannot save ", flnm.toLatin1().data());
 
 
-  m_preferencesWidget->save(flnm.toLatin1().data());
+  //m_preferencesWidget->save(flnm.toLatin1().data());
 }
 
 void
@@ -2845,11 +2849,6 @@ MainWindow::loadSettings()
 	  Global::setTextureMemorySize(str.toInt());
 	  Global::calculate3dTextureSize();
 	}
-      else if (dlist.at(i).nodeName() == "texturesizelimit")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::setTextureSizeLimit(str.toInt());
-	}
       else if (dlist.at(i).nodeName() == "tempdirectory")
 	{
 	  QString str = dlist.at(i).toElement().text();
@@ -2879,8 +2878,8 @@ MainWindow::loadSettings()
 	  Global::setFloatPrecision(str.toInt());
 	}
     }
-  m_preferencesWidget->updateTextureMemory();
-  m_preferencesWidget->load(flnm.toLatin1().data());
+  //m_preferencesWidget->updateTextureMemory();
+  //m_preferencesWidget->load(flnm.toLatin1().data());
   updateRecentFileAction();
 }
 
@@ -2964,7 +2963,7 @@ MainWindow::loadProject(const char* flnm)
       m_Lowres->setSubvolumeBounds(sbmin, sbmax);
     }
 
-  m_preferencesWidget->load(flnm);
+  //m_preferencesWidget->load(flnm);
   m_tfManager->load(flnm);
 
 
@@ -3054,7 +3053,7 @@ MainWindow::saveProject(const char* flnm)
 
   saveVolumeIntoProject(flnm);
   m_Lowres->save(flnm);
-  m_preferencesWidget->save(flnm);
+  //m_preferencesWidget->save(flnm);
   //GeometryObjects::trisets()->save(flnm);
   m_tfManager->save(flnm);
   saveViewsAndKeyFrames(flnm);
@@ -3487,7 +3486,7 @@ void MainWindow::updateMorph(bool flag) { m_tfManager->updateMorph(flag); }
 void
 MainWindow::updateFocus(float focusDistance, float es)
 {
-  m_preferencesWidget->updateStereoSettings(focusDistance, es,
+  m_preferencesWidget->setStereoSettings(focusDistance, es,
 					    m_Viewer->camera()->physicalScreenWidth());
 }
 

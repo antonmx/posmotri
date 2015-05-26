@@ -783,7 +783,7 @@ Viewer::loadLookupTable(QList<QImage> image)
 void
 Viewer::loadLookupTable(unsigned char *lut)
 {
- glActiveTexture(GL_TEXTURE0);
+  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_lutTex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -2061,7 +2061,9 @@ Viewer::updateLookFrom(Vec pos, Quaternion rot, float focusDistance, float es)
   if (focusDistance > 0.1)
     {
       camera()->setFocusDistance(focusDistance);
-      emit focusSetting(camera()->focusDistance());
+      emit stereoSettings(camera()->focusDistance(),
+                          camera()->IODistance(),
+                          camera()->physicalScreenWidth());
     }
   m_focusDistance = camera()->focusDistance();
 }
@@ -3127,7 +3129,8 @@ Viewer::keyPressEvent(QKeyEvent *event)
 	}
     }
 
-
+    // TODO: assign shortcuts for the following:
+/*
   if (event->key() == Qt::Key_PageUp ||
       (event->modifiers() & Qt::ShiftModifier &&
        event->key() == Qt::Key_Up))
@@ -3144,6 +3147,7 @@ Viewer::keyPressEvent(QKeyEvent *event)
       (event->modifiers() & Qt::ShiftModifier &&
        event->key() == Qt::Key_Right))
     { emit changeDrag(-1); return; }
+    */
 
 
 

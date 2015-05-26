@@ -136,11 +136,8 @@ class Viewer : public QGLViewer
   void quitDrishti();
   void showMessage(QString, bool);
   void stereoSettings(float, float, float);
-  void focusSetting(float);
   void histogramUpdated(QImage, QImage);
   void setHiresMode(bool);
-  void changeStill(int);
-  void changeDrag(int);
   void setView(Vec, Quaternion,
 	       QImage, float);
   void setKeyFrame(Vec, Quaternion,

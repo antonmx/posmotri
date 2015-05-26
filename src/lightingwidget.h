@@ -4,9 +4,8 @@
 #include "lightinginformation.h"
 #include "ui_lightingwidget.h"
 
-class LightingWidget : public QWidget
-{
- Q_OBJECT
+class LightingWidget : public QWidget {
+ Q_OBJECT;
 
  public :
   LightingWidget(QWidget *parent=NULL);
