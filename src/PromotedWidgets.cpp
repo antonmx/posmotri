@@ -19,7 +19,6 @@
 
 #include "PromotedWidgets.h"
 
-#include <QApplication>
 #include <QDebug>
 
 QSpinSlide::QSpinSlide (QSlider * _slide, QSpinBox * _box,  QObject * parent)
@@ -40,6 +39,14 @@ int QSpinSlide::value() const {
   return sbox->value();
 }
 
+int QSpinSlide::minimum() const {
+  return slide->minimum();
+}
+
+int QSpinSlide::maximum() const {
+  return slide->maximum();
+}
+
 void QSpinSlide::setValue(int val) {
   oldvalue = val;
   sbox->setValue(val);
@@ -51,10 +58,9 @@ void QSpinSlide::setRange(int minimum, int maximum) {
   slide->setRange(minimum, maximum);
 }
 
-void QSpinSlide::retranslateNewValue(QWidget * oldwdg) {
-  QCoreApplication::processEvents(); // to allow connected "valueChanged" get processed.
+void QSpinSlide::retranslateNewValue() {
   int val=oldvalue;
-  if ( sender() == sbox || oldwdg == sbox)
+  if ( sender() == sbox )
     val = sbox->value();
   else if ( sender() == slide )
     val = slide->value();

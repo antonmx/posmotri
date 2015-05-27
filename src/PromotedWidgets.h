@@ -35,13 +35,15 @@ private:
 public:
   explicit QSpinSlide (QSlider  * _slide, QSpinBox * _box,  QObject * parent=0);
   int value() const;
+  int minimum() const;
+  int maximum() const;
 public slots:
   void setValue(int);
   void setRange(int, int);
 signals:
   void valueChanged(int);
 private slots:
-  void retranslateNewValue(QWidget *oldwdg=0);
+  void retranslateNewValue();
 };
 
 #endif // PROMOTEDWIDGETS_H

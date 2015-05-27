@@ -12,7 +12,7 @@ LightingWidget::LightingWidget(QWidget *parent)
   ui.peelW->hide();
   ui.applycoloredshadowW->hide();
   ui.applybackplaneW->hide();
-  
+
   peelminLink = new QSpinSlide(ui.peelmin_, ui.peelmin_SB, this);
   peelmaxLink = new QSpinSlide(ui.peelmax_, ui.peelmax_SB, this);
   peelmixLink = new QSpinSlide(ui.peelmix_, ui.peelmix_SB, this);
@@ -33,8 +33,8 @@ LightingWidget::LightingWidget(QWidget *parent)
   connect( redLink, SIGNAL(valueChanged(int)), SLOT(shadowColor()));
   connect( blueLink, SIGNAL(valueChanged(int)), SLOT(shadowColor()));
   connect( greenLink, SIGNAL(valueChanged(int)), SLOT(shadowColor()));
-  
-  
+  connect( ui.linkcolors,  SIGNAL(toggled(bool)), SLOT(shadowColor()));
+
   connect(ui.lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)), SLOT(lightDirectionChanged(qglviewer::Vec)));
 
 }
@@ -47,7 +47,7 @@ LightingWidget::setLightInfo(LightingInformation lightInfo)
   ambientLink->setValue(lightInfo.highlights.ambient*10);
   diffuseLink->setValue(lightInfo.highlights.diffuse*10);
   specularLink->setValue(lightInfo.highlights.specular*10);
-  specularcoeffLink->setValue(ui.specularcoeff_->maximum() - lightInfo.highlights.specularCoefficient);
+  specularcoeffLink->setValue(specularcoeffLink->maximum() - lightInfo.highlights.specularCoefficient);
 
   ui.peel->setChecked(lightInfo.peel);
   peelminLink->setValue(lightInfo.peelMin*100);
@@ -109,7 +109,7 @@ void LightingWidget::highlightsChanged()
   hl.ambient  = (float)ambientLink->value()*0.1;
   hl.diffuse  = (float)diffuseLink->value()*0.1;
   hl.specular = (float)specularLink->value()*0.1;
-  hl.specularCoefficient = ui.specularcoeff_->maximum()-specularcoeffLink->value();
+  hl.specularCoefficient = specularcoeffLink->maximum()-specularcoeffLink->value();
 
   emit highlights(hl);
 }
@@ -144,33 +144,25 @@ void LightingWidget::on_applycoloredshadow_clicked(bool flag) {
   emit applyColoredShadow(flag);
 }
 
-
-void LightingWidget::on_linkcolors_clicked(bool flag) {
-  if ( ui.linkcolors->isChecked() ) {
-    blueLink->setValue(redLink->value());
-    greenLink->setValue(redLink->value());
-    connect( redLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
-    connect( redLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
-    connect( blueLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
-    connect( blueLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
-    connect( greenLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
-    connect( greenLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
-  } else {
-    disconnect( redLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
-    disconnect( redLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
-    disconnect( blueLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
-    disconnect( blueLink, SIGNAL(valueChanged(int)), greenLink, SLOT(setValue(int)));
-    disconnect( greenLink, SIGNAL(valueChanged(int)), blueLink, SLOT(setValue(int)));
-    disconnect( greenLink, SIGNAL(valueChanged(int)), redLink, SLOT(setValue(int)));
-  }
-}
-
 void LightingWidget::shadowColor() {
-  QCoreApplication::processEvents(); // to allow linked colors to update.
-  float r = 0.02*redLink->value();
-  float g = 0.02*greenLink->value();
-  float b = 0.02*blueLink->value();
-  emit shadowColorAttenuation(r,g,b);
+
+  if ( ui.linkcolors->isChecked() ) {
+
+    int val = redLink->minimum() - 1;
+    if (sender() == redLink)        val = redLink->value();
+    else if (sender() == greenLink) val = greenLink->value();
+    else if (sender() == blueLink)  val = blueLink->value();
+
+    if (val >= redLink->minimum() ) {
+      redLink->setValue(val);
+      greenLink->setValue(val);
+      blueLink->setValue(val);
+    }
+
+  }
+
+  emit shadowColorAttenuation( 0.02*redLink->value(), 0.02*greenLink->value(), 0.02*blueLink->value());
+
 }
 
 

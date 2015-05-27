@@ -47,7 +47,6 @@ class LightingWidget : public QWidget {
   void on_applyshadow_clicked(bool);
   void on_applycoloredshadow_clicked(bool);
   void on_applybackplane_clicked(bool);
-  void on_linkcolors_clicked(bool);
 
   void on_peel_clicked(bool);
   void on_peelmin_sliderReleased();
@@ -76,7 +75,7 @@ class LightingWidget : public QWidget {
 
   void peelSliderReleased();
   void showHelp();
-  
+
   QSpinSlide * peelminLink;
   QSpinSlide * peelmaxLink;
   QSpinSlide * peelmixLink;
