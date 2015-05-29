@@ -46,4 +46,34 @@ private slots:
   void retranslateNewValue();
 };
 
+
+class QDoubleSpinSlide : public QObject {
+  Q_OBJECT;
+private:
+  QDoubleSpinBox * const sbox;
+  QSlider  * const slide;
+  double oldvalue;
+  double coefa;
+  double coefb;
+public:
+  explicit QDoubleSpinSlide (QSlider * _slide, QDoubleSpinBox * _box,  QObject * parent=0);
+  double value() const;
+  double minimum() const;
+  double maximum() const;
+public slots:
+  void setValue(double val);
+  void setRange(double, double);
+signals:
+  void valueChanged(double);
+  void valueChanged(float);
+private slots:
+  void retranslateNewValue();
+  void setValue();
+};
+
+
+
+
+
+
 #endif // PROMOTEDWIDGETS_H

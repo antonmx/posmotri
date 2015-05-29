@@ -29,7 +29,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QCheckBox" name="applyemissiveD">
+    <widget class="QCheckBox" name="applyemissive">
      <property name="text">
       <string>Emissive</string>
      </property>
@@ -151,15 +151,6 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QSpinBox" name="peelmin_SB"/>
-      </item>
-      <item row="2" column="2">
-       <widget class="QSpinBox" name="peelmax_SB"/>
-      </item>
-      <item row="3" column="2">
-       <widget class="QSpinBox" name="peelmix_SB"/>
-      </item>
       <item row="0" column="1" colspan="2">
        <widget class="QComboBox" name="peeltype">
         <property name="editable">
@@ -175,6 +166,33 @@
           <string>Keep Inside</string>
          </property>
         </item>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QDoubleSpinBox" name="peelmin_SB">
+        <property name="minimum">
+         <double>-1.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1.100000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QDoubleSpinBox" name="peelmax_SB">
+        <property name="minimum">
+         <double>-1.100000000000000</double>
+        </property>
+        <property name="maximum">
+         <double>1.100000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QDoubleSpinBox" name="peelmix_SB">
+        <property name="maximum">
+         <double>1.000000000000000</double>
+        </property>
        </widget>
       </item>
      </layout>
@@ -324,17 +342,12 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QSpinBox" name="ambient_SB"/>
-      </item>
-      <item row="1" column="2">
-       <widget class="QSpinBox" name="diffuse_SB"/>
-      </item>
-      <item row="2" column="2">
-       <widget class="QSpinBox" name="specular_SB"/>
-      </item>
       <item row="3" column="2">
-       <widget class="QSpinBox" name="specularcoeff_SB"/>
+       <widget class="QSpinBox" name="specularcoeff_SB">
+        <property name="maximum">
+         <number>9</number>
+        </property>
+       </widget>
       </item>
       <item row="5" column="0" colspan="3">
        <widget class="QFrame" name="applyshadowW">
@@ -474,16 +487,44 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="QSpinBox" name="shadowblur_SB"/>
+             <widget class="QDoubleSpinBox" name="shadowblur_SB">
+              <property name="decimals">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <double>5.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QSpinBox" name="shadowscale_SB"/>
+             <widget class="QDoubleSpinBox" name="shadowscale_SB">
+              <property name="decimals">
+               <number>2</number>
+              </property>
+              <property name="minimum">
+               <double>0.200000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="2" column="2">
-             <widget class="QSpinBox" name="shadowcontrast_SB"/>
+             <widget class="QDoubleSpinBox" name="shadowcontrast_SB">
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="3" column="2">
-             <widget class="QSpinBox" name="shadowfov_SB"/>
+             <widget class="QDoubleSpinBox" name="shadowfov_SB">
+              <property name="minimum">
+               <double>-0.200000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>0.200000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -605,13 +646,25 @@
              </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QSpinBox" name="red_SB"/>
+             <widget class="QDoubleSpinBox" name="red_SB">
+              <property name="maximum">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="2" column="2">
-             <widget class="QSpinBox" name="green_SB"/>
+             <widget class="QDoubleSpinBox" name="green_SB">
+              <property name="maximum">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="3" column="2">
-             <widget class="QSpinBox" name="blue_SB"/>
+             <widget class="QDoubleSpinBox" name="blue_SB">
+              <property name="maximum">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -694,10 +747,27 @@
              </widget>
             </item>
             <item row="0" column="2">
-             <widget class="QSpinBox" name="backplaneshadowscale_SB"/>
+             <widget class="QDoubleSpinBox" name="backplaneshadowscale_SB">
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>1.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>3.000000000000000</double>
+              </property>
+             </widget>
             </item>
             <item row="1" column="2">
-             <widget class="QSpinBox" name="backplanecontrast_SB"/>
+             <widget class="QDoubleSpinBox" name="backplanecontrast_SB">
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -712,6 +782,36 @@
         </property>
         <property name="checked">
          <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QDoubleSpinBox" name="specular_SB">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QDoubleSpinBox" name="diffuse_SB">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>1.000000000000000</double>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QDoubleSpinBox" name="ambient_SB">
+        <property name="decimals">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <double>1.000000000000000</double>
         </property>
        </widget>
       </item>

@@ -1,41 +1,19 @@
 #include "lightinginformation.h"
 #include "staticfunctions.h"
 
-Highlights::Highlights()
-{
-  ambient = 1;
-  diffuse = 0;
-  specular = 1;
-  specularCoefficient = 7;
-}
-Highlights::Highlights(const Highlights& hl)
-{
-  ambient = hl.ambient;
-  diffuse = hl.diffuse;
-  specular = hl.specular;
-  specularCoefficient = hl.specularCoefficient;
-}
-Highlights&
-Highlights::operator=(const Highlights& hl)
-{
-  ambient = hl.ambient;
-  diffuse = hl.diffuse;
-  specular = hl.specular;
-  specularCoefficient = hl.specularCoefficient;
-  return *this;
-}
-Highlights
-Highlights::interpolate(const Highlights highlights1,
-			const Highlights highlights2,
-			float frc)
-{
-  Highlights highlights;
+Highlights::Highlights(float _ambient, float _diffuse, float _specular,  int _specularCoefficient)
+  : ambient(_ambient)
+  , diffuse(_diffuse)
+  , specular(_specular)
+  , specularCoefficient(_specularCoefficient)
+{}
 
+Highlights Highlights::interpolate(const Highlights highlights1, const Highlights highlights2, float frc) {
+  Highlights highlights;
   highlights.ambient = highlights1.ambient + frc*(highlights2.ambient-highlights1.ambient);
   highlights.diffuse = highlights1.diffuse + frc*(highlights2.diffuse-highlights1.diffuse);
   highlights.specular = highlights1.specular + frc*(highlights2.specular-highlights1.specular);
   highlights.specularCoefficient = highlights1.specularCoefficient + frc*(highlights2.specularCoefficient-highlights1.specularCoefficient);
-
   return highlights;
 }
 
@@ -224,9 +202,9 @@ LightingInformation::load(fstream &fin)
   bool done = false;
   char keyword[100];
   float f[3];
-  
+
   while(!done)
-    { 
+    {
       fin.getline(keyword, 100, 0);
       if (strcmp(keyword, "end") == 0)
 	done = true;
@@ -298,13 +276,13 @@ LightingInformation::save(fstream &fout)
 
   memset(keyword, 0, 100);
   sprintf(keyword, "applyemissive");
-  fout.write((char*)keyword, strlen(keyword)+1);  
+  fout.write((char*)keyword, strlen(keyword)+1);
   fout.write((char*)&applyEmissive, sizeof(bool));
 
 
   memset(keyword, 0, 100);
   sprintf(keyword, "applylighting");
-  fout.write((char*)keyword, strlen(keyword)+1);  
+  fout.write((char*)keyword, strlen(keyword)+1);
   fout.write((char*)&applyLighting, sizeof(bool));
 
 

@@ -20,6 +20,7 @@
 #include "PromotedWidgets.h"
 
 #include <QDebug>
+#include <QString>
 
 QSpinSlide::QSpinSlide (QSlider * _slide, QSpinBox * _box,  QObject * parent)
   : QObject (parent)
@@ -48,9 +49,12 @@ int QSpinSlide::maximum() const {
 }
 
 void QSpinSlide::setValue(int val) {
-  oldvalue = val;
-  sbox->setValue(val);
-  slide->setValue(val);
+  if (sender() != slide)
+    slide->setValue(val);
+  if (sender() != sbox)
+    sbox->setValue(val);
+  if ( sender() != sbox  &&  sender() != slide  &&  val != oldvalue )
+    emit valueChanged(oldvalue=val);
 }
 
 void QSpinSlide::setRange(int minimum, int maximum) {
@@ -59,13 +63,72 @@ void QSpinSlide::setRange(int minimum, int maximum) {
 }
 
 void QSpinSlide::retranslateNewValue() {
-  int val=oldvalue;
-  if ( sender() == sbox )
-    val = sbox->value();
-  else if ( sender() == slide )
-    val = slide->value();
+  int val=sbox->value();
   if (val != oldvalue)
     emit valueChanged(oldvalue=val);
 }
 
 
+
+
+
+
+
+QDoubleSpinSlide::QDoubleSpinSlide (QSlider * _slide, QDoubleSpinBox * _box,  QObject * parent)
+  : QObject (parent)
+  , slide(_slide)
+  , sbox(_box)
+  , oldvalue(_box->value())
+  , coefa(1.0)
+  , coefb(0.0)
+{
+  setRange(sbox->minimum(), sbox->maximum());
+  setValue();
+  connect(sbox, SIGNAL(valueChanged(double)), SLOT(setValue()));
+  connect(slide, SIGNAL(sliderMoved(int)), SLOT(setValue()));
+  connect(sbox, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
+  connect(slide, SIGNAL(sliderReleased()), SLOT(retranslateNewValue()));
+}
+
+double QDoubleSpinSlide::value() const {
+  return sbox->value();
+}
+
+double QDoubleSpinSlide::minimum() const {
+  return sbox->minimum();
+}
+
+double QDoubleSpinSlide::maximum() const {
+  return sbox->maximum();
+}
+
+
+void QDoubleSpinSlide::setValue(double val) {
+  sbox->setValue(val);
+  retranslateNewValue();
+}
+
+void QDoubleSpinSlide::setValue() {
+  if (sender() == sbox) slide->setValue( (sbox->value()-coefb)/coefa );
+  else /*slider or constructor*/ sbox->setValue(coefa * slide->value() + coefb);
+}
+
+void QDoubleSpinSlide::setRange(double minimum, double maximum) {
+  sbox->setRange(minimum, maximum);
+  int irange = slide->maximum() - slide->minimum();
+  if ( ! irange )
+    qDebug() <<  "QDoubleSpinSlide: 0-range of the slider. Should never happen. Report to developper.";
+  else {
+    coefa = ( sbox->maximum() - sbox->minimum() ) / irange ;
+    coefb = ( slide->maximum() * sbox->maximum() - slide->minimum() * sbox->minimum()  ) / irange ;
+  }
+  sbox->setSingleStep(coefa);
+}
+
+void QDoubleSpinSlide::retranslateNewValue() {
+  double val = sbox->value();
+  if (val != oldvalue) {
+    emit valueChanged(oldvalue=val);
+    emit valueChanged((float)val);
+  }
+}

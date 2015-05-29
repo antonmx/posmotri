@@ -8,22 +8,16 @@ using namespace qglviewer;
 #include <fstream>
 using namespace std;
 
-class Highlights
-{
- public :
-  Highlights();
-  Highlights(const Highlights&);
-
-  Highlights& operator=(const Highlights&);
-
-  static Highlights interpolate(const Highlights,
-					 const Highlights,
-					 float);
+class Highlights {
+public :
+  Highlights( float _ambient = 1.0, float _diffuse = 0.0, float _specular = 1.0,  int _specularCoefficient = 7);
+  static Highlights interpolate(const Highlights, const Highlights, float);
   float ambient;
   float diffuse;
   float specular;
   int specularCoefficient;
 };
+
 
 class LightingInformation
 {
@@ -40,7 +34,7 @@ class LightingInformation
   void clear();
   void load(fstream&);
   void save(fstream&);
-  
+
   bool applyEmissive;
   bool applyLighting;
   bool applyShadows;
@@ -52,7 +46,7 @@ class LightingInformation
   float shadowBlur;
   float shadowScale;
   float shadowIntensity;
-  float shadowFovOffset;  
+  float shadowFovOffset;
   float lightDistanceOffset;
   float backplaneShadowScale;
   float backplaneIntensity;

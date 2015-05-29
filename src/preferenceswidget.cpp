@@ -17,14 +17,14 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
   ui.tabWidget->widget(3)->layout()->addWidget(m_tagColorEditor);
   connect(m_tagColorEditor, SIGNAL(tagColorChanged()), SIGNAL(tagColorChanged()));
   connect(m_tagColorEditor, SIGNAL(tagColorChanged()), SIGNAL(updateGL()));
- 
+
   textureMemorySizeLink = new QSpinSlide(ui.m_textureMemorySize, ui.m_textureMemorySize_SB, this);
   stilLink = new QSpinSlide(ui.m_still, ui.m_still_SB, this);
-  dragLink = new QSpinSlide(ui.m_drag, ui.m_drag_SB, this);  
+  dragLink = new QSpinSlide(ui.m_drag, ui.m_drag_SB, this);
   connect( textureMemorySizeLink,  SIGNAL(valueChanged(int)),  SLOT(onImageQualityChanged()));
   connect( stilLink,  SIGNAL(valueChanged(int)),  SLOT( onImageQualityChanged() ));
   connect( dragLink,  SIGNAL(valueChanged(int)),  SLOT( onImageQualityChanged() ));
-  
+
   connect( ui.m_tickSize,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_tickStep,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
   connect( ui.m_labelX,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
@@ -33,7 +33,7 @@ PreferencesWidget::PreferencesWidget(QWidget *parent)
   connect( ui.m_eyeSeparation,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
   connect( ui.m_focus,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
   connect( ui.m_screenWidth,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
-  
+
   onTickChanged();
   updateTextureMemory();
 
