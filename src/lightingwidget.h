@@ -9,7 +9,7 @@ class LightingWidget : public QWidget {
   Q_OBJECT;
 
 private :
-  Ui::LightingWidget ui;
+  Ui::LightingWidget * ui;
 
   QDoubleSpinSlide * peelminLink;
   QDoubleSpinSlide * peelmaxLink;

@@ -92,38 +92,39 @@ void LightDisc::resizeEvent(QResizeEvent *event) {
 
 
 DirectionVectorWidget::DirectionVectorWidget(QWidget *parent)
-: QFrame(parent)
+  : QFrame(parent)
+  , ui(new Ui::DirectionVectorWidget)
 {	
-  ui.setupUi(this);  
-  connect(ui.lightDisc, SIGNAL(directionChanged(QPointF)), SLOT(updateDirection(QPointF)));
-  connect(ui.zangle, SIGNAL(valueChanged(double)), SLOT(onDirectionChange()));
-  connect(ui.yangle, SIGNAL(valueChanged(double)), SLOT(onDirectionChange()));
-  connect(ui.len, SIGNAL(valueChanged(double)), SLOT(onLenChange()));
+  ui->setupUi(this);  
+  connect(ui->lightDisc, SIGNAL(directionChanged(QPointF)), SLOT(updateDirection(QPointF)));
+  connect(ui->zangle, SIGNAL(valueChanged(double)), SLOT(onDirectionChange()));
+  connect(ui->yangle, SIGNAL(valueChanged(double)), SLOT(onDirectionChange()));
+  connect(ui->len, SIGNAL(valueChanged(double)), SLOT(onLenChange()));
 }
 
 void DirectionVectorWidget::setVector(const Vec & vv) {
   const qreal norm = vv.norm();
-  ui.len->setValue(norm);
+  ui->len->setValue(norm);
   if ( norm != 0 ) {
     Vec vo = vv/norm;
-    ui.zangle->setValue( RAD2DEG(acos(vo.z)) );
-    ui.yangle->setValue( copysign( RAD2DEG(acos(-vo.y/sqrt(vo.y*vo.y+vo.x*vo.x))), -vo.x ) );  
+    ui->zangle->setValue( RAD2DEG(acos(vo.z)) );
+    ui->yangle->setValue( copysign( RAD2DEG(acos(-vo.y/sqrt(vo.y*vo.y+vo.x*vo.x))), -vo.x ) );  
   }
 }
 
 Vec DirectionVectorWidget::vector() {
-  const float cosz = cos( DEG2RAD(ui.zangle->value()) );
-  const float cosy = cos( DEG2RAD(ui.yangle->value()) );  
+  const float cosz = cos( DEG2RAD(ui->zangle->value()) );
+  const float cosy = cos( DEG2RAD(ui->yangle->value()) );  
   const float z = cosz;
   const float y = -cosy*sqrt(1-cosz*cosz);  
-  const float x = -copysign( sqrt( (1-cosz*cosz)*(1-cosy*cosy) ), ui.yangle->value() );
-  return  ui.len->value() * Vec(x,y,z);
+  const float x = -copysign( sqrt( (1-cosz*cosz)*(1-cosy*cosy) ), ui->yangle->value() );
+  return  ui->len->value() * Vec(x,y,z);
 }
 
 
 void DirectionVectorWidget::updateDirection(QPointF pt) {
   const qreal zabs = sqrt(1-pt.y()*pt.y()-pt.x()*pt.x());
-  setVector( Vec(pt.x(), pt.y(), copysign( zabs, 90 - ui.zangle->value() ) ) );
+  setVector( Vec(pt.x(), pt.y(), copysign( zabs, 90 - ui->zangle->value() ) ) );
   emit directionChanged(vector());
 }
 
@@ -131,8 +132,8 @@ void DirectionVectorWidget::updateDirection(QPointF pt) {
 void DirectionVectorWidget::onDirectionChange() {
   const Vec vo=vector();
   const Vec vn = vo.norm() == 0 ? vo : vo.unit();
-  ui.lightDisc->setDirection( QPointF(vn.x, vn.y) );
-  ui.lightDisc->setBacklit(vn.z < 0);
+  ui->lightDisc->setDirection( QPointF(vn.x, vn.y) );
+  ui->lightDisc->setBacklit(vn.z < 0);
   emit directionChanged(vo);
 }
 
@@ -144,6 +145,6 @@ void DirectionVectorWidget::onLenChange() {
 
 void DirectionVectorWidget::resizeEvent(QResizeEvent *event) {
   setMaximumSize(QWIDGETSIZE_MAX,
-		 width() + ui.nums->height() + layout()->minimumSize().height());
+		 width() + ui->nums->height() + layout()->minimumSize().height());
 }
 

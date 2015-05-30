@@ -46,7 +46,7 @@ class DirectionVectorWidget : public QFrame {
  Q_OBJECT;
  
 private :
-  Ui::DirectionVectorWidget ui;
+  Ui::DirectionVectorWidget * ui;
 
 public :
   

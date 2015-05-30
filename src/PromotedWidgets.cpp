@@ -21,6 +21,7 @@
 
 #include <QDebug>
 #include <QString>
+#include <math.h>
 
 QSpinSlide::QSpinSlide (QSlider * _slide, QSpinBox * _box,  QObject * parent)
   : QObject (parent)
@@ -85,7 +86,7 @@ QDoubleSpinSlide::QDoubleSpinSlide (QSlider * _slide, QDoubleSpinBox * _box,  QO
   setRange(sbox->minimum(), sbox->maximum());
   setValue();
   connect(sbox, SIGNAL(valueChanged(double)), SLOT(setValue()));
-  connect(slide, SIGNAL(sliderMoved(int)), SLOT(setValue()));
+  connect(slide, SIGNAL(valueChanged(int)), SLOT(setValue()));
   connect(sbox, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
   connect(slide, SIGNAL(sliderReleased()), SLOT(retranslateNewValue()));
 }
@@ -109,8 +110,8 @@ void QDoubleSpinSlide::setValue(double val) {
 }
 
 void QDoubleSpinSlide::setValue() {
-  if (sender() == sbox) slide->setValue( (sbox->value()-coefb)/coefa );
-  else /*slider or constructor*/ sbox->setValue(coefa * slide->value() + coefb);
+  if (sender() == sbox) slide->setValue( (int) rint((sbox->value()-coefb)/coefa) );
+  else /*slider or constructor*/ sbox->setValue(coefa * slide->sliderPosition() + coefb);
 }
 
 void QDoubleSpinSlide::setRange(double minimum, double maximum) {
@@ -120,7 +121,7 @@ void QDoubleSpinSlide::setRange(double minimum, double maximum) {
     qDebug() <<  "QDoubleSpinSlide: 0-range of the slider. Should never happen. Report to developper.";
   else {
     coefa = ( sbox->maximum() - sbox->minimum() ) / irange ;
-    coefb = ( slide->maximum() * sbox->maximum() - slide->minimum() * sbox->minimum()  ) / irange ;
+    coefb = ( slide->maximum() * sbox->minimum() - slide->minimum() * sbox->maximum()  ) / irange ;
   }
   sbox->setSingleStep(coefa);
 }
