@@ -62,7 +62,6 @@ add_executable(posmotri
   dcolorwheel.cpp
   doublespinboxdelegate.cpp
   dialogs.cpp
-  directionvectorwidget.cpp
   drawhiresvolume.cpp
   drawlowresvolume.cpp
   fileslistdialog.cpp

@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>DirectionVectorWidget</class>
  <widget class="QWidget" name="DirectionVectorWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>270</width>
+    <height>291</height>
+   </rect>
+  </property>
   <layout class="QVBoxLayout">
    <property name="sizeConstraint">
     <enum>QLayout::SetMinAndMaxSize</enum>
@@ -133,7 +141,7 @@
   <customwidget>
    <class>LightDisc</class>
    <extends>QWidget</extends>
-   <header>directionvectorwidget.h</header>
+   <header>lightingwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

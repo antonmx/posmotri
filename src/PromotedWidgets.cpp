@@ -110,8 +110,15 @@ void QDoubleSpinSlide::setValue(double val) {
 }
 
 void QDoubleSpinSlide::setValue() {
-  if (sender() == sbox) slide->setValue( (int) rint((sbox->value()-coefb)/coefa) );
-  else /*slider or constructor*/ sbox->setValue(coefa * slide->sliderPosition() + coefb);
+  if (sender() == sbox) {
+    slide->blockSignals(true);
+    slide->setValue( (int) rint((sbox->value()-coefb)/coefa) );
+    slide->blockSignals(false);
+  } else { /*slider or constructor*/
+    sbox->blockSignals(true);
+    sbox->setValue(coefa * slide->sliderPosition() + coefb);
+    sbox->blockSignals(false);
+  }
 }
 
 void QDoubleSpinSlide::setRange(double minimum, double maximum) {
