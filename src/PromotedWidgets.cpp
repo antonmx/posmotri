@@ -23,6 +23,11 @@
 #include <QString>
 #include <math.h>
 
+using namespace qglviewer;
+
+
+
+
 QSpinSlide::QSpinSlide (QSlider * _slide, QSpinBox * _box,  QObject * parent)
   : QObject (parent)
   , slide(_slide)
@@ -140,3 +145,62 @@ void QDoubleSpinSlide::retranslateNewValue() {
     emit valueChanged((float)val);
   }
 }
+
+
+
+
+
+QValidator::State QVecValidtor::validate(QString & input, int & pos) const {
+  QStringList list = input.split(" ", QString::SkipEmptyParts);
+  if (list.count() != 3)
+    return QValidator::Intermediate;
+  foreach (QString str, list) {
+    bool ok;
+    str.toDouble(&ok);
+    if (!ok)
+      return QValidator::Intermediate;
+  }
+  return QValidator::Acceptable;
+}
+
+
+
+
+QVecEdit::QVecEdit(QWidget * parent)
+  : QLineEdit(parent) 
+  , oldVec(0,0,0)
+{
+  setValidator(new QVecValidtor(this));
+  setValue(oldVec);
+  connect(this, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
+}
+ 
+ 
+Vec QVecEdit::value() const {
+  if ( ! hasAcceptableInput() )
+    return oldVec;
+  QStringList list = text().split(" ", QString::SkipEmptyParts);
+  return Vec(list[0].toDouble(), list[1].toDouble(), list[2].toDouble());
+}
+
+void QVecEdit::setValue(const Vec & vec) {
+  setText( QString("%1 %2 %3").arg(vec.x).arg(vec.y).arg(vec.z) );
+}
+
+void QVecEdit::retranslateNewValue() {
+  if ( ! hasAcceptableInput() )
+    return;
+  const Vec newVec = value();
+  if (newVec != oldVec)
+    emit valueChanged(oldVec=newVec);
+}
+
+void QVecEdit::focusOutEvent ( QFocusEvent * e ) {
+  if ( ! hasAcceptableInput() )
+    setValue(oldVec);
+  QLineEdit::focusOutEvent(e);
+}
+
+
+
+

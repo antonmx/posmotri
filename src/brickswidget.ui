@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>BricksWidget</class>
  <widget class="QWidget" name="BricksWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>603</width>
+    <height>620</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Bricks Editor</string>
   </property>
@@ -49,8 +57,8 @@
      </item>
      <item>
       <layout class="QGridLayout" name="gridLayout_2">
-       <item row="0" column="0">
-        <widget class="QLabel" name="label_8">
+       <item row="2" column="0">
+        <widget class="QLabel" name="label_10">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -58,14 +66,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Voxel Min</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="m_brickMaxLabel">
-         <property name="text">
-          <string>0 0 0</string>
+          <string>Dimensions</string>
          </property>
         </widget>
        </item>
@@ -82,15 +83,8 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="1">
-        <widget class="QLabel" name="m_brickMinLabel">
-         <property name="text">
-          <string>0 0 0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
-        <widget class="QLabel" name="label_10">
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_8">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -98,12 +92,47 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Dimensions</string>
+          <string>Voxel Min</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLabel" name="m_brickMinLabel">
+         <property name="text">
+          <string>0 0 0</string>
          </property>
         </widget>
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="m_brickSizeLabel">
+         <property name="text">
+          <string>0 0 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLabel" name="m_brickMaxLabel">
+         <property name="text">
+          <string>0 0 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QVecEdit" name="m_brickMinEdit">
+         <property name="text">
+          <string>0 0 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QVecEdit" name="m_brickMaxEdit">
+         <property name="text">
+          <string>0 0 0</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QVecEdit" name="m_brickSizeEdit">
          <property name="text">
           <string>0 0 0</string>
          </property>
@@ -412,6 +441,13 @@ p, li { white-space: pre-wrap; }
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QVecEdit</class>
+   <extends>QLineEdit</extends>
+   <header>PromotedWidgets.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

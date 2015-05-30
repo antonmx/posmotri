@@ -24,6 +24,9 @@
 #include <QSlider>
 #include <QHBoxLayout>
 #include <QDoubleSpinBox>
+#include <QLineEdit>
+#include <QValidator>
+#include <QGLViewer/vec.h>
 
 
 class QSpinSlide : public QObject {
@@ -72,6 +75,41 @@ private slots:
 };
 
 
+
+
+
+
+class QVecValidtor  :  public QValidator {
+  Q_OBJECT;
+public:
+  QVecValidtor(QObject *parent = 0) : QValidator(parent) {}
+  QValidator::State validate(QString & input, int & pos) const ;
+};
+
+
+class QVecEdit : public QLineEdit {
+  Q_OBJECT;
+  
+private:
+  qglviewer::Vec oldVec;
+  
+public:  
+  QVecEdit(QWidget * parent = 0);  
+  qglviewer::Vec value() const ;  
+  
+public slots:
+  void setValue(const qglviewer::Vec & vec);
+  
+signals:
+  void valueChanged(const qglviewer::Vec & vec);
+  
+private slots:
+  void retranslateNewValue();
+  
+protected:  
+  virtual void 	focusOutEvent(QFocusEvent * e); 
+  
+};
 
 
 
