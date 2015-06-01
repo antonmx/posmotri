@@ -4,7 +4,7 @@
 #include "captiondialog.h"
 #include "dcolordialog.h"
 #include "propertyeditor.h"
-#include "enums.h"
+#include "staticfunctions.h"
 
 #include <QTextStream>
 #include <QFileDialog>
@@ -588,7 +588,7 @@ ClipObject::drawGrid()
 	    m_opacity);
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec opt = VECPRODUCT(m_position, voxelScaling);
+  Vec opt = vMv(m_position, voxelScaling);
   Vec c0, c1, c2, c3;
   c0 = opt - s1*m_xaxis + s2*m_yaxis;
   c1 = opt - s1*m_xaxis - s2*m_yaxis;
@@ -638,7 +638,7 @@ ClipObject::drawCaptionImage()
     }
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec opt = VECPRODUCT(m_position, voxelScaling);
+  Vec opt = vMv(m_position, voxelScaling);
   Vec c0, c1, c2, c3;
   c0 = opt - s1*m_xaxis + s2*m_yaxis;
   c1 = opt - s1*m_xaxis - s2*m_yaxis;
@@ -747,7 +747,7 @@ ClipObject::drawLines(QGLViewer *viewer,
   glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec opt = VECPRODUCT(m_position, voxelScaling);
+  Vec opt = vMv(m_position, voxelScaling);
 
   float r = m_size;
   float s1 = m_tscale1;

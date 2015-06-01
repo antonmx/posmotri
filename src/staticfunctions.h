@@ -8,8 +8,14 @@ using namespace qglviewer;
 
 #define DEG2RAD(angle) angle*3.1415926535897931/180.0
 #define RAD2DEG(angle) angle*180.0/3.1415926535897931
-#define VECPRODUCT(a, b) Vec(a.x*b.x, a.y*b.y, a.z*b.z)
-#define VECDIVIDE(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
+
+inline Vec vMv(const Vec & a, const Vec & b) {
+  return Vec(a.x*b.x, a.y*b.y, a.z*b.z);
+}
+
+inline Vec vDv(const Vec & a, const Vec & b) {
+  return Vec( b.x==0 ? 1 : a.x/b.x, b.y==0 ? 1 : a.y/b.y, b.z==0 ? 1 :  a.z/b.z);
+}
 
 class StaticFunctions
 {

@@ -249,9 +249,9 @@ DrawLowresVolume::loadVolume()
   Vec fullVolSize = m_Volume->getFullVolumeSize();
   Vec lowVolSize = m_Volume->getLowresVolumeSize();
 
-  Vec vscale = VECDIVIDE(fullVolSize, lowVolSize);
+  Vec vscale = vDv(fullVolSize, lowVolSize);
 
-  m_virtualTextureSize = VECPRODUCT(textureSize,vscale);
+  m_virtualTextureSize = vMv(textureSize,vscale);
   m_virtualTextureMin = Vec(0, 0, 0);
   m_virtualTextureMax = fullVolSize-Vec(1,1,1);
 
@@ -261,8 +261,8 @@ DrawLowresVolume::loadVolume()
   m_boundingBox.setBounds(m_dataMin, m_dataMax);
 
 //  Vec voxelScaling = Global::voxelScaling();
-//  m_boundingBox.setBounds(VECPRODUCT(m_dataMin,voxelScaling),
-//			  VECPRODUCT(m_dataMax,voxelScaling));
+//  m_boundingBox.setBounds(vMv(m_dataMin,voxelScaling),
+//			  vMv(m_dataMax,voxelScaling));
   raise();
   load3dTexture();
 }
@@ -271,8 +271,8 @@ void
 DrawLowresVolume::updateScaling()
 {
 //  Vec voxelScaling = Global::voxelScaling();
-//  m_boundingBox.setBounds(VECPRODUCT(m_dataMin,voxelScaling),
-//			  VECPRODUCT(m_dataMax,voxelScaling));
+//  m_boundingBox.setBounds(vMv(m_dataMin,voxelScaling),
+//			  vMv(m_dataMax,voxelScaling));
 }
 
 void
@@ -635,7 +635,7 @@ DrawLowresVolume::drawpoly(Vec po, Vec pn,
     {
       Vec tx, tc;
       tx = poly[i]-subcorner;
-      tc = VECDIVIDE(tx,subdim);
+      tc = vDv(tx,subdim);
 
       glTexCoord3f(tc.x, tc.y, tc.z);
       glVertex3f(poly[i].x, poly[i].y, poly[i].z);
@@ -728,11 +728,11 @@ DrawLowresVolume::load(const char *flnm)
     }
 
 //  Vec voxelScaling = Global::voxelScaling();
-//  m_boundingBox.setBounds(VECPRODUCT(m_dataMin,voxelScaling),
-//			  VECPRODUCT(m_dataMax,voxelScaling));
+//  m_boundingBox.setBounds(vMv(m_dataMin,voxelScaling),
+//			  vMv(m_dataMax,voxelScaling));
   m_boundingBox.setBounds(m_dataMin, m_dataMax);
-//  svmin = VECPRODUCT(svmin, voxelScaling);
-//  svmax = VECPRODUCT(svmax, voxelScaling);
+//  svmin = vMv(svmin, voxelScaling);
+//  svmax = vMv(svmax, voxelScaling);
   m_boundingBox.setPositions(svmin, svmax);
 }
 

@@ -550,7 +550,7 @@ VolumeSingle::createBitmask(int minx, int maxx,
 	for(int x=minx; x<=maxx; x++)
 	  {
 	    Vec po = Vec(x, y, k);
-	    po = VECPRODUCT(po, voxelScaling);
+	    po = vMv(po, voxelScaling);
 
 	    bool ok = StaticFunctions::getClip(po, clipPos, clipNormal);
 
@@ -639,7 +639,7 @@ VolumeSingle::findConnectedRegion(QList<Vec> pos,
 
   for(int pi=0; pi<pos.count(); pi++)
     {
-      Vec point = VECPRODUCT(pos[pi], voxelScaling);
+      Vec point = vMv(pos[pi], voxelScaling);
       // apply clipping
       if (StaticFunctions::getClip(point, clipPos, clipNormal))
 	{
@@ -682,7 +682,7 @@ VolumeSingle::findConnectedRegion(QList<Vec> pos,
 	      for(int x2=x0; x2<=x1; x2++)
 		{
 		  Vec po = Vec(x2, y2, k2);
-		  Vec point = VECPRODUCT(po, voxelScaling);
+		  Vec point = vMv(po, voxelScaling);
 		  // apply clipping
 		  if (StaticFunctions::getClip(point, clipPos, clipNormal))
 		    {
@@ -948,7 +948,7 @@ VolumeSingle::saveVolume(uchar *lut,
 	    }
 	    mop /= 255.0;
 
-	    po = VECPRODUCT(po, voxelScaling);
+	    po = vMv(po, voxelScaling);
 
 	    if (ok)
 	      ok = StaticFunctions::getClip(po, clipPos, clipNormal);
@@ -2214,7 +2214,7 @@ VolumeSingle::rawValues(QList<Vec> pos)
   // now start extracting the raw values
   for(int pi=0; pi<pos.size(); pi++)
     {
-      Vec u = VECDIVIDE(pos[pi], voxelScaling);
+      Vec u = vDv(pos[pi], voxelScaling);
       int h = u.x;
       int w = u.y;
       int d = u.z;
@@ -2269,7 +2269,7 @@ VolumeSingle::rawValues(int radius,
       progress.setValue((int)(100.0*(float)pi/(float)pos.size()));
       if (pi%10==0) qApp->processEvents();
 
-      Vec u = VECDIVIDE(pos[pi], voxelScaling);
+      Vec u = vDv(pos[pi], voxelScaling);
       int h = u.x;
       int w = u.y;
       int d = u.z;
@@ -2383,7 +2383,7 @@ VolumeSingle::getThicknessProfile(int searchType,
       for(int side=0; side<2; side++)
 	{
 	  vtflag[side] = false;
-	  Vec u = VECDIVIDE(voxel[p], voxelScaling);
+	  Vec u = vDv(voxel[p], voxelScaling);
 	  Vec uv = normal[p].unit();
 	  if (side == 0)
 	    {
@@ -2519,7 +2519,7 @@ VolumeSingle::stickToSurface(uchar *lut,
       Vec voxel = pn[p].first;
       Vec normal = pn[p].second;
 
-      Vec u = VECDIVIDE(voxel, voxelScaling);
+      Vec u = vDv(voxel, voxelScaling);
       int d, w, h;
       d = u.z;
       w = u.y;
@@ -2545,7 +2545,7 @@ VolumeSingle::stickToSurface(uchar *lut,
 	{
 	  vtflag[side] = false;
 
-	  u = VECDIVIDE(voxel, voxelScaling);
+	  u = vDv(voxel, voxelScaling);
 
 	  Vec uv = 0.5*normal;
 	  if (side == 0)

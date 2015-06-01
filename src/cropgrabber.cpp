@@ -44,13 +44,13 @@ CropGrabber::checkIfGrabsMouse(int x, int y,
   m_lastX = x;
   m_lastY = y;
   Vec v = Vec(x, y, 0);
-  Vec pvs = VECPRODUCT(pts[0], voxelScaling);
+  Vec pvs = vMv(pts[0], voxelScaling);
   Vec pos0 = camera->projectedCoordinatesOf(pvs);
   Vec p0 = Vec(pos0.x, pos0.y, 0);
 
   for(int i=1; i<pts.count(); i++)
     {
-      pvs = VECPRODUCT(pts[i], voxelScaling);
+      pvs = vMv(pts[i], voxelScaling);
       Vec pos1 = camera->projectedCoordinatesOf(pvs);
       Vec p1 = Vec(pos1.x, pos1.y, 0);
       Vec pvec = p1-p0;
@@ -78,8 +78,8 @@ CropGrabber::checkIfGrabsMouse(int x, int y,
     float rx = (radX0+radX1)*0.5f;
     float ry = (radY0+radY1)*0.5f;
 
-    Vec p0 = VECPRODUCT(pts[0], voxelScaling);
-    Vec p1 = VECPRODUCT(pts[1], voxelScaling);
+    Vec p0 = vMv(pts[0], voxelScaling);
+    Vec p1 = vMv(pts[1], voxelScaling);
 
     Vec ca = (0.4f*p0 + 0.6f*p1);
     Vec cb = (0.6f*p0 + 0.4f*p1);
@@ -135,7 +135,7 @@ CropGrabber::mousePressEvent(QMouseEvent* const event,
   QList<Vec> pts = points();
   for(int i=0; i<pts.count(); i++)
     {
-      Vec v = VECPRODUCT(pts[i], voxelScaling);
+      Vec v = vMv(pts[i], voxelScaling);
       Vec pos = camera->projectedCoordinatesOf(v);
       QPoint hp(pos.x, pos.y);
       if ((hp-m_prevPos).manhattanLength() < 15)
@@ -155,8 +155,8 @@ CropGrabber::mousePressEvent(QMouseEvent* const event,
       float rx = (radX0+radX1)*0.5f;
       float ry = (radY0+radY1)*0.5f;
 
-      Vec p0 = VECPRODUCT(pts[0], voxelScaling);
-      Vec p1 = VECPRODUCT(pts[1], voxelScaling);
+      Vec p0 = vMv(pts[0], voxelScaling);
+      Vec p1 = vMv(pts[1], voxelScaling);
 
       Vec ca = (0.4f*p0 + 0.6f*p1);
       Vec cb = (0.6f*p0 + 0.4f*p1);
@@ -225,7 +225,7 @@ CropGrabber::mouseMoveEvent(QMouseEvent* const event,
       trans = camera->frame()->orientation().rotate(trans);
 
       Vec voxelScaling = Global::voxelScaling();
-      trans = VECDIVIDE(trans, voxelScaling);
+      trans = vDv(trans, voxelScaling);
 
       if (event->modifiers() & Qt::ControlModifier ||
 	  event->modifiers() & Qt::MetaModifier)
@@ -324,8 +324,8 @@ CropGrabber::mouseMoveEvent(QMouseEvent* const event,
 
       QList<Vec> pts = points();
       Vec voxelScaling = Global::voxelScaling();
-      Vec p0 = VECPRODUCT(pts[0], voxelScaling);
-      Vec p1 = VECPRODUCT(pts[1], voxelScaling);
+      Vec p0 = vMv(pts[0], voxelScaling);
+      Vec p1 = vMv(pts[1], voxelScaling);
       Vec ca = (p0+p1)*0.5f;
 
       Vec trans(delta.x(), -delta.y(), 0.0f);

@@ -64,7 +64,7 @@ ScaleBars::setScaleBars(QList<ScaleBarObject> caps)
     add(caps[i]);
 }
 
-#define VECPRODUCT(a, b) Vec(a.x*b.x, a.y*b.y, a.z*b.z)
+#define vMv(a, b) Vec(a.x*b.x, a.y*b.y, a.z*b.z)
 
 void
 ScaleBars::draw(QGLViewer *viewer,
@@ -92,7 +92,7 @@ ScaleBars::draw(QGLViewer *viewer,
       int vh = vp.w()*screenHeight;
       Camera clipCam;
       clipCam.setOrientation(clipInfo.rot[ic]);
-      Vec cpos0 = VECPRODUCT(clipInfo.pos[ic], voxelScaling);
+      Vec cpos0 = vMv(clipInfo.pos[ic], voxelScaling);
       clipCam.setSceneCenter(cpos0);
       Vec cpos = cpos0 -
 	clipCam.viewDirection()*viewer->sceneRadius()*2*(1.0/clipInfo.viewportScale[ic]);

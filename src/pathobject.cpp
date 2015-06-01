@@ -1579,7 +1579,7 @@ PathObject::computePath(QList<Vec> points)
     {
       for(int i=0; i<npts; i++)
 	{
-	  Vec v = VECPRODUCT(points[i], voxelScaling);
+	  Vec v = vMv(points[i], voxelScaling);
 	  m_path.append(v);
 	  m_radX.append(m_pointRadX[i]);
 	  m_radY.append(m_pointRadY[i]);
@@ -1587,12 +1587,12 @@ PathObject::computePath(QList<Vec> points)
 	  m_angle.append(o);
 
 	  // for length calculation
-	  v = VECPRODUCT(points[i], voxelSize);
+	  v = vMv(points[i], voxelSize);
 	  lengthPath.append(v);
 	}
       if (m_closed)
 	{
-	  Vec v = VECPRODUCT(points[0], voxelScaling);
+	  Vec v = vMv(points[0], voxelScaling);
 	  m_path.append(v);
 	  m_radX.append(m_pointRadX[0]);
 	  m_radY.append(m_pointRadY[0]);
@@ -1600,7 +1600,7 @@ PathObject::computePath(QList<Vec> points)
 	  m_angle.append(o);
 
 	  // for length calculation
-	  v = VECPRODUCT(points[0], voxelSize);
+	  v = vMv(points[0], voxelSize);
 	  lengthPath.append(v);
 	}
 
@@ -1624,7 +1624,7 @@ PathObject::computePath(QList<Vec> points)
 	  float frc = (float)j/(float)m_segments;
 	  Vec pos = interpolate(i-1, i, frc);
 
-	  Vec pv = VECPRODUCT(pos, voxelScaling);
+	  Vec pv = vMv(pos, voxelScaling);
 	  m_path.append(pv);
 
 	  float rfrc = StaticFunctions::smoothstep(0.0, 1.0, frc);
@@ -1638,13 +1638,13 @@ PathObject::computePath(QList<Vec> points)
 
 
 	  // for length calculation
-	  pv = VECPRODUCT(pos, voxelSize);
+	  pv = vMv(pos, voxelSize);
 	  lengthPath.append(pv);
 	}
     }
   if (!m_closed)
     {
-      Vec pos = VECPRODUCT(points[points.count()-1],
+      Vec pos = vMv(points[points.count()-1],
 			   voxelScaling);
       m_path.append(pos);
 
@@ -1654,7 +1654,7 @@ PathObject::computePath(QList<Vec> points)
       m_angle.append(o);
 
       // for length calculation
-      pos = VECPRODUCT(points[points.count()-1],
+      pos = vMv(points[points.count()-1],
 		       voxelSize);
       lengthPath.append(pos);
     }
@@ -1672,7 +1672,7 @@ PathObject::computePath(QList<Vec> points)
 	  float frc = (float)j/(float)m_segments;
 	  Vec pos = interpolate(npts-1, 0, frc);
 
-	  Vec pv = VECPRODUCT(pos, voxelScaling);
+	  Vec pv = vMv(pos, voxelScaling);
 	  m_path.append(pv);
 
 	  float v;
@@ -1684,10 +1684,10 @@ PathObject::computePath(QList<Vec> points)
 	  m_angle.append(v);
 
 	  // for length calculation
-	  pv = VECPRODUCT(pos, voxelSize);
+	  pv = vMv(pos, voxelSize);
 	  lengthPath.append(pv);
 	}
-      Vec pos = VECPRODUCT(points[0], voxelScaling);
+      Vec pos = vMv(points[0], voxelScaling);
       m_path.append(pos);
 
       m_radX.append(m_pointRadX[0]);
@@ -1696,7 +1696,7 @@ PathObject::computePath(QList<Vec> points)
       m_angle.append(o);
 
       // for length calculation
-      pos = VECPRODUCT(points[0], voxelSize);
+      pos = vMv(points[0], voxelSize);
       lengthPath.append(pos);
     }
 
@@ -1779,7 +1779,7 @@ PathObject::postdrawInViewport(QGLViewer *viewer,
   bool ok = true;
   for(int i=0; i<m_points.count();i++)
     {
-      Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+      Vec pt = vMv(m_points[i], voxelScaling);
       if (qAbs((pt-cp)*cn) > ct+0.5)
 	{
 	  ok = false;
@@ -1985,7 +1985,7 @@ PathObject::drawLines(QGLViewer *viewer,
       glBegin(GL_POINTS);
       for(int i=0; i<m_points.count();i++)
 	{
-	  Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+	  Vec pt = vMv(m_points[i], voxelScaling);
 	  glVertex3fv(pt);
 	}
       glEnd();
@@ -1997,7 +1997,7 @@ PathObject::drawLines(QGLViewer *viewer,
 	  Vec voxelScaling = Global::voxelScaling();
 	  glPointSize(25);
 	  glBegin(GL_POINTS);
-	  Vec pt = VECPRODUCT(m_points[m_pointPressed], voxelScaling);
+	  Vec pt = vMv(m_points[m_pointPressed], voxelScaling);
 	  glVertex3fv(pt);
 	  glEnd();
 	}
@@ -2157,7 +2157,7 @@ PathObject::generateRibbon(float scale)
   for(int i=0; i<npaths; i++)
     {
       Vec voxelScaling = Global::voxelScaling();
-      Vec shft = VECPRODUCT(m_radX[i]*scale*m_pathX[i], voxelScaling);
+      Vec shft = vMv(m_radX[i]*scale*m_pathX[i], voxelScaling);
 
       Vec pp0 = m_path[i] - shft;
       Vec pp1 = m_path[i] + shft;
@@ -2553,7 +2553,7 @@ PathObject::getCrossSection(float scale,
       float x = r*cos(6.2831853*t)*scale;
       float y = r*sin(6.2831853*t)*scale;
       Vec v = x*xaxis + y*yaxis;
-      v = VECPRODUCT(v, voxelScaling);
+      v = vMv(v, voxelScaling);
       csec.append(v);
     }
 
@@ -2597,7 +2597,7 @@ PathObject::postdrawAngle(QGLViewer *viewer)
 	    0.5);
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec pt = VECPRODUCT(m_points[0], voxelScaling);
+  Vec pt = vMv(m_points[0], voxelScaling);
   Vec scr = viewer->camera()->projectedCoordinatesOf(pt);
   int x0 = scr.x;
   int y0 = scr.y;
@@ -2606,7 +2606,7 @@ PathObject::postdrawAngle(QGLViewer *viewer)
   y0 *= viewer->size().height()/viewer->camera()->screenHeight();
   //---------------------
 
-  pt = VECPRODUCT(m_points[1], voxelScaling);
+  pt = vMv(m_points[1], voxelScaling);
   scr = viewer->camera()->projectedCoordinatesOf(pt);
   int x1 = scr.x;
   int y1 = scr.y;
@@ -2615,7 +2615,7 @@ PathObject::postdrawAngle(QGLViewer *viewer)
   y1 *= viewer->size().height()/viewer->camera()->screenHeight();
   //---------------------
 
-  pt = VECPRODUCT(m_points[2], voxelScaling);
+  pt = vMv(m_points[2], voxelScaling);
   scr = viewer->camera()->projectedCoordinatesOf(pt);
   int x2 = scr.x;
   int y2 = scr.y;
@@ -2714,7 +2714,7 @@ PathObject::postdrawLength(QGLViewer *viewer)
 	    m_lengthColor.z*0.9,
 	    0.9);
 
-  Vec pt = VECPRODUCT(m_points[0], voxelScaling);
+  Vec pt = vMv(m_points[0], voxelScaling);
   Vec scr = viewer->camera()->projectedCoordinatesOf(pt);
   int x0 = scr.x;
   int y0 = scr.y;
@@ -2723,7 +2723,7 @@ PathObject::postdrawLength(QGLViewer *viewer)
   y0 *= viewer->size().height()/viewer->camera()->screenHeight();
   //---------------------
 
-  pt = VECPRODUCT(m_points[m_points.count()-1], voxelScaling);
+  pt = vMv(m_points[m_points.count()-1], voxelScaling);
   scr = viewer->camera()->projectedCoordinatesOf(pt);
   int x1 = scr.x;
   int y1 = scr.y;
@@ -2825,7 +2825,7 @@ PathObject::postdrawPointNumbers(QGLViewer *viewer)
   Vec voxelScaling = Global::voxelScaling();
   for(int i=0; i<m_points.count();i++)
     {
-      Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+      Vec pt = vMv(m_points[i], voxelScaling);
       Vec scr = viewer->camera()->projectedCoordinatesOf(pt);
       int x = scr.x;
       int y = scr.y;
@@ -2869,9 +2869,9 @@ PathObject::postdrawCaption(QGLViewer *viewer)
 		float(screenHeight));
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec pt = VECPRODUCT(m_path[0], voxelScaling);
+  Vec pt = vMv(m_path[0], voxelScaling);
   Vec pp0 = viewer->camera()->projectedCoordinatesOf(pt);
-  pt = VECPRODUCT(m_path[m_path.count()-1], voxelScaling);
+  pt = vMv(m_path[m_path.count()-1], voxelScaling);
   Vec pp1 = viewer->camera()->projectedCoordinatesOf(pt);
 
   pp0.x /= frcw;
@@ -3890,8 +3890,8 @@ void PathObject::drawViewportLine(float scale, int vh)
     {
       if (np > 0)
 	{
-	  Vec p0 = VECPRODUCT(voxelSize,m_path[np]);
-	  Vec p1 = VECPRODUCT(voxelSize,m_path[np-1]);
+	  Vec p0 = vMv(voxelSize,m_path[np]);
+	  Vec p1 = vMv(voxelSize,m_path[np-1]);
 	  clen += (p0-p1).norm();
 	}
 
@@ -3943,8 +3943,8 @@ void PathObject::drawViewportLineDots(QGLViewer *viewer, float scale, int vh)
     {
       if (np > 0)
 	{
-	  Vec p0 = VECPRODUCT(voxelSize,m_path[np]);
-	  Vec p1 = VECPRODUCT(voxelSize,m_path[np-1]);
+	  Vec p0 = vMv(voxelSize,m_path[np]);
+	  Vec p1 = vMv(voxelSize,m_path[np-1]);
 	  clen += (p0-p1).norm();
 	}
 
@@ -3961,8 +3961,8 @@ void PathObject::drawViewportLineDots(QGLViewer *viewer, float scale, int vh)
     {
       if (np > 0)
 	{
-	  Vec p0 = VECPRODUCT(voxelSize,m_path[np]);
-	  Vec p1 = VECPRODUCT(voxelSize,m_path[np-1]);
+	  Vec p0 = vMv(voxelSize,m_path[np]);
+	  Vec p1 = vMv(voxelSize,m_path[np-1]);
 	  clen += (p0-p1).norm();
 	}
 
@@ -3979,8 +3979,8 @@ void PathObject::drawViewportLineDots(QGLViewer *viewer, float scale, int vh)
 	{
 	  if (np > 0)
 	    {
-	      Vec p0 = VECPRODUCT(voxelSize,m_path[np]);
-	      Vec p1 = VECPRODUCT(voxelSize,m_path[np-1]);
+	      Vec p0 = vMv(voxelSize,m_path[np]);
+	      Vec p1 = vMv(voxelSize,m_path[np-1]);
 	      clen += (p0-p1).norm();
 	    }
 
@@ -4006,8 +4006,8 @@ void PathObject::drawViewportLineDots(QGLViewer *viewer, float scale, int vh)
       {
 	if (np > 0)
 	  {
-	    Vec p0 = VECPRODUCT(voxelSize,m_path[np]);
-	    Vec p1 = VECPRODUCT(voxelSize,m_path[np-1]);
+	    Vec p0 = vMv(voxelSize,m_path[np]);
+	    Vec p1 = vMv(voxelSize,m_path[np-1]);
 	    clen += (p0-p1).norm();
 	  }
 

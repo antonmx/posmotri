@@ -242,7 +242,7 @@ RawVolume::rawValues(int radius,
       progress.setValue((int)(100.0*(float)pi/(float)pos.size()));
       qApp->processEvents();
 
-      Vec u = VECDIVIDE(pos[pi], voxelScaling);
+      Vec u = vDv(pos[pi], voxelScaling);
       int h = u.x;
       int w = u.y;
       int d = u.z;

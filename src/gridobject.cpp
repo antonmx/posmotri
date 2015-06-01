@@ -1,7 +1,7 @@
 #include "global.h"
 #include "gridobject.h"
 #include "volumeinformation.h"
-#include "enums.h"
+#include "staticfunctions.h"
 #include <QMessageBox>
 
 #ifdef Q_WS_MAC
@@ -347,7 +347,7 @@ GridObject::regrid()
   m_grid.clear();
   for(int i=0; i<m_points.count(); i++)
     {
-      Vec v = VECPRODUCT(m_points[i], voxelScaling);
+      Vec v = vMv(m_points[i], voxelScaling);
       m_grid.append(v);
     }
 }

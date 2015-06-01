@@ -4151,7 +4151,7 @@ MainWindow::sculpt(int docarve, QList<Vec> ppos, float rad, float decay, int tag
   QList<Vec> pos;
   for (int i=0; i<ppos.count(); i++)
     {
-      Vec pt = VECDIVIDE(ppos[i], voxelScaling);
+      Vec pt = vDv(ppos[i], voxelScaling);
       pos << pt;
     }
   PruneHandler::sculpt(docarve, dmin, pos, rad, decay, tag);
@@ -4165,7 +4165,7 @@ MainWindow::fillPathPatch(QList<Vec> ppos, int thick, int val)
   QList<Vec> pos;
   for (int i=0; i<ppos.count(); i++)
     {
-      Vec pt = VECDIVIDE(ppos[i], voxelScaling);
+      Vec pt = vDv(ppos[i], voxelScaling);
       pos << pt;
     }
   PruneHandler::fillPathPatch(dmin, pos, thick, val, false);
@@ -4179,7 +4179,7 @@ MainWindow::paintPathPatch(QList<Vec> ppos, int thick, int tag)
   QList<Vec> pos;
   for (int i=0; i<ppos.count(); i++)
     {
-      Vec pt = VECDIVIDE(ppos[i], voxelScaling);
+      Vec pt = vDv(ppos[i], voxelScaling);
       pos << pt;
     }
   PruneHandler::fillPathPatch(dmin, pos, thick, tag, true);

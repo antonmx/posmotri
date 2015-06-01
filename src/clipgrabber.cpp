@@ -118,7 +118,7 @@ ClipGrabber::checkIfGrabsMouse(int x, int y,
   m_lastY = y;
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec pos = VECPRODUCT(position(), voxelScaling);
+  Vec pos = vMv(position(), voxelScaling);
   Vec pp = Vec(x, y, 0);
 
   bool flag;
@@ -145,7 +145,7 @@ ClipGrabber::mousePressEvent(QMouseEvent* const event,
 
   Vec voxelScaling = Global::voxelScaling();
   Vec pp = Vec(m_prevPos.x(), m_prevPos.y(), 0);
-  Vec pos = VECPRODUCT(position(), voxelScaling);
+  Vec pos = vMv(position(), voxelScaling);
 
   bool flag;
 
@@ -186,9 +186,9 @@ ClipGrabber::mouseMoveEvent(QMouseEvent* const event,
 
   Vec voxelScaling = Global::voxelScaling();
 
-  Vec xaxis = VECDIVIDE(m_xaxis, voxelScaling);
-  Vec yaxis = VECDIVIDE(m_yaxis, voxelScaling);
-  Vec tang = VECDIVIDE(m_tang, voxelScaling);
+  Vec xaxis = vDv(m_xaxis, voxelScaling);
+  Vec yaxis = vDv(m_yaxis, voxelScaling);
+  Vec tang = vDv(m_tang, voxelScaling);
 
   if (event->buttons() != Qt::LeftButton)
     {
@@ -203,7 +203,7 @@ ClipGrabber::mouseMoveEvent(QMouseEvent* const event,
       trans = camera->frame()->orientation().rotate(trans);
 
       Vec voxelScaling = Global::voxelScaling();
-      trans = VECDIVIDE(trans, voxelScaling);
+      trans = vDv(trans, voxelScaling);
 
       if (event->modifiers() & Qt::ControlModifier ||
 	  event->modifiers() & Qt::MetaModifier)
@@ -254,7 +254,7 @@ ClipGrabber::mouseMoveEvent(QMouseEvent* const event,
       else if (moveAxis() == MoveZ) axis = m_tang;
 
       Vec voxelScaling = Global::voxelScaling();
-      Vec pos = VECPRODUCT(position(), voxelScaling);
+      Vec pos = vMv(position(), voxelScaling);
       float r = size();
       Vec trans(delta.x(), -delta.y(), 0.0f);
 

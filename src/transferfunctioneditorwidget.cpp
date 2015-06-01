@@ -4,7 +4,6 @@
 TransferFunctionEditorWidget::TransferFunctionEditorWidget(QWidget *parent) :
   QSplitter(Qt::Vertical, parent)
 {
-  m_parent = parent;
 
   m_splineEditorWidget = new SplineEditorWidget(this);
   m_gradientEditorWidget = new GradientEditorWidget(this);
@@ -15,7 +14,7 @@ TransferFunctionEditorWidget::TransferFunctionEditorWidget(QWidget *parent) :
   setChildrenCollapsible(false);
 
   QObject::connect(m_splineEditorWidget, SIGNAL(giveHistogram(int)),
-		   this, SLOT(changeHistogram(int)));
+		   SLOT(changeHistogram(int)));
 
   QObject::connect(m_gradientEditorWidget, SIGNAL(gradientChanged(QGradientStops)),
 		   m_splineEditorWidget, SLOT(setGradientStops(QGradientStops)));
@@ -24,13 +23,13 @@ TransferFunctionEditorWidget::TransferFunctionEditorWidget(QWidget *parent) :
 		   m_gradientEditorWidget, SLOT(setColorGradient(QGradientStops)));
 
   QObject::connect(m_splineEditorWidget, SIGNAL(transferFunctionChanged(QImage)),
-		   this, SLOT(transferFunctionChanged(QImage)));
+		   SLOT(transferFunctionChanged(QImage)));
 
   QObject::connect(m_splineEditorWidget, SIGNAL(applyUndo(bool)),
-		   this, SIGNAL(applyUndo(bool)));
+		   SIGNAL(applyUndo(bool)));
 
   QObject::connect(m_gradientEditorWidget, SIGNAL(applyUndo(bool)),
-		   this, SIGNAL(applyUndo(bool)));
+		   SIGNAL(applyUndo(bool)));
 }
 
 

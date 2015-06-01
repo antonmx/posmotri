@@ -143,14 +143,14 @@ Vec
 BrickInformation::getCorrectedPivot()
 {
   Vec sz = brickMax - brickMin;
-  Vec p = brickMin + VECPRODUCT(pivot, sz);
+  Vec p = brickMin + vMv(pivot, sz);
   return p;
 }
 Vec
 BrickInformation::getCorrectedScalePivot()
 {
   Vec sz = brickMax - brickMin;
-  Vec p = brickMin + VECPRODUCT(scalepivot, sz);
+  Vec p = brickMin + vMv(scalepivot, sz);
   return p;
 }
 

@@ -1477,14 +1477,14 @@ DrawHiresVolume::collectBrickInformation(bool force)
       if (bnum < numGhostBricks)
 	{
 	  bno = bnum;
-	  bmin = m_dataMin + VECPRODUCT(m_dataSize,ghostBricks[bno].brickMin);
-	  bmax = m_dataMin + VECPRODUCT(m_dataSize,ghostBricks[bno].brickMax);
+	  bmin = m_dataMin + vMv(m_dataSize,ghostBricks[bno].brickMin);
+	  bmax = m_dataMin + vMv(m_dataSize,ghostBricks[bno].brickMax);
 
 	  clippers = m_bricks->brickInformation(0).clippers;
 	  tfSet = m_bricks->brickInformation(0).tfSet;
 
 	  brickPivot = m_bricks->getScalePivot(0);
-	  brickPivot = VECPRODUCT(brickPivot, voxelScaling);
+	  brickPivot = vMv(brickPivot, voxelScaling);
 	  brickScale = m_bricks->getScale(0);
 	}
       else
@@ -1492,14 +1492,14 @@ DrawHiresVolume::collectBrickInformation(bool force)
 	  // userBrick 0 is whole subvolume
 	  // user defined bricks actually start from 1 onwards
 	  bno = bnum - numGhostBricks + 1;
-	  bmin = m_dataMin + VECPRODUCT(m_dataSize,userBricks[bno].brickMin);
-	  bmax = m_dataMin + VECPRODUCT(m_dataSize,userBricks[bno].brickMax);
+	  bmin = m_dataMin + vMv(m_dataSize,userBricks[bno].brickMin);
+	  bmax = m_dataMin + vMv(m_dataSize,userBricks[bno].brickMax);
 
 	  clippers = m_bricks->brickInformation(bno).clippers;
 	  tfSet = m_bricks->brickInformation(bno).tfSet;
 
 	  brickPivot = m_bricks->getScalePivot(bno);
-	  brickPivot = VECPRODUCT(brickPivot, voxelScaling);
+	  brickPivot = vMv(brickPivot, voxelScaling);
 	  brickScale = m_bricks->getScale(bno);
 	}
 
@@ -1532,10 +1532,10 @@ DrawHiresVolume::collectBrickInformation(bool force)
       subvol[7] = Vec(xmin, ymax, zmax);
 
 
-      subcorner = VECPRODUCT(m_virtualTextureMin,voxelScaling);
-      subcorner += VECPRODUCT(m_dataMin, voxelScaling);
+      subcorner = vMv(m_virtualTextureMin,voxelScaling);
+      subcorner += vMv(m_dataMin, voxelScaling);
 
-      subdim = VECPRODUCT(m_virtualTextureSize,voxelScaling) - Vec(1,1,1);
+      subdim = vMv(m_virtualTextureSize,voxelScaling) - Vec(1,1,1);
 
 //      int lod = m_Volume->getSubvolumeSubsamplingLevel();
 //      for (int i=0; i<8; i++)
@@ -1543,7 +1543,7 @@ DrawHiresVolume::collectBrickInformation(bool force)
 //	  Vec tx = subvol[i]-Vec(subcorner.x, subcorner.y, 0);
 //	  tx.x /= lod;
 //	  tx.y /= lod;
-//	  texture[i] = VECDIVIDE(tx, voxelScaling);
+//	  texture[i] = vDv(tx, voxelScaling);
 //	}
 //      QMessageBox::information(0, "", QString("%1 %2 %3\n%4 %5 %6").\
 //			       arg(subvol[0].x).\
@@ -1607,7 +1607,7 @@ DrawHiresVolume::collectBrickInformation(bool force)
 	{
 	  Vec sv = subvol[i];
 	  sv = subvol[i]-brickPivot;
-	  subvol[i] = brickPivot + VECPRODUCT(sv, brickScale);
+	  subvol[i] = brickPivot + vMv(sv, brickScale);
 	}
       //---------------------
 
@@ -2041,7 +2041,7 @@ DrawHiresVolume::drawpoly(Vec po, Vec pn,
       if (clips[ci])
 	{
 	  Vec cpo = m_clipPos[ci];
-	  Vec cpn =  VECPRODUCT(m_clipNormal[ci], voxelScaling);
+	  Vec cpn =  vMv(m_clipNormal[ci], voxelScaling);
 
 	  tedges = 0;
 	  for(i=0; i<edges; i++)
@@ -2103,8 +2103,8 @@ void
 DrawHiresVolume::collectEnclosingBoxInfo()
 {
   Vec voxelScaling = Global::voxelScaling();
-  Vec bmin = VECPRODUCT(m_dataMin,voxelScaling);
-  Vec bmax = VECPRODUCT(m_dataMax,voxelScaling);
+  Vec bmin = vMv(m_dataMin,voxelScaling);
+  Vec bmax = vMv(m_dataMax,voxelScaling);
 
   double *Xform = m_bricks->getMatrix(0);
 
@@ -2335,8 +2335,8 @@ DrawHiresVolume::drawGeometry(float pnear, float pfar, Vec step,
 
   //----- apply brick0 transformation -------
   Vec voxelScaling = Global::voxelScaling();
-  Vec pos = VECPRODUCT(m_bricks->getTranslation(0), voxelScaling);
-  Vec pivot = VECPRODUCT(m_bricks->getPivot(0),voxelScaling);
+  Vec pos = vMv(m_bricks->getTranslation(0), voxelScaling);
+  Vec pivot = vMv(m_bricks->getPivot(0),voxelScaling);
   Vec axis = m_bricks->getAxis(0);
   float angle = m_bricks->getAngle(0);
 
@@ -2420,8 +2420,8 @@ void
 DrawHiresVolume::setRenderDefault()
 {
   Vec voxelScaling = Global::voxelScaling();
-  Vec bpos = VECPRODUCT(m_bricks->getTranslation(0), voxelScaling);
-  Vec bpivot = VECPRODUCT(m_bricks->getPivot(0),voxelScaling);
+  Vec bpos = vMv(m_bricks->getTranslation(0), voxelScaling);
+  Vec bpivot = vMv(m_bricks->getPivot(0),voxelScaling);
   Vec baxis = m_bricks->getAxis(0);
   float bangle = m_bricks->getAngle(0);
   Quaternion q(baxis, -DEG2RAD(bangle));
@@ -2677,7 +2677,7 @@ DrawHiresVolume::getSlices(Vec poStart,
 	  tfset[i] < Global::lutSize() &&
 	  vp.x() >= 0.0)
 	{
-	  Vec tang = VECDIVIDE(m_clipNormal[i], voxelScaling);
+	  Vec tang = vDv(m_clipNormal[i], voxelScaling);
 	  m_clipPos[i] += tang*thickness[i];
 	}
     }
@@ -2751,7 +2751,7 @@ DrawHiresVolume::getSlices(Vec poStart,
   for (int ic=0; ic<m_clipPos.count(); ic++)
     {
       ViewAlignedPolygon *vap = new ViewAlignedPolygon;
-      Vec cpos = VECPRODUCT(m_clipPos[ic], voxelScaling);
+      Vec cpos = vMv(m_clipPos[ic], voxelScaling);
       drawpoly(cpos, m_clipNormal[ic],
 	       bsubvol, btexture,
 	       dummyclips,
@@ -3187,8 +3187,8 @@ DrawHiresVolume::drawSlicesDefault(Vec pn, Vec minvert, Vec maxvert,
   glUseProgramObjectARB(0);
   disableTextureUnits();
   Vec voxelScaling = Global::voxelScaling();
-  Vec bpos = VECPRODUCT(m_bricks->getTranslation(0), voxelScaling);
-  Vec bpivot = VECPRODUCT(m_bricks->getPivot(0),voxelScaling);
+  Vec bpos = vMv(m_bricks->getTranslation(0), voxelScaling);
+  Vec bpivot = vMv(m_bricks->getPivot(0),voxelScaling);
   Vec baxis = m_bricks->getAxis(0);
   float bangle = m_bricks->getAngle(0);
   Quaternion q(baxis, -DEG2RAD(bangle));
@@ -3306,9 +3306,9 @@ DrawHiresVolume::drawPathInViewport(int pathOffset, Vec lpos, float depthcue,
 	  QList<float> radY = po[i].pathradY();
 
 	  for(int np=0; np<pathPoints.count(); np++)
-	    pathX[np] = VECPRODUCT(voxelSize,pathX[np]);
+	    pathX[np] = vMv(voxelSize,pathX[np]);
 	  for(int np=0; np<pathPoints.count(); np++)
-	    pathY[np] = VECPRODUCT(voxelSize,pathY[np]);
+	    pathY[np] = vMv(voxelSize,pathY[np]);
 
 	  int maxthick = radY[0];
 	  for(int np=0; np<pathPoints.count(); np++)
@@ -3326,8 +3326,8 @@ DrawHiresVolume::drawPathInViewport(int pathOffset, Vec lpos, float depthcue,
 	  float imglength = 0;
 	  for(int np=1; np<pathPoints.count(); np++)
 	    {
-	      Vec p0 = VECPRODUCT(voxelSize,pathPoints[np]);
-	      Vec p1 = VECPRODUCT(voxelSize,pathPoints[np-1]);
+	      Vec p0 = vMv(voxelSize,pathPoints[np]);
+	      Vec p1 = vMv(voxelSize,pathPoints[np-1]);
 	      imglength += (p0-p1).norm();
 	    }
 	  float scale = (float)(vw-11)/imglength;
@@ -3407,8 +3407,8 @@ DrawHiresVolume::drawPathInViewport(int pathOffset, Vec lpos, float depthcue,
 		    {
 		      if (np > 0)
 			{
-			  Vec p0 = VECPRODUCT(voxelSize,pathPoints[np]);
-			  Vec p1 = VECPRODUCT(voxelSize,pathPoints[np-1]);
+			  Vec p0 = vMv(voxelSize,pathPoints[np]);
+			  Vec p1 = vMv(voxelSize,pathPoints[np-1]);
 			  clen += (p0-p1).norm();
 			}
 		      float frc = clen;
@@ -3419,8 +3419,8 @@ DrawHiresVolume::drawPathInViewport(int pathOffset, Vec lpos, float depthcue,
 		      Vec tv2 = pathPoints[np]-pathX[np]*radX[np];
 		      tv1 += pathY[np]*radY[np]*tk;
 		      tv2 += pathY[np]*radY[np]*tk;
-		      tv1 = VECDIVIDE(tv1, voxelSize);
-		      tv2 = VECDIVIDE(tv2, voxelSize);
+		      tv1 = vDv(tv1, voxelSize);
+		      tv2 = vDv(tv2, voxelSize);
 
 		      Vec v0 = Vec(frc, 0.0, 0.0);
 		      Vec v1 = v0 - Vec(0.0,lenradx,0.0);
@@ -3552,7 +3552,7 @@ DrawHiresVolume::drawClipPlaneInViewport(int clipOffset, Vec lpos, float depthcu
 	  //----------------
 	  m_Viewer->camera()->setOrientation(clipInfo.rot[ic]);
 
-	  Vec cpos = VECPRODUCT(clipInfo.pos[ic], voxelScaling);
+	  Vec cpos = vMv(clipInfo.pos[ic], voxelScaling);
 	  Vec clipcampos = cpos -
 	    m_Viewer->camera()->viewDirection()*m_Viewer->sceneRadius()*2*(1.0/clipInfo.viewportScale[ic]);
 
@@ -4043,8 +4043,8 @@ DrawHiresVolume::setRenderToScreen(Vec defaultCamPos,
 				   float defaultFov)
 {
   Vec voxelScaling = Global::voxelScaling();
-  Vec bpos = VECPRODUCT(m_bricks->getTranslation(0), voxelScaling);
-  Vec bpivot = VECPRODUCT(m_bricks->getPivot(0),voxelScaling);
+  Vec bpos = vMv(m_bricks->getTranslation(0), voxelScaling);
+  Vec bpivot = vMv(m_bricks->getPivot(0),voxelScaling);
   Vec baxis = m_bricks->getAxis(0);
   float bangle = m_bricks->getAngle(0);
   Quaternion q(baxis, -DEG2RAD(bangle));
@@ -4212,8 +4212,8 @@ void
 DrawHiresVolume::setRenderToShadowBuffer()
 {
   Vec voxelScaling = Global::voxelScaling();
-  Vec bpos = VECPRODUCT(m_bricks->getTranslation(0), voxelScaling);
-  Vec bpivot = VECPRODUCT(m_bricks->getPivot(0),voxelScaling);
+  Vec bpos = vMv(m_bricks->getTranslation(0), voxelScaling);
+  Vec bpivot = vMv(m_bricks->getPivot(0),voxelScaling);
   Vec baxis = m_bricks->getAxis(0);
   float bangle = m_bricks->getAngle(0);
   Quaternion q(baxis, -DEG2RAD(bangle));
@@ -4374,8 +4374,8 @@ DrawHiresVolume::drawSlicesHighQuality(Vec pn, Vec minvert, Vec maxvert,
 
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec bpos = VECPRODUCT(m_bricks->getTranslation(0), voxelScaling);
-  Vec bpivot = VECPRODUCT(m_bricks->getPivot(0),voxelScaling);
+  Vec bpos = vMv(m_bricks->getTranslation(0), voxelScaling);
+  Vec bpivot = vMv(m_bricks->getPivot(0),voxelScaling);
   Vec baxis = m_bricks->getAxis(0);
   float bangle = m_bricks->getAngle(0);
   Quaternion q(baxis, -DEG2RAD(bangle));
@@ -5879,9 +5879,9 @@ DrawHiresVolume::resliceVolume(Vec pos,
 
   VolumeInformation pvlInfo = VolumeInformation::volumeInformation();
   Vec vs;
-  vs.x = VECPRODUCT(xaxis, pvlInfo.voxelSize).norm();
-  vs.y = VECPRODUCT(yaxis, pvlInfo.voxelSize).norm();
-  vs.z = VECPRODUCT(normal,pvlInfo.voxelSize).norm();
+  vs.x = vMv(xaxis, pvlInfo.voxelSize).norm();
+  vs.y = vMv(yaxis, pvlInfo.voxelSize).norm();
+  vs.z = vMv(normal,pvlInfo.voxelSize).norm();
   vs *= subsample*vlod;
 
   VolumeFileManager pFileManager;
@@ -6354,15 +6354,15 @@ DrawHiresVolume::resliceUsingPath(int pathIdx, bool fullThickness,
   QList<float> radY = po.pathradY();
 
   for(int np=0; np<pathPoints.count(); np++)
-    pathX[np] = VECPRODUCT(voxelScaling,pathX[np]);
+    pathX[np] = vMv(voxelScaling,pathX[np]);
   for(int np=0; np<pathPoints.count(); np++)
-    pathY[np] = VECPRODUCT(voxelScaling,pathY[np]);
+    pathY[np] = vMv(voxelScaling,pathY[np]);
 
   float pathLength = 0;
   for(int np=1; np<pathPoints.count(); np++)
     {
-      Vec p0 = VECPRODUCT(voxelScaling,pathPoints[np]);
-      Vec p1 = VECPRODUCT(voxelScaling,pathPoints[np-1]);
+      Vec p0 = vMv(voxelScaling,pathPoints[np]);
+      Vec p1 = vMv(voxelScaling,pathPoints[np-1]);
       pathLength += (p0-p1).norm();
     }
 
@@ -6526,8 +6526,8 @@ DrawHiresVolume::resliceUsingPath(int pathIdx, bool fullThickness,
 
 	      if (np > 0)
 	      {
-		Vec p0 = VECPRODUCT(voxelScaling,pathPoints[np]);
-		Vec p1 = VECPRODUCT(voxelScaling,pathPoints[np-1]);
+		Vec p0 = vMv(voxelScaling,pathPoints[np]);
+		Vec p1 = vMv(voxelScaling,pathPoints[np-1]);
 		clen += (p0-p1).norm();
 	      }
 
@@ -6546,8 +6546,8 @@ DrawHiresVolume::resliceUsingPath(int pathIdx, bool fullThickness,
 		  tv2 += pathY[np]*radY[np]*tk;
 		}
 
-	      tv1 = VECDIVIDE(tv1, voxelScaling);
-	      tv2 = VECDIVIDE(tv2, voxelScaling);
+	      tv1 = vDv(tv1, voxelScaling);
+	      tv2 = vDv(tv2, voxelScaling);
 
 	      float x0 = clen/subsample/vlod;
 	      Vec v1 = Vec(x0,-lenradx,0.0);
@@ -6616,9 +6616,9 @@ DrawHiresVolume::resliceUsingClipPlane(Vec cpos, Quaternion rot, int thickness,
   xaxis = rot.rotate(xaxis);
   yaxis = rot.rotate(yaxis);
 
-  normal= VECDIVIDE(normal,voxelScaling);
-  xaxis = VECDIVIDE(xaxis, voxelScaling);
-  yaxis = VECDIVIDE(yaxis, voxelScaling);
+  normal= vDv(normal,voxelScaling);
+  xaxis = vDv(xaxis, voxelScaling);
+  yaxis = vDv(yaxis, voxelScaling);
 
 
   float aspectRatio = vp.z()/vp.w();
@@ -6890,8 +6890,8 @@ DrawHiresVolume::resliceUsingClipPlane(Vec cpos, Quaternion rot, int thickness,
     {
       VolumeInformation pvlInfo = VolumeInformation::volumeInformation();
       Vec vs;
-      vs.x = VECPRODUCT(xaxis, pvlInfo.voxelSize).norm();
-      vs.y = VECPRODUCT(yaxis, pvlInfo.voxelSize).norm();
+      vs.x = vMv(xaxis, pvlInfo.voxelSize).norm();
+      vs.y = vMv(yaxis, pvlInfo.voxelSize).norm();
       vs *= subsample*vlod;
       float voxarea = nonZeroVoxels*vs.x*vs.y;
 

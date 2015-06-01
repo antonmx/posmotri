@@ -13,7 +13,7 @@
 
 
 
-#define VECDIVIDE(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
+#define vDv(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
 
 QGLFramebufferObject *LightHandler::m_opacityBuffer=0;
 QGLFramebufferObject *LightHandler::m_finalLightBuffer=0;
@@ -1457,11 +1457,11 @@ LightHandler::applyClipping(int ct)
   lod *= m_lightLod;
   for(int i=0; i<m_clipPos.count(); i++)
     {
-      Vec p = VECDIVIDE(m_clipPos[i], voxelScaling);
+      Vec p = vDv(m_clipPos[i], voxelScaling);
       p -= m_dataMin;
       p /= lod;
 
-      Vec n = VECPRODUCT(m_clipNorm[i], voxelScaling);
+      Vec n = vMv(m_clipNorm[i], voxelScaling);
       p -= lod*n;
 
       glUniform3fARB(m_clipParm[6], p.x,p.y,p.z);
@@ -1982,7 +1982,7 @@ LightHandler::updatePointLightBuffer(QList<Vec> olpos, float lradius,
   for(int i=0; i<npts; i++)
     {
       Vec v = olpos[i];
-      v = VECDIVIDE(v, voxelScaling);
+      v = vDv(v, voxelScaling);
       v = (v-m_dataMin)/m_dragInfo.z/pointLightLod;
       lpos[3*i+0] = v.x;
       lpos[3*i+1] = v.y;

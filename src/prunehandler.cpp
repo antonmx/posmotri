@@ -12,7 +12,7 @@
 #include <QProgressDialog>
 
 
-#define VECDIVIDE(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
+#define vDv(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
 
 QGLFramebufferObject *PruneHandler::m_pruneBuffer=0;
 QGLFramebufferObject *PruneHandler::m_savedPruneBuffer=0;
@@ -2507,7 +2507,7 @@ PruneHandler::clip(Vec pos, Vec normal, Vec dmin)
   int lod = m_dragInfo.z;
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec p = VECDIVIDE(pos, voxelScaling);
+  Vec p = vDv(pos, voxelScaling);
   p -= dmin;
   p /= lod;
 

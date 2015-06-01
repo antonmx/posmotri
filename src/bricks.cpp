@@ -2,6 +2,8 @@
 #include "staticfunctions.h"
 #include "matrix.h"
 #include "global.h"
+#include <PromotedWidgets.h>
+#include <QDebug>
 
 QList<BrickInformation> Bricks::bricks() { return m_bricks; }
 QList<BrickBounds> Bricks::ghostBricks() { return m_ghostBricks; }
@@ -31,7 +33,7 @@ double* Bricks::getMatrixInv() { return m_XformInv[0]; }
 Vec
 Bricks::getPivot()
 {
-  Vec pivot = m_dataMin + VECPRODUCT(m_dataSize, m_bricks[0].getCorrectedPivot());
+  Vec pivot = m_dataMin + vMv(m_dataSize, m_bricks[0].getCorrectedPivot());
   return pivot;
 }
 Vec Bricks::getAxis() { return m_bricks[0].axis.unit(); }
@@ -39,13 +41,13 @@ float Bricks::getAngle() { return m_bricks[0].angle; }
 Vec
 Bricks::getTranslation()
 {
-  Vec translation = VECPRODUCT(m_dataSize,m_bricks[0].position);
+  Vec translation = vMv(m_dataSize,m_bricks[0].position);
   return translation;
 }
 Vec
 Bricks::getScalePivot()
 {
-  Vec scalepivot = m_dataMin + VECPRODUCT(m_dataSize, m_bricks[0].getCorrectedScalePivot());
+  Vec scalepivot = m_dataMin + vMv(m_dataSize, m_bricks[0].getCorrectedScalePivot());
   return scalepivot;
 }
 Vec Bricks::getScale() { return m_bricks[0].scale; }
@@ -56,7 +58,7 @@ double* Bricks::getMatrixInv(int i) { return m_XformInv[i]; }
 Vec
 Bricks::getPivot(int i)
 {
-  Vec pivot = m_dataMin + VECPRODUCT(m_dataSize, m_bricks[i].getCorrectedPivot());
+  Vec pivot = m_dataMin + vMv(m_dataSize, m_bricks[i].getCorrectedPivot());
   return pivot;
 }
 Vec Bricks::getAxis(int i) { return m_bricks[i].axis.unit(); }
@@ -64,13 +66,13 @@ float Bricks::getAngle(int i) { return m_bricks[i].angle; }
 Vec
 Bricks::getTranslation(int i)
 {
-  Vec translation = VECPRODUCT(m_dataSize,m_bricks[i].position);
+  Vec translation = vMv(m_dataSize,m_bricks[i].position);
   return translation;
 }
 Vec
 Bricks::getScalePivot(int i)
 {
-  Vec scalepivot = m_dataMin + VECPRODUCT(m_dataSize, m_bricks[i].getCorrectedScalePivot());
+  Vec scalepivot = m_dataMin + vMv(m_dataSize, m_bricks[i].getCorrectedScalePivot());
   return scalepivot;
 }
 Vec Bricks::getScale(int i) { return m_bricks[i].scale; }
@@ -232,14 +234,14 @@ Bricks::updateScaling()
     {
       Vec bmin, bmax;
 
-      bmin = VECPRODUCT(m_dataMin, voxelScaling);
-      bmax = VECPRODUCT(m_dataMax, voxelScaling);
+      bmin = vMv(m_dataMin, voxelScaling);
+      bmax = vMv(m_dataMax, voxelScaling);
       m_brickBox[i]->setBounds(bmin, bmax);
 
-      bmin = m_dataMin + VECPRODUCT(m_bricks[i].brickMin, m_dataSize);
-      bmax = m_dataMin + VECPRODUCT(m_bricks[i].brickMax, m_dataSize);
-      bmin = VECPRODUCT(bmin, voxelScaling);
-      bmax = VECPRODUCT(bmax, voxelScaling);
+      bmin = m_dataMin + vMv(m_bricks[i].brickMin, m_dataSize);
+      bmax = m_dataMin + vMv(m_bricks[i].brickMax, m_dataSize);
+      bmin = vMv(bmin, voxelScaling);
+      bmax = vMv(bmax, voxelScaling);
       m_brickBox[i]->setPositions(bmin, bmax);
     }
 
@@ -259,15 +261,15 @@ Bricks::setBounds(Vec datamin, Vec datamax)
     {
       Vec bmin, bmax;
 
-      bmin = VECPRODUCT(datamin, voxelScaling);
-      bmax = VECPRODUCT(datamax, voxelScaling);
+      bmin = vMv(datamin, voxelScaling);
+      bmax = vMv(datamax, voxelScaling);
       //m_brickBox[i]->setBounds(datamin, datamax);
       m_brickBox[i]->setBounds(bmin, bmax);
 
-      bmin = m_dataMin + VECPRODUCT(m_bricks[i].brickMin, m_dataSize);
-      bmax = m_dataMin + VECPRODUCT(m_bricks[i].brickMax, m_dataSize);
-      bmin = VECPRODUCT(bmin, voxelScaling);
-      bmax = VECPRODUCT(bmax, voxelScaling);
+      bmin = m_dataMin + vMv(m_bricks[i].brickMin, m_dataSize);
+      bmax = m_dataMin + vMv(m_bricks[i].brickMax, m_dataSize);
+      bmin = vMv(bmin, voxelScaling);
+      bmax = vMv(bmax, voxelScaling);
       m_brickBox[i]->setPositions(bmin, bmax);
     }
 
@@ -298,8 +300,8 @@ Bricks::genMatrices()
   Vec voxelScaling = Global::voxelScaling();
   for(int i=0; i<m_Xform.size(); i++)
     {
-      Vec translation = VECPRODUCT(getTranslation(i), voxelScaling);
-      Vec pivot = VECPRODUCT(getPivot(i),voxelScaling);
+      Vec translation = vMv(getTranslation(i), voxelScaling);
+      Vec pivot = vMv(getPivot(i),voxelScaling);
       Vec axis = getAxis(i);
       float angle = DEG2RAD(getAngle(i));
       double *Xform = new double[16];
@@ -347,7 +349,9 @@ Bricks::setBrick(int bno, BrickInformation binfo)
     return;
 
   m_bricks[bno] = binfo;
-
+  m_brickBox[bno]->setPositions(m_dataMin + vMv(binfo.brickMin, m_dataSize),
+				m_dataMin + vMv(binfo.brickMax, m_dataSize) );
+  
   if (bno > 0)
     update();
   else
@@ -379,8 +383,8 @@ Bricks::setBricks(QList<BrickInformation> binfo)
 
   BoundingBox *bbox = new BoundingBox();
   m_brickBox.append(bbox);
-  Vec bmin = VECPRODUCT(m_dataMin, voxelScaling);
-  Vec bmax = VECPRODUCT(m_dataMax, voxelScaling);
+  Vec bmin = vMv(m_dataMin, voxelScaling);
+  Vec bmax = vMv(m_dataMax, voxelScaling);
   bbox->setBounds(bmin, bmax);
   // do not allow changing of bounds for zeroeth brick
   // zeroeth brick always occupies the whole subvolume
@@ -391,15 +395,15 @@ Bricks::setBricks(QList<BrickInformation> binfo)
       Vec bmin, bmax;
       BoundingBox *bbox = new BoundingBox();
 
-      bmin = VECPRODUCT(m_dataMin, voxelScaling);
-      bmax = VECPRODUCT(m_dataMax, voxelScaling);
+      bmin = vMv(m_dataMin, voxelScaling);
+      bmax = vMv(m_dataMax, voxelScaling);
       //bbox->setBounds(m_dataMin, m_dataMax);
       bbox->setBounds(bmin, bmax);
 
-      bmin = m_dataMin + VECPRODUCT(m_bricks[i].brickMin, m_dataSize);
-      bmax = m_dataMin + VECPRODUCT(m_bricks[i].brickMax, m_dataSize);
-      bmin = VECPRODUCT(bmin, voxelScaling);
-      bmax = VECPRODUCT(bmax, voxelScaling);
+      bmin = m_dataMin + vMv(m_bricks[i].brickMin, m_dataSize);
+      bmax = m_dataMin + vMv(m_bricks[i].brickMax, m_dataSize);
+      bmin = vMv(bmin, voxelScaling);
+      bmax = vMv(bmax, voxelScaling);
       bbox->setPositions(bmin, bmax);
 
       connect(bbox, SIGNAL(updated()), this, SLOT(update()));
@@ -442,8 +446,8 @@ Bricks::addBrick(BrickInformation binfo)
 
   BoundingBox *bbox = new BoundingBox();
   Vec voxelScaling = Global::voxelScaling();
-  Vec bmin = VECPRODUCT(m_dataMin, voxelScaling);
-  Vec bmax = VECPRODUCT(m_dataMax, voxelScaling);
+  Vec bmin = vMv(m_dataMin, voxelScaling);
+  Vec bmax = vMv(m_dataMax, voxelScaling);
   bbox->setBounds(bmin, bmax);
   if (m_brickBox.size() > 0)
     {
@@ -473,8 +477,8 @@ Bricks::addBrick()
 
   BoundingBox *bbox = new BoundingBox();
   Vec voxelScaling = Global::voxelScaling();
-  Vec bmin = VECPRODUCT(m_dataMin, voxelScaling);
-  Vec bmax = VECPRODUCT(m_dataMax, voxelScaling);
+  Vec bmin = vMv(m_dataMin, voxelScaling);
+  Vec bmax = vMv(m_dataMax, voxelScaling);
   bbox->setBounds(bmin, bmax);
   if (m_brickBox.size() > 0)
     {
@@ -519,7 +523,7 @@ Bricks::drawAxisAngle(double *xform, int bno)
     return;
 
   Vec voxelScaling = Global::voxelScaling();
-  Vec pivot = VECPRODUCT(getPivot(bno),voxelScaling);
+  Vec pivot = vMv(getPivot(bno),voxelScaling);
   Vec axis = getAxis(bno);
   float len = (m_dataSize.x+m_dataSize.y+m_dataSize.z)/6;
   Vec p1 = pivot + len * axis;
@@ -579,11 +583,11 @@ Bricks::draw()
 //  for(int i=0; i<m_ghostBricks.size(); i++)
 //    {
 //      Vec dataMin = m_dataMin +
-//	            VECPRODUCT(m_ghostBricks[i].brickMin, m_dataSize);
+//	            vMv(m_ghostBricks[i].brickMin, m_dataSize);
 //      Vec dataMax = m_dataMin +
-//	            VECPRODUCT(m_ghostBricks[i].brickMax, m_dataSize);
-//      dataMin = VECPRODUCT(dataMin, voxelScaling);
-//      dataMax = VECPRODUCT(dataMax, voxelScaling);
+//	            vMv(m_ghostBricks[i].brickMax, m_dataSize);
+//      dataMin = vMv(dataMin, voxelScaling);
+//      dataMax = vMv(dataMax, voxelScaling);
 //      StaticFunctions::drawEnclosingCubeWithTransformation(dataMin,
 //							   dataMax,
 //							   m_Xform[0],   
@@ -598,11 +602,11 @@ Bricks::draw()
   else
     {
       Vec dataMin = m_dataMin +
-	            VECPRODUCT(m_bricks[m_selected].brickMin, m_dataSize);
+	            vMv(m_bricks[m_selected].brickMin, m_dataSize);
       Vec dataMax = m_dataMin +
-	            VECPRODUCT(m_bricks[m_selected].brickMax, m_dataSize);
-      dataMin = VECPRODUCT(dataMin, voxelScaling);
-      dataMax = VECPRODUCT(dataMax, voxelScaling);
+	            vMv(m_bricks[m_selected].brickMax, m_dataSize);
+      dataMin = vMv(dataMin, voxelScaling);
+      dataMax = vMv(dataMax, voxelScaling);
 
       StaticFunctions::drawEnclosingCubeWithTransformation(dataMin,
 							   dataMax,
@@ -637,8 +641,8 @@ Bricks::update()
   QList<BrickBounds> gbrick1;
   Vec voxelScaling = Global::voxelScaling();
 
-//  Vec dmin = VECPRODUCT(m_dataMin, voxelScaling);
-//  Vec dmax = VECPRODUCT(m_dataMax, voxelScaling);
+//  Vec dmin = vMv(m_dataMin, voxelScaling);
+//  Vec dmax = vMv(m_dataMax, voxelScaling);
 //  BrickBounds ghost(dmin, dmax);
 
   BrickBounds ghost(m_dataMin, m_dataMax);
@@ -650,16 +654,17 @@ Bricks::update()
     {
       Vec bmin, bmax;
       m_brickBox[bno]->bounds(bmin, bmax);
+      
 
-      bmin = VECDIVIDE(bmin, voxelScaling);
-      bmax = VECDIVIDE(bmax, voxelScaling);
+      bmin = vDv(bmin, voxelScaling);
+      bmax = vDv(bmax, voxelScaling);
 
       bmin = StaticFunctions::clampVec(m_dataMin, m_dataMax, bmin);
       bmax = StaticFunctions::clampVec(m_dataMin, m_dataMax, bmax);
 
       // first update brickMin and brickMax
-      m_bricks[bno].brickMin = VECDIVIDE((bmin-m_dataMin), m_dataSize);
-      m_bricks[bno].brickMax = VECDIVIDE((bmax-m_dataMin), m_dataSize);
+      m_bricks[bno].brickMin = vDv((bmin-m_dataMin), m_dataSize);
+      m_bricks[bno].brickMax = vDv((bmax-m_dataMin), m_dataSize);
 
       for(int k=0; k<3; k++) // loop for x,y,z
 	{
@@ -784,8 +789,8 @@ Bricks::update()
 	    {
 	      Vec bmin, bmax;
 	      m_brickBox[b]->bounds(bmin, bmax);
-	      bmin = VECDIVIDE(bmin, voxelScaling);
-	      bmax = VECDIVIDE(bmax, voxelScaling);
+	      bmin = vDv(bmin, voxelScaling);
+	      bmax = vDv(bmax, voxelScaling);
 	      bmin = StaticFunctions::clampVec(m_dataMin, m_dataMax, bmin);
 	      bmax = StaticFunctions::clampVec(m_dataMin, m_dataMax, bmax);
 	      
@@ -814,8 +819,8 @@ Bricks::update()
       Vec gbmin = gbrick2[i].brickMin;
       Vec gbmax = gbrick2[i].brickMax;
       // convert these to normalized coordinates before copying
-      brk.brickMin = VECDIVIDE((gbmin-m_dataMin), m_dataSize);
-      brk.brickMax = VECDIVIDE((gbmax-m_dataMin), m_dataSize);
+      brk.brickMin = vDv((gbmin-m_dataMin), m_dataSize);
+      brk.brickMax = vDv((gbmax-m_dataMin), m_dataSize);
       m_ghostBricks.append(brk);
     }
 

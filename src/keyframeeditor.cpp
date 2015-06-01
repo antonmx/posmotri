@@ -1,6 +1,8 @@
 #include "global.h"
 #include "keyframeeditor.h"
 #include "propertyeditor.h"
+#include "ui_keyframeeditor.h"
+#include <QDebug>
 
 #include <algorithm>
 using namespace std;
@@ -49,124 +51,48 @@ KeyFrameEditor::sizeHint() const
   return QSize(size().width(), m_editorHeight);
 }
 
-KeyFrameEditor::KeyFrameEditor(QWidget *parent):
-  QWidget(parent)
+KeyFrameEditor::KeyFrameEditor(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::KeyFrameEditor)
+  , m_lineHeight(70)
+  , m_tickHeight(10)
+  , m_tickStep(50)
+  , m_p0(60, m_lineHeight)
+  , m_p1(100, m_lineHeight)
+  , m_imgSpacer(35)
+  , m_imgSize(100)
+  , m_editorHeight(m_lineHeight + m_tickHeight + m_imgSpacer + m_imgSize + 10)
+  , m_minFrame(1)
+  , m_frameStep(10)
+  , m_currFrame(1)
+  , m_selected(-1)
+  , m_playFrames(false)
+  , m_hiresMode(false)  
+  , m_copyFno(-1)  
 {
-  m_parent = parent;
-
-  m_copyFno = -1;
-  m_selected = -1;
-
-  m_set = new QPushButton("Set Keyframe");
-  m_remove = new QPushButton("Remove KeyFrame");
-
-  m_plus = new QPushButton(QPixmap(":/images/zoomin.png"), "Z");
-  m_minus = new QPushButton(QPixmap(":/images/zoomout.png"), "z");
-  m_play = new QPushButton(QPixmap(":/images/animation-start.png"), ">");
-  m_reset = new QPushButton(QPixmap(":/images/animation-reset.png"), "|<");
-
-  m_plus->setText("");
-  m_minus->setText("");
-  m_play->setText("");
-  m_reset->setText("");
-
-  m_plus->setAutoRepeat(true);
-  m_minus->setAutoRepeat(true);
-
-  m_set->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-  m_remove->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    m_plus->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-   m_minus->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-  m_set->setMaximumSize(100, 30);
-  m_remove->setMaximumSize(150, 30);
-  m_plus->setMaximumSize(30, 30);
-  m_minus->setMaximumSize(30, 30);
-
-  m_play->setMaximumSize(30, 30);
-  m_reset->setMaximumSize(30, 30);
-
-  m_set->setMinimumSize(120, 30);
-  m_remove->setMinimumSize(150, 30);
-  m_plus->setMinimumSize(30, 30);
-  m_minus->setMinimumSize(30, 30);
-
-  m_play->setMinimumSize(30, 30);
-  m_reset->setMinimumSize(30, 30);
-
-
-  QHBoxLayout *hbox = new QHBoxLayout();
-  hbox->addWidget(m_set, 0, Qt::AlignTop);
-  hbox->addWidget(m_remove, 0, Qt::AlignTop);
-  hbox->addStretch();
-  hbox->addWidget(m_plus, 0, Qt::AlignTop);
-  hbox->addWidget(m_minus, 0, Qt::AlignTop);
-
-  QVBoxLayout *vbox = new QVBoxLayout();
-  vbox->setSpacing(1);
-  vbox->addWidget(m_play);
-  vbox->addWidget(m_reset);
-  vbox->addStretch();
-
-  QVBoxLayout *mainhbox = new QVBoxLayout();
-  mainhbox->addLayout(hbox);
-  mainhbox->addLayout(vbox);
-  setLayout(mainhbox);
-
-  m_hiresMode = false;
-  m_playFrames = false;
-  m_currFrame = 1;
-
-  m_lineHeight = 70;
-  m_tickStep = 50;
-  m_tickHeight = 10;
-
-  m_imgSpacer = 35;
-  m_imgSize = 100;
-
-  m_minFrame = 1;
-  m_frameStep = 10;
-
-  m_p0 = QPoint(60, m_lineHeight);
-  m_p1 = QPoint(100, m_lineHeight);
-
+  ui->setupUi(this);
+  ui->zoomP->setAutoRepeat(true);
+  ui->zoomM->setAutoRepeat(true);
+  
   calcMaxFrame();
-
-  m_editorHeight = m_lineHeight + m_tickHeight +
-                   m_imgSpacer + m_imgSize + 10;
-
   clear();
 
-  connect(m_plus, SIGNAL(pressed()),
-	  this, SLOT(decreaseFrameStep()));
-
-  connect(m_minus, SIGNAL(pressed()),
-	  this, SLOT(increaseFrameStep()));
-
-  connect(m_set, SIGNAL(pressed()),
-	  this, SLOT(setKeyFrame()));
-
-  connect(m_remove, SIGNAL(pressed()),
-	  this, SLOT(removeKeyFrame()));
-
-  connect(m_play, SIGNAL(pressed()),
-	  this, SLOT(playPressed()));
-
-  connect(this, SIGNAL(startPlay()),
-	  this, SLOT(playKeyFrames()));
-
-  connect(m_reset, SIGNAL(pressed()),
-	  this, SLOT(resetCurrentFrame()));
-
+  connect(ui->zoomP, SIGNAL(pressed()), SLOT(decreaseFrameStep()));
+  connect(ui->zoomM, SIGNAL(pressed()), SLOT(increaseFrameStep()));
+  connect(ui->setFrame, SIGNAL(pressed()), SLOT(setKeyFrame()));
+  connect(ui->deleteFrame, SIGNAL(pressed()), SLOT(removeKeyFrame()));
+  connect(ui->playpause, SIGNAL(pressed()), SLOT(playPressed()));
+  connect(ui->rewind, SIGNAL(pressed()),SLOT(resetCurrentFrame()));
+  connect(ui->copyFrame, SIGNAL(pressed()), SLOT(copyFrame()));
+  connect(ui->pasteFrame, SIGNAL(pressed()), SLOT(pasteFrame()));
+  connect(this, SIGNAL(startPlay()), SLOT(playKeyFrames()));
 
   setMinimumSize(400, 150);
-  setMaximumSize(2000, m_editorHeight);
+  setMaximumHeight(m_editorHeight);
   setBaseSize(400, m_editorHeight);
 }
 
-void
-KeyFrameEditor::setHiresMode(bool flag)
-{
+void KeyFrameEditor::setHiresMode(bool flag) {
   m_hiresMode = flag;
   setPlayFrames(false);
 }
@@ -207,9 +133,9 @@ KeyFrameEditor::setPlayFrames(bool flag)
   m_playFrames = flag;
 
   if (m_playFrames == false)
-    m_play->setIcon(QPixmap(":/images/animation-start.png"));
+    ui->playpause->setText(">");
   else
-    m_play->setIcon(QPixmap(":/images/animation-pause.png"));
+    ui->playpause->setText("||");
 
   update();
 
@@ -225,7 +151,7 @@ void
 KeyFrameEditor::playKeyFrames(int start, int end, int step)
 {
   // ---- set play on ----
-  m_play->setIcon(QPixmap(":/images/animation-pause.png"));
+  ui->playpause->setText("||");
   m_playFrames = true;
   // ---------------------
 
@@ -482,71 +408,68 @@ KeyFrameEditor::drawVisibleRange(QPainter *p)
   p->drawLine(QPoint(bg0,5), QPoint(bg1, 5));
 }
 
-void
-KeyFrameEditor::drawTicks(QPainter *p)
-{
-  if (m_playFrames || m_draggingCurrFrame)
-    {
-      p->setBrush(QColor(70, 50, 20, 50));
-      p->setPen(Qt::transparent);
-      p->drawRect(m_p0.x()-5,
-		  m_lineHeight-m_tickHeight-15,
-		  m_p1.x()-m_p0.x()+10,
-		  2*m_tickHeight+25);
-    }
-
+void KeyFrameEditor::drawTicks(QPainter *p) {
+  
+  if (m_playFrames || m_draggingCurrFrame)  {
+    p->setBrush(QColor(70, 50, 20, 50));
+    p->setPen(Qt::transparent);
+    p->drawRect(m_p0.x()-5,
+                m_lineHeight-m_tickHeight-15,
+                m_p1.x()-m_p0.x()+10,
+                2*m_tickHeight+25);
+  }
+  
   p->setBrush(Qt::transparent);
   p->setPen(Qt::darkGray);
   p->drawLine(m_p0, m_p1);
-
+  
   int nticks = (m_p1.x() - m_p0.x())/m_tickStep;
   if (nticks*m_tickStep < m_p1.x() - m_p0.x())
     nticks ++;
   int prevtick = 0;
-  for(int t=0; t<=nticks; t++)
-    {
-      int frameNumber = m_minFrame + t*m_frameStep;
-      int tick = m_p0.x() + t*m_tickStep;
-      int sticks = 10;
-      if (t == nticks)
-	{
-	  float frc = (float)(frameNumber-m_maxFrame)/(float)m_frameStep;
-	  sticks *= (1-frc);
-	  frameNumber = m_maxFrame;
-	  tick = m_p1.x();
-	}
-
-      p->drawLine(tick, m_lineHeight-m_tickHeight,
-		  tick, m_lineHeight+m_tickHeight);
-
-      int tk = tick;
-      if (frameNumber < 10)
-	tk = tick-2;
-      else if (frameNumber < 100)
-	tk = tick-7;
-      else if (frameNumber < 1000)
-	tk = tick-10;
-      else
-	tk = tick-15;
-
-      p->drawText(tk, m_lineHeight-m_tickHeight-2,
-		 QString("%1").arg(frameNumber));
-
-
-      // draw inbetween smaller ticks
-      if (m_frameStep > 1 && t > 0 && sticks > 0)
-	{
-	  int tkstep = (tick-prevtick)/sticks;
-	  for(int s=1; s<sticks; s++)
-	    {
-	      int stk = prevtick + s*tkstep;
-	      p->drawLine(stk, m_lineHeight,
-			 stk, m_lineHeight-m_tickHeight/2);
-	    }
-	}
-
-      prevtick = tick;
+  
+  for(int t=0; t<=nticks; t++) {
+    
+    int frameNumber = m_minFrame + t*m_frameStep;
+    int tick = m_p0.x() + t*m_tickStep;
+    int sticks = 10;
+    
+    if (t == nticks) {
+      float frc = (float)(frameNumber-m_maxFrame)/(float)m_frameStep;
+      sticks *= (1-frc);
+      frameNumber = m_maxFrame;
+      tick = m_p1.x();
     }
+
+    p->drawLine(tick, m_lineHeight-m_tickHeight, tick, m_lineHeight+m_tickHeight);
+
+    int tk = tick;
+    if (frameNumber < 10)
+      tk = tick-2;
+    else if (frameNumber < 100)
+      tk = tick-7;
+    else if (frameNumber < 1000)
+      tk = tick-10;
+    else
+      tk = tick-15;
+
+    //p->rotate(90);
+    p->drawText(tk, m_lineHeight-m_tickHeight-2, QString("%1").arg(frameNumber));
+    //p->rotate(-90);
+
+
+    // draw inbetween smaller ticks
+    if (m_frameStep > 1 && t > 0 && sticks > 0)	{
+      int tkstep = (tick-prevtick)/sticks;
+      for(int s=1; s<sticks; s++)  {
+	      int stk = prevtick + s*tkstep;
+        p->drawLine(stk, m_lineHeight, stk, m_lineHeight-m_tickHeight/2);
+      }
+    }
+
+    prevtick = tick;
+    
+  }
 }
 
 void
@@ -706,12 +629,12 @@ KeyFrameEditor::increaseFrameStep()
       m_tickStep = 200;
     }
 
-  m_plus->setEnabled(true);
+  ui->zoomP->setEnabled(true);
 
   if (m_frameStep >= 10000)
     {
       m_frameStep = 10000;
-      m_minus->setEnabled(false);
+      ui->zoomM->setEnabled(false);
     }
 
   calcMaxFrame();
@@ -735,13 +658,13 @@ KeyFrameEditor::decreaseFrameStep()
   else
     m_tickStep = 50;
 
-  m_minus->setEnabled(true);
+  ui->zoomM->setEnabled(true);
 
   if (m_frameStep <= 1)
     {
       m_frameStep = 1;
       m_tickStep = 20;
-      m_plus->setEnabled(false);
+      ui->zoomP->setEnabled(false);
     }
 
   calcMaxFrame();
@@ -963,127 +886,122 @@ KeyFrameEditor::updateSelectRegion()
     }
 }
 
+void KeyFrameEditor::copyFrame() {
+  if (m_selected<0) {
+    emit showMessage("No frame selected for copying", true);
+    return;
+  }
+  m_copyFno = m_fno[m_selected];
+  m_copyImage = m_fImage[m_selected];
+  emit copyFrame(m_selected);
+  emit showMessage(QString("frame at %1 copied").arg(m_copyFno), false);
+}
+
+void KeyFrameEditor::pasteFrame() {
+
+  if (m_copyFno < 0)  {
+    emit showMessage("No frame selected for pasting", true);
+    return;
+  }
+
+  if (m_selectRegion.valid)  {
+    int startKF = m_selectRegion.keyframe0;
+    int endKF = m_selectRegion.keyframe1;
+    emit pasteFrameOnTop(startKF, endKF);
+  } else {
+    if (m_selected > -1)  {
+      if (m_selected < m_fno.count())
+        emit pasteFrameOnTop(m_selected);
+      else
+        QMessageBox::information(0, "",
+                                 QString("Selected keyframe %1 does not exist").arg(m_selected));
+    } else {
+      int onTop = -1;
+      for(int f=0; f<m_fno.count(); f++) {
+        if (m_currFrame == m_fno[f]) {
+          onTop = f;
+          break;
+        }
+      }
+      
+      if (onTop > -1)
+        emit pasteFrameOnTop(onTop);
+      else {
+        emit pasteFrame(m_currFrame);
+        
+        m_fno.append(m_currFrame);
+        m_fRect.append(QRect(-10,-10,1,1));
+        m_fImage.append(m_copyImage);
+        
+        calcRect();
+        reorder();
+        update();
+      }
+    }
+  }
+    
+}
+
+
+
 void KeyFrameEditor::enterEvent(QEvent *e) { setFocus(); grabKeyboard(); }
 void KeyFrameEditor::leaveEvent(QEvent *e) { clearFocus(); releaseKeyboard(); }
 
-void
-KeyFrameEditor::keyPressEvent(QKeyEvent *event)
-{
-  if (event->key() == Qt::Key_Space)
-    {
-      if (m_selected > -1)
-	emit editFrameInterpolation(m_selected);
+void KeyFrameEditor::keyPressEvent(QKeyEvent *event) {
+  
+  if (event->key() == Qt::Key_Space)  {
+    
+    if (m_selected > -1)
+      emit editFrameInterpolation(m_selected);
+    
+  } else if (event->key() == Qt::Key_Left) {
+    
+    m_currFrame = qMax(m_currFrame-1, 1);
+    m_selected = -1;
+    for(int f=0; f<m_fno.count(); f++) {
+      if (m_currFrame == m_fno[f]) {
+        m_selected = f;
+        break;
+      }
     }
-  else if (event->key() == Qt::Key_Left)
-    {
-      m_currFrame = qMax(m_currFrame-1, 1);
-      m_selected = -1;
-      for(int f=0; f<m_fno.count(); f++)
-	{
-	  if (m_currFrame == m_fno[f])
-	    {
-	      m_selected = f;
-	      break;
-	    }
-	}
-      update();
-      emit playFrameNumber(m_currFrame);
-      qApp->processEvents();
+    update();
+    emit playFrameNumber(m_currFrame);
+    qApp->processEvents();
+    
+  } else if (event->key() == Qt::Key_Right)  {
+    
+    m_currFrame = m_currFrame+1;
+    m_selected = -1;
+    for(int f=0; f<m_fno.count(); f++) {
+      if (m_currFrame == m_fno[f]) {
+        m_selected = f;
+        break;
+      }
     }
-  else if (event->key() == Qt::Key_Right)
-    {
-      m_currFrame = m_currFrame+1;
-      m_selected = -1;
-      for(int f=0; f<m_fno.count(); f++)
-	{
-	  if (m_currFrame == m_fno[f])
-	    {
-	      m_selected = f;
-	      break;
-	    }
-	}
-      update();
-      emit playFrameNumber(m_currFrame);
-      qApp->processEvents();
-    }
-  else if (event->key() == Qt::Key_C &&
-	   (event->modifiers() & Qt::ControlModifier ||
-	    event->modifiers() & Qt::MetaModifier) )
-    {
-      if (m_selected > -1)
-	{
-	  m_copyFno = m_fno[m_selected];
-	  m_copyImage = m_fImage[m_selected];
-
-	  emit copyFrame(m_selected);
-	  emit showMessage(QString("frame at %1 copied").arg(m_copyFno), false);
-	}
-      else
-	{
-	  emit showMessage("No frame selected for copying", true);
-	  return;
-	}
-    }
-  else if (event->key() == Qt::Key_H &&
-	   (event->modifiers() & Qt::ControlModifier ||
-	    event->modifiers() & Qt::MetaModifier) )
+    update();
+    emit playFrameNumber(m_currFrame);
+    qApp->processEvents();
+    
+  } else if ( event->key() == Qt::Key_C &&
+              (event->modifiers() & Qt::ControlModifier ||
+               event->modifiers() & Qt::MetaModifier) )  {
+    
+      copyFrame();
+  
+  } else if (event->key() == Qt::Key_H &&
+	           (event->modifiers() & Qt::ControlModifier ||
+	            event->modifiers() & Qt::MetaModifier) ) {
+    
     showHelp();
-  else if (event->key() == Qt::Key_V &&
-	   (event->modifiers() & Qt::ControlModifier ||
-	    event->modifiers() & Qt::MetaModifier) )
-	   {
-      if (m_copyFno < 0)
-	{
-	  emit showMessage("No frame selected for pasting", true);
-	  return;
-	}
-
-      if (m_selectRegion.valid)
-	{
-	  int startKF = m_selectRegion.keyframe0;
-	  int endKF = m_selectRegion.keyframe1;
-
-	  emit pasteFrameOnTop(startKF, endKF);
-	}
-      else
-	{
-	  if (m_selected > -1)
-	    {
-	      if (m_selected < m_fno.count())
-		emit pasteFrameOnTop(m_selected);
-	      else
-		QMessageBox::information(0, "",
-		 QString("Selected keyframe %1 does not exist").arg(m_selected));
-	    }
-	  else
-	    {
-	      int onTop = -1;
-	      for(int f=0; f<m_fno.count(); f++)
-		{
-		  if (m_currFrame == m_fno[f])
-		    {
-		      onTop = f;
-		      break;
-		    }
-		}
-
-	      if (onTop > -1)
-		emit pasteFrameOnTop(onTop);
-	      else
-		{
-		  emit pasteFrame(m_currFrame);
-
-		  m_fno.append(m_currFrame);
-		  m_fRect.append(QRect(-10,-10,1,1));
-		  m_fImage.append(m_copyImage);
-
-		  calcRect();
-		  reorder();
-		  update();
-		}
-	    }
-	}
-    }
+  
+  } else if (event->key() == Qt::Key_V &&
+	         (event->modifiers() & Qt::ControlModifier ||
+	          event->modifiers() & Qt::MetaModifier) )  {
+    
+    pasteFrame();
+    
+  }
+  
 }
 
 

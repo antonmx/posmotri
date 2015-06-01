@@ -2,7 +2,7 @@
 #include "global.h"
 #include "volumeinformation.h"
 #include "matrix.h"
-#include "enums.h"
+#include "staticfunctions.h"
 #include <GL/glut.h>
 
 QString Tick::m_labelX = "Height";
@@ -34,8 +34,8 @@ Tick::draw(Camera *cam, double *Xform)
   Vec dataMin, dataMax, dataSize;
   Global::bounds(dataMin, dataMax);
   Vec voxelScaling = Global::voxelScaling();
-  Vec bmin = VECPRODUCT(dataMin,voxelScaling);
-  Vec bmax = VECPRODUCT(dataMax,voxelScaling);
+  Vec bmin = vMv(dataMin,voxelScaling);
+  Vec bmax = vMv(dataMax,voxelScaling);
 
   int i;
 

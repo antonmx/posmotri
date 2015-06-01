@@ -258,7 +258,7 @@ ClipPlanes::normals()
     {
       Vec tang = m_clips[i]->m_tang;
       //Vec voxelScaling = Global::voxelScaling();
-      //tang = VECPRODUCT(tang, voxelScaling);
+      //tang = vMv(tang, voxelScaling);
       //tang.normalize();
       normals.append(tang);
     }
@@ -273,7 +273,7 @@ ClipPlanes::xaxis()
     {
       Vec v = m_clips[i]->m_xaxis;
       //Vec voxelScaling = Global::voxelScaling();
-      //v = VECPRODUCT(v, voxelScaling);
+      //v = vMv(v, voxelScaling);
       //v.normalize();
       xaxis.append(v);
     }
@@ -288,7 +288,7 @@ ClipPlanes::yaxis()
     {
       Vec v = m_clips[i]->m_yaxis;
       //Vec voxelScaling = Global::voxelScaling();
-      //v = VECPRODUCT(v, voxelScaling);
+      //v = vMv(v, voxelScaling);
       //v.normalize();
       yaxis.append(v);
     }
@@ -652,9 +652,9 @@ ClipPlanes::viewportKeypressEvent(int i, QKeyEvent *event)
 	      Vec pos = m_clips[i]->position();
 	      Vec normal = m_clips[i]->m_tang;
 	      Vec voxelScaling = Global::voxelScaling();
-	      normal = VECPRODUCT(normal, voxelScaling);
+	      normal = vMv(normal, voxelScaling);
 	      normal.normalize();
-	      pos = VECPRODUCT(pos, voxelScaling);
+	      pos = vMv(pos, voxelScaling);
 	      emit mopClip(pos, normal);
 	    }
 	  if (m_clips[i]->saveSliceImage())
@@ -802,13 +802,13 @@ ClipPlanes::drawOtherSlicesInViewport(QGLViewer *viewer, int ic)
   Vec voxelScaling = Global::voxelScaling();
   Vec pos = m_clips[ic]->position();
   Vec cxaxis = m_clips[ic]->m_xaxis;
-  cxaxis = VECPRODUCT(cxaxis, voxelScaling);
+  cxaxis = vMv(cxaxis, voxelScaling);
   cxaxis.normalize();
   Vec cyaxis = m_clips[ic]->m_yaxis;
-  cyaxis = VECPRODUCT(cyaxis, voxelScaling);
+  cyaxis = vMv(cyaxis, voxelScaling);
   cyaxis.normalize();
   Vec cnormal = m_clips[ic]->m_tang;
-  cnormal = VECPRODUCT(cnormal, voxelScaling);
+  cnormal = vMv(cnormal, voxelScaling);
   cnormal.normalize();
 
   float aspectRatio = viewer->aspectRatio();
@@ -832,7 +832,7 @@ ClipPlanes::drawOtherSlicesInViewport(QGLViewer *viewer, int ic)
 	    {
 	      Vec postic = m_clips[tic]->position();
 	      Vec cnormaltic = m_clips[tic]->m_tang;
-	      cnormaltic = VECPRODUCT(cnormaltic, voxelScaling);
+	      cnormaltic = vMv(cnormaltic, voxelScaling);
 	      cnormaltic.normalize();
 	      int thickness = m_clips[tic]->thickness();
 	      Vec cc = m_clips[tic]->color();
@@ -857,7 +857,7 @@ void
 ClipPlanes::drawPoints(int ic, QList<Vec> hpts)
 {
   Vec voxelScaling = Global::voxelScaling();
-  Vec pos = VECPRODUCT(m_clips[ic]->position(), voxelScaling);
+  Vec pos = vMv(m_clips[ic]->position(), voxelScaling);
   Vec cnormal = m_clips[ic]->m_tang;
   int clipThickness = m_clips[ic]->thickness();
 
@@ -871,7 +871,7 @@ ClipPlanes::drawPoints(int ic, QList<Vec> hpts)
   glBegin(GL_POINTS);
   for(int ip=0; ip<hpts.count(); ip++)
     {
-      Vec pt = VECPRODUCT(hpts[ip], voxelScaling);
+      Vec pt = vMv(hpts[ip], voxelScaling);
       if (qAbs((pt-pos)*cnormal)<(clipThickness+1.0))
 	glVertex3f(pt.x, pt.y, pt.z);
     }

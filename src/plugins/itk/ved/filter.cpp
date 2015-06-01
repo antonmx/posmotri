@@ -346,7 +346,7 @@ VEDFilter::applyFilter(QString flnm,
 		  ok = (mop > 0);
 		}
 		
-		po = VECPRODUCT(po, voxelScaling);
+		po = vMv(po, voxelScaling);
 		
 		if (ok && clipPresent)
 		  ok = StaticFunctions::getClip(po, clipPos, clipNormal);

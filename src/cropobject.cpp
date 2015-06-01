@@ -841,7 +841,7 @@ CropObject::computeTangents()
     tang = Vec(1,0,0); // should really scold the user
 
   Vec voxelScaling = Global::voxelScaling();
-  tang = VECPRODUCT(tang, voxelScaling);
+  tang = vMv(tang, voxelScaling);
   tang.normalize();
 
 
@@ -864,8 +864,8 @@ CropObject::computeTangents()
   m_xaxis = q.rotate(m_oxaxis);
   m_yaxis = m_tang^m_xaxis;
 
-  m_xaxis = VECPRODUCT(m_xaxis, voxelScaling);
-  m_yaxis = VECPRODUCT(m_yaxis, voxelScaling);
+  m_xaxis = vMv(m_xaxis, voxelScaling);
+  m_yaxis = vMv(m_yaxis, voxelScaling);
   m_xaxis.normalize();
   m_yaxis.normalize();
 
@@ -938,13 +938,13 @@ CropObject::computeCrop(QList<Vec> points)
   Vec prevPt;
   for(int i=0; i<npts; i++)
     {
-      Vec v = VECPRODUCT(points[i], voxelScaling);
+      Vec v = vMv(points[i], voxelScaling);
       m_crop.append(v);
       m_radX.append(m_pointRadX[i]);
       m_radY.append(m_pointRadY[i]);
 
       // for length calculation
-      v = VECPRODUCT(points[i], voxelSize);
+      v = vMv(points[i], voxelSize);
       lengthCrop.append(v);
     }
 
@@ -1047,7 +1047,7 @@ CropObject::drawLines(QGLViewer *viewer,
       glBegin(GL_POINTS);
       for(int i=0; i<m_points.count();i++)
 	{
-	  Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+	  Vec pt = vMv(m_points[i], voxelScaling);
 	  glVertex3fv(pt);
 	}
       glEnd();
@@ -1059,7 +1059,7 @@ CropObject::drawLines(QGLViewer *viewer,
 	  Vec voxelScaling = Global::voxelScaling();
 	  glPointSize(25);
 	  glBegin(GL_POINTS);
-	  Vec pt = VECPRODUCT(m_points[m_pointPressed], voxelScaling);
+	  Vec pt = vMv(m_points[m_pointPressed], voxelScaling);
 	  glVertex3fv(pt);
 	  glEnd();
 	}
@@ -1419,7 +1419,7 @@ CropObject::getCrossSection(float scale,
       float x = r*cos(6.2831853*t)*scale;
       float y = r*sin(6.2831853*t)*scale;
       Vec v = x*xaxis + y*yaxis;
-      //v = VECPRODUCT(v, voxelScaling);
+      //v = vMv(v, voxelScaling);
       csec.append(v);
     }
 

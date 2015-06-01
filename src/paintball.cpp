@@ -53,8 +53,8 @@ PaintBall::setBounds(Vec dataMin, Vec dataMax)
 
   Vec voxelScaling = Global::voxelScaling();
   Vec bmin, bmax;
-  bmin = VECPRODUCT(m_dataMin, voxelScaling);
-  bmax = VECPRODUCT(m_dataMax, voxelScaling);
+  bmin = vMv(m_dataMin, voxelScaling);
+  bmax = vMv(m_dataMax, voxelScaling);
 
   Vec pos = StaticFunctions::clampVec(bmin, bmax,
 				      m_frame.position());
@@ -157,8 +157,8 @@ PaintBall::bound()
 {
   Vec voxelScaling = Global::voxelScaling();
   Vec bmin, bmax;
-  bmin = VECPRODUCT(m_dataMin, voxelScaling);
-  bmax = VECPRODUCT(m_dataMax, voxelScaling);
+  bmin = vMv(m_dataMin, voxelScaling);
+  bmax = vMv(m_dataMax, voxelScaling);
 
   Vec pos = StaticFunctions::clampVec(bmin, bmax,
 				      m_frame.position());
@@ -229,7 +229,7 @@ Vec PaintBall::position()
 {
   Vec pos = m_frame.position();
   Vec voxelScaling = Global::voxelScaling();
-  pos = VECDIVIDE(pos, voxelScaling);
+  pos = vDv(pos, voxelScaling);
   return pos;
 }
 
@@ -242,7 +242,7 @@ Vec PaintBall::size()
 {
   Vec sz = m_size;
   Vec voxelScaling = Global::voxelScaling();
-  sz = VECDIVIDE(sz, voxelScaling);
+  sz = vDv(sz, voxelScaling);
   return 2*sz;
 }
 
@@ -360,7 +360,7 @@ PaintBall::draw()
       Vec dir = m_constraints->translationConstraintDirection();
       if (dir.norm() > 0)
 	dir.normalize();
-      Vec pos = VECPRODUCT(sz, dir);
+      Vec pos = vMv(sz, dir);
       pos += dir;
       dir *= scale;
       QGLViewer::drawArrow(pos,   pos+dir, 0.5f, 7);
@@ -372,7 +372,7 @@ PaintBall::draw()
 	{
 	  Vec pos, dir;
 	  dir = Vec((i==0),(i==1),(i==2));
-	  pos = VECPRODUCT(sz, dir);
+	  pos = vMv(sz, dir);
 	  pos += dir;
 	  dir *= scale;
 	  QGLViewer::drawArrow(pos,   pos+dir, 0.5f, 7);

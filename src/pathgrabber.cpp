@@ -116,7 +116,7 @@ PathGrabber::mousePressEvent(QMouseEvent* const event,
   QList<Vec> pts = points();
   for(int i=0; i<pts.count(); i++)
     {
-      Vec v = VECPRODUCT(pts[i], voxelScaling);
+      Vec v = vMv(pts[i], voxelScaling);
       Vec pos = camera->projectedCoordinatesOf(v);
       QPoint hp(pos.x, pos.y);
       if ((hp-m_prevPos).manhattanLength() < 20)
@@ -199,7 +199,7 @@ PathGrabber::mouseMoveEvent(QMouseEvent* const event,
 
 
   Vec voxelScaling = Global::voxelScaling();
-  trans = VECDIVIDE(trans, voxelScaling);
+  trans = vDv(trans, voxelScaling);
 
   m_pointPressed = getPointPressed();
   if (m_pointPressed > -1)

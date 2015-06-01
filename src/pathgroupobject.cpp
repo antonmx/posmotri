@@ -1025,7 +1025,7 @@ PathGroupObject::computeGrabbedPathLength()
     {
       for(int i=sidx; i<eidx; i++)
 	{
-	  Vec v = VECPRODUCT(m_points[i], voxelSize);
+	  Vec v = vMv(m_points[i], voxelSize);
 	  lengthPath.append(v);
 	}
     }
@@ -1038,13 +1038,13 @@ PathGroupObject::computeGrabbedPathLength()
 	    {
 	      float frc = (float)j/(float)m_segments;
 	      Vec pos = interpolate(i-1, i, frc);
-	      Vec pv = VECPRODUCT(pos, voxelSize);
+	      Vec pv = vMv(pos, voxelSize);
 	      lengthPath.append(pv);
 	    }
 	}
       if (!m_closed)
 	{
-	  Vec pos = VECPRODUCT(m_points[eidx-1],
+	  Vec pos = vMv(m_points[eidx-1],
 			   voxelSize);
 	  lengthPath.append(pos);
 	}
@@ -1085,7 +1085,7 @@ PathGroupObject::computePath()
 
 	  for(int i=sidx; i<eidx; i++)
 	    {
-	      Vec v = VECPRODUCT(m_points[i], voxelScaling);
+	      Vec v = vMv(m_points[i], voxelScaling);
 	      m_path.append(v);
 	      m_radX.append(m_pointRadX[i]);
 	      m_radY.append(m_pointRadY[i]);
@@ -1093,12 +1093,12 @@ PathGroupObject::computePath()
 	      m_angle.append(o);
 
 	      // for length calculation
-	      v = VECPRODUCT(m_points[i], voxelSize);
+	      v = vMv(m_points[i], voxelSize);
 	      lengthPath.append(v);
 	    }
 	  if (m_closed)
 	    {
-	      Vec v = VECPRODUCT(m_points[sidx], voxelScaling);
+	      Vec v = vMv(m_points[sidx], voxelScaling);
 	      m_path.append(v);
 	      m_radX.append(m_pointRadX[sidx]);
 	      m_radY.append(m_pointRadY[sidx]);
@@ -1106,7 +1106,7 @@ PathGroupObject::computePath()
 	      m_angle.append(o);
 
 	      // for length calculation
-	      v = VECPRODUCT(m_points[sidx], voxelSize);
+	      v = vMv(m_points[sidx], voxelSize);
 	      lengthPath.append(v);
 	    }
 
@@ -1162,7 +1162,7 @@ PathGroupObject::computePath()
 	      float frc = (float)j/(float)m_segments;
 	      Vec pos = interpolate(i-1, i, frc);
 
-	      Vec pv = VECPRODUCT(pos, voxelScaling);
+	      Vec pv = vMv(pos, voxelScaling);
 	      m_path.append(pv);
 
 	      float v;
@@ -1175,14 +1175,14 @@ PathGroupObject::computePath()
 
 
 	      // for length calculation
-	      pv = VECPRODUCT(pos, voxelSize);
+	      pv = vMv(pos, voxelSize);
 	      lengthPath.append(pv);
 	    }
 	}
 
       if (!m_closed)
 	{
-	  Vec pos = VECPRODUCT(m_points[eidx-1],
+	  Vec pos = vMv(m_points[eidx-1],
 			       voxelScaling);
 	  m_path.append(pos);
 
@@ -1192,7 +1192,7 @@ PathGroupObject::computePath()
 	  m_angle.append(o);
 
 	  // for length calculation
-	  pos = VECPRODUCT(m_points[eidx-1],
+	  pos = vMv(m_points[eidx-1],
 			   voxelSize);
 	  lengthPath.append(pos);
 	}
@@ -1210,7 +1210,7 @@ PathGroupObject::computePath()
 	      float frc = (float)j/(float)m_segments;
 	      Vec pos = interpolate(eidx-1, sidx, frc);
 
-	      Vec pv = VECPRODUCT(pos, voxelScaling);
+	      Vec pv = vMv(pos, voxelScaling);
 	      m_path.append(pv);
 
 	      float v;
@@ -1222,10 +1222,10 @@ PathGroupObject::computePath()
 	      m_angle.append(v);
 
 	      // for length calculation
-	      pv = VECPRODUCT(pos, voxelSize);
+	      pv = vMv(pos, voxelSize);
 	      lengthPath.append(pv);
 	    }
-	  Vec pos = VECPRODUCT(m_points[sidx], voxelScaling);
+	  Vec pos = vMv(m_points[sidx], voxelScaling);
 	  m_path.append(pos);
 
 	  m_radX.append(m_pointRadX[sidx]);
@@ -1234,7 +1234,7 @@ PathGroupObject::computePath()
 	  m_angle.append(o);
 
 	  // for length calculation
-	  pos = VECPRODUCT(m_points[sidx], voxelSize);
+	  pos = vMv(m_points[sidx], voxelSize);
 	  lengthPath.append(pos);
 	}
 
@@ -1326,7 +1326,7 @@ PathGroupObject::drawPoints()
     {
       if (m_validPoint[i])
 	{
-	  Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+	  Vec pt = vMv(m_points[i], voxelScaling);
 	  glVertex3dv(pt);
 	}
     }
@@ -1339,7 +1339,7 @@ PathGroupObject::drawPoints()
       Vec voxelScaling = Global::voxelScaling();
       glPointSize(15);
       glBegin(GL_POINTS);
-      Vec pt = VECPRODUCT(m_points[m_pointPressed], voxelScaling);
+      Vec pt = vMv(m_points[m_pointPressed], voxelScaling);
       glVertex3dv(pt);
       glEnd();
     }
@@ -1474,7 +1474,7 @@ PathGroupObject::predraw(QGLViewer *viewer,
 	  if (m_validPoint[i])
 	    {
 	      bool ok = true;
-	      Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+	      Vec pt = vMv(m_points[i], voxelScaling);
 	      if (pt.x >= bmin.x &&
 		  pt.y >= bmin.y &&
 		  pt.z >= bmin.z &&
@@ -1788,7 +1788,7 @@ PathGroupObject::drawSphereSprites(QGLViewer *viewer,
 	    psz = (1-frc)*m_minScale + frc*m_maxScale;
 	  glPointSize(qMax(1.0f, psz));
 	  glBegin(GL_POINTS);
-	  Vec pt = VECPRODUCT(m_path[sidx], voxelScaling);
+	  Vec pt = vMv(m_path[sidx], voxelScaling);
 	  glVertex3dv(pt);
 	  glEnd();
 	}
@@ -2513,7 +2513,7 @@ PathGroupObject::getCrossSection(float scale,
       float x = r*cos(6.2831853*t)*scale;
       float y = r*sin(6.2831853*t)*scale;
       Vec v = x*xaxis + y*yaxis;
-      v = VECPRODUCT(v, voxelScaling);
+      v = vMv(v, voxelScaling);
       csec.append(v);
     }
   csec.append(csec[0]);

@@ -22,6 +22,7 @@
 #include <QDebug>
 #include <QString>
 #include <math.h>
+#include <limits>
 
 using namespace qglviewer;
 
@@ -151,17 +152,22 @@ void QDoubleSpinSlide::retranslateNewValue() {
 
 
 QValidator::State QVecValidtor::validate(QString & input, int & pos) const {
-  QStringList list = input.split(" ", QString::SkipEmptyParts);
-  if (list.count() != 3)
+  bool ok;
+  Vec tvec = QVecEdit::toVec(input, &ok);
+  if ( ! ok )
     return QValidator::Intermediate;
-  foreach (QString str, list) {
-    bool ok;
-    str.toDouble(&ok);
-    if (!ok)
-      return QValidator::Intermediate;
-  }
+  QVecEdit * vec = dynamic_cast<QVecEdit*>( parent() );
+  if (vec)
+    return  ( tvec.x < vec->minimum().x || tvec.x > vec->maximum().x
+           || tvec.y < vec->minimum().y || tvec.y > vec->maximum().y
+           || tvec.z < vec->minimum().z || tvec.z > vec->maximum().z )
+         ? QValidator::Intermediate : QValidator::Acceptable;
   return QValidator::Acceptable;
 }
+
+
+
+
 
 
 
@@ -170,35 +176,67 @@ QVecEdit::QVecEdit(QWidget * parent)
   : QLineEdit(parent) 
   , oldVec(0,0,0)
 {
+  bool ok;
+  Vec initvec = toVec(text(),&ok);
+  if(!ok)
+    initvec=Vec(1,1,1);
+  const double rm=std::numeric_limits<double>::max();
+  setRange( Vec(-rm,-rm,-rm), Vec(rm,rm,rm));
+  setValue( initvec );
+  
   setValidator(new QVecValidtor(this));
-  setValue(oldVec);
-  connect(this, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
+  
+  connect(this, SIGNAL(returnPressed()), SLOT(retranslateNewValue()));
+  //connect(this, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
 }
  
  
 Vec QVecEdit::value() const {
-  if ( ! hasAcceptableInput() )
-    return oldVec;
-  QStringList list = text().split(" ", QString::SkipEmptyParts);
-  return Vec(list[0].toDouble(), list[1].toDouble(), list[2].toDouble());
+  return hasAcceptableInput()  ?  toVec(text())  :  oldVec;
 }
 
 void QVecEdit::setValue(const Vec & vec) {
-  setText( QString("%1 %2 %3").arg(vec.x).arg(vec.y).arg(vec.z) );
+  setText(toString(vec));
+  oldVec=value();
 }
 
 void QVecEdit::retranslateNewValue() {
-  if ( ! hasAcceptableInput() )
+
+  if ( ! hasAcceptableInput() ) {
+    setValue(oldVec);
     return;
+  }
   const Vec newVec = value();
   if (newVec != oldVec)
     emit valueChanged(oldVec=newVec);
 }
 
 void QVecEdit::focusOutEvent ( QFocusEvent * e ) {
-  if ( ! hasAcceptableInput() )
-    setValue(oldVec);
+  retranslateNewValue();
   QLineEdit::focusOutEvent(e);
+}
+
+QString QVecEdit::toString ( const Vec & vec ) {
+  return QString("%1 %2 %3").arg(vec.x).arg(vec.y).arg(vec.z);
+}
+
+Vec QVecEdit::toVec ( const QString & str, bool * ok) {
+  if(ok) *ok = true;
+  QStringList list = str.split(" ", QString::SkipEmptyParts);
+  if (list.count() != 3) {
+    if(ok) *ok=false;
+    return Vec(0,0,0);
+  }
+  bool v0, v1, v2;
+  Vec ret(list[0].toDouble(&v0), list[1].toDouble(&v1), list[2].toDouble(&v2));
+  if (ok) *ok = v0 && v1 && v2;
+  return ret;
+}
+
+void QVecEdit::setRange ( const Vec & min, const Vec & max) {
+  _min = min;
+  _max = max;
+  setValue(value()); // to revalidate
 }
 
 

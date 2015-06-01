@@ -3,8 +3,6 @@
 
 #define DEG2RAD(angle) angle*3.1415926535897931/180.0
 #define RAD2DEG(angle) angle*180.0/3.1415926535897931
-#define VECPRODUCT(a, b) Vec(a.x*b.x, a.y*b.y, a.z*b.z)
-#define VECDIVIDE(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
 
 class Enums
 {

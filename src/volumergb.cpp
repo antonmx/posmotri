@@ -1064,7 +1064,7 @@ VolumeRGB::maskRawVolume(unsigned char *lut,
 	    int idx = (y-miny)*lenx + (x-minx);
 
 	    Vec po = Vec(x, y, z);
-	    po = VECPRODUCT(po, voxelScaling);
+	    po = vMv(po, voxelScaling);
 
 	    bool ok = StaticFunctions::getClip(po, clipPos, clipNormal);
 
@@ -1204,7 +1204,7 @@ VolumeRGB::saveOpacityVolume(unsigned char *lut,
 	    int idx = (y-miny)*lenx + (x-minx);
 
 	    Vec po = Vec(x, y, z);
-	    po = VECPRODUCT(po, voxelScaling);
+	    po = vMv(po, voxelScaling);
 
 	    bool ok = StaticFunctions::getClip(po, clipPos, clipNormal);
 

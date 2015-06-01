@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>603</width>
-    <height>620</height>
+    <width>821</width>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -66,7 +66,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Dimensions</string>
+          <string>Size</string>
          </property>
         </widget>
        </item>
@@ -97,42 +97,24 @@
         </widget>
        </item>
        <item row="0" column="1">
-        <widget class="QLabel" name="m_brickMinLabel">
-         <property name="text">
-          <string>0 0 0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QLabel" name="m_brickSizeLabel">
-         <property name="text">
-          <string>0 0 0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QLabel" name="m_brickMaxLabel">
-         <property name="text">
-          <string>0 0 0</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
         <widget class="QVecEdit" name="m_brickMinEdit">
          <property name="text">
           <string>0 0 0</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="2">
+       <item row="1" column="1">
         <widget class="QVecEdit" name="m_brickMaxEdit">
          <property name="text">
           <string>0 0 0</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="2">
+       <item row="2" column="1">
         <widget class="QVecEdit" name="m_brickSizeEdit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>0 0 0</string>
          </property>
@@ -174,7 +156,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="4" column="1">
-        <widget class="QLineEdit" name="m_axis">
+        <widget class="QVecEdit" name="m_axis_">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -182,7 +164,7 @@ p, li { white-space: pre-wrap; }
           </sizepolicy>
          </property>
          <property name="text">
-          <string>1 0 0</string>
+          <string>1 1 1</string>
          </property>
         </widget>
        </item>
@@ -236,7 +218,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="3" column="1">
-        <widget class="QLineEdit" name="m_pivot">
+        <widget class="QVecEdit" name="m_pivot_">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -278,21 +260,8 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="5" column="1">
-        <widget class="QLineEdit" name="m_angle">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>0</string>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="1">
-        <widget class="QLineEdit" name="m_translation">
+        <widget class="QVecEdit" name="m_translation_">
          <property name="text">
           <string>0 0 0</string>
          </property>
@@ -312,7 +281,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="6" column="1">
-        <widget class="QLineEdit" name="m_scalepivot">
+        <widget class="QVecEdit" name="m_scalepivot_">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -384,7 +353,7 @@ p, li { white-space: pre-wrap; }
         </widget>
        </item>
        <item row="7" column="1">
-        <widget class="QLineEdit" name="m_scale">
+        <widget class="QVecEdit" name="m_scale_">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -393,6 +362,22 @@ p, li { white-space: pre-wrap; }
          </property>
          <property name="text">
           <string>1 1 1</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QDoubleSpinBox" name="m_angle_">
+         <property name="suffix">
+          <string>°</string>
+         </property>
+         <property name="decimals">
+          <number>3</number>
+         </property>
+         <property name="minimum">
+          <double>-2147483647.000000000000000</double>
+         </property>
+         <property name="maximum">
+          <double>2147483647.000000000000000</double>
          </property>
         </widget>
        </item>

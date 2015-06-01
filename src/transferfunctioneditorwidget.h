@@ -31,7 +31,6 @@ class TransferFunctionEditorWidget : public QSplitter
   void applyUndo(bool);
 
  private :
-  QWidget *m_parent;
   SplineEditorWidget *m_splineEditorWidget;
   GradientEditorWidget *m_gradientEditorWidget;
 

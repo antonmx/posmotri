@@ -1045,7 +1045,7 @@ Paths::processCommand(int idx, QString cmd)
 	      Vec voxelScaling = Global::voxelScaling();
 	      for (int i=0; i<ppoints.count(); i++)
 		{
-		  Vec pt = VECPRODUCT(ppoints[i], voxelScaling);
+		  Vec pt = vMv(ppoints[i], voxelScaling);
 		  pathPoints << pt;
 		}
 
@@ -1401,7 +1401,7 @@ Paths::getRequiredParameters(int i,
   QList<float> radX = m_paths[i]->pathradX();
 
   for(int np=0; np<pathPoints.count(); np++)
-    pathX[np] = VECPRODUCT(voxelSize,pathX[np]);
+    pathX[np] = vMv(voxelSize,pathX[np]);
 
   float maxheight = 0;
   for(int np=0; np<pathPoints.count(); np++)
@@ -1413,8 +1413,8 @@ Paths::getRequiredParameters(int i,
   float imglength = 0;
   for(int np=1; np<pathPoints.count(); np++)
     {
-      Vec p0 = VECPRODUCT(voxelSize,pathPoints[np]);
-      Vec p1 = VECPRODUCT(voxelSize,pathPoints[np-1]);
+      Vec p0 = vMv(voxelSize,pathPoints[np]);
+      Vec p1 = vMv(voxelSize,pathPoints[np-1]);
       imglength += (p0-p1).norm();
     }
   scale = (float)(vw-11)/imglength;
@@ -1449,8 +1449,8 @@ Paths::getPointPressed(int i, Vec voxelSize,
 	  for (int s=0; s<nseg; s++)
 	    {
 	      ptn++;
-	      Vec p0 = VECPRODUCT(voxelSize,pathPoints[ptn]);
-	      Vec p1 = VECPRODUCT(voxelSize,pathPoints[ptn-1]);
+	      Vec p0 = vMv(voxelSize,pathPoints[ptn]);
+	      Vec p1 = vMv(voxelSize,pathPoints[ptn-1]);
 	      clen += (p0-p1).norm();
 	    }
 	  if (fabs(shiftx+clen*scale - scr.x()) < 20)
@@ -1514,9 +1514,9 @@ Paths::viewportKeypressEvent(int i, QKeyEvent *event,
   QList<float> radY = m_paths[i]->pathradY();
 
   for(int np=0; np<pathPoints.count(); np++)
-    pathX[np] = VECPRODUCT(voxelSize,pathX[np]);
+    pathX[np] = vMv(voxelSize,pathX[np]);
   for(int np=0; np<pathPoints.count(); np++)
-    pathY[np] = VECPRODUCT(voxelSize,pathY[np]);
+    pathY[np] = vMv(voxelSize,pathY[np]);
 
   int idx = getPointPressed(i, voxelSize,
 			    pathPoints,

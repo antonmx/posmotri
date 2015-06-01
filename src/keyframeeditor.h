@@ -11,9 +11,17 @@ class SelectRegion
   int keyframe0, keyframe1;
 };
 
+
+namespace Ui {
+  class KeyFrameEditor;
+}
+
 class KeyFrameEditor : public QWidget
 {
-  Q_OBJECT
+  Q_OBJECT;
+  
+private:
+  Ui::KeyFrameEditor * ui;
 
  public :
   KeyFrameEditor(QWidget *parent=0);
@@ -71,20 +79,19 @@ class KeyFrameEditor : public QWidget
   void removeKeyFrame();
   void playKeyFrames();
   void playPressed();
+  void copyFrame();
+  void pasteFrame();
 
  private :
-  QWidget *m_parent;
-
-  QPushButton *m_set, *m_remove;
-  QPushButton *m_plus, *m_minus;
-  QPushButton *m_play, *m_reset;
 
   SelectRegion m_selectRegion;
-  QPoint m_p0, m_p1;
-  int m_lineHeight, m_tickStep, m_tickHeight;
+  const int m_lineHeight, m_tickHeight;
+  int m_tickStep;
+  const QPoint m_p0;
+  QPoint m_p1;
+  const int m_imgSize, m_imgSpacer;
+  const int m_editorHeight;
   int m_minFrame, m_maxFrame, m_frameStep;
-  int m_imgSize, m_imgSpacer;
-  int m_editorHeight;
   int m_prevX;
   bool m_reordered;
   int m_currFrame;

@@ -103,6 +103,7 @@ DirectionVectorWidget::DirectionVectorWidget(QWidget *parent)
   connect(ui->zangle, SIGNAL(valueChanged(double)), SLOT(onDirectionChange()));
   connect(ui->yangle, SIGNAL(valueChanged(double)), SLOT(onDirectionChange()));
   connect(ui->len, SIGNAL(valueChanged(double)), SLOT(onLenChange()));
+  setVector(Vec(0,0,1));
 }
 
 void DirectionVectorWidget::setVector(const Vec & vv) {

@@ -695,7 +695,7 @@ GiLightObject::computePath(QList<Vec> points)
   int npts = points.count();
   if (npts == 1)
     {
-      m_path << VECPRODUCT(points[0], voxelScaling);
+      m_path << vMv(points[0], voxelScaling);
       m_pathT << Vec(0,0,1);
       m_pathX << Vec(0,1,0);
       m_pathY << Vec(1,0,0);
@@ -707,11 +707,11 @@ GiLightObject::computePath(QList<Vec> points)
     {
       for(int i=0; i<npts; i++)
 	{
-	  Vec v = VECPRODUCT(points[i], voxelScaling);
+	  Vec v = vMv(points[i], voxelScaling);
 	  m_path.append(v);
 
 	  // for length calculation
-	  v = VECPRODUCT(points[i], voxelSize);
+	  v = vMv(points[i], voxelSize);
 	  lengthPath.append(v);
 	}
 
@@ -729,22 +729,22 @@ GiLightObject::computePath(QList<Vec> points)
 	  float frc = (float)j/(float)m_segments;
 	  Vec pos = interpolate(i-1, i, frc);
 
-	  Vec pv = VECPRODUCT(pos, voxelScaling);
+	  Vec pv = vMv(pos, voxelScaling);
 	  m_path.append(pv);
 
 	  // for length calculation
-	  pv = VECPRODUCT(pos, voxelSize);
+	  pv = vMv(pos, voxelSize);
 	  lengthPath.append(pv);
 	}
     }
 
   // last point
-  Vec pos = VECPRODUCT(points[points.count()-1],
+  Vec pos = vMv(points[points.count()-1],
 		       voxelScaling);
   m_path.append(pos);
 
   // for length calculation
-  pos = VECPRODUCT(points[points.count()-1],
+  pos = vMv(points[points.count()-1],
 		   voxelSize);
   lengthPath.append(pos);
   
@@ -866,7 +866,7 @@ GiLightObject::drawLines(QGLViewer *viewer,
       if (m_lightType == 1)
 	{ // draw only first point
 	  glBegin(GL_POINTS);
-	  Vec pt = VECPRODUCT(m_points[0], voxelScaling);
+	  Vec pt = vMv(m_points[0], voxelScaling);
 	  glVertex3fv(pt);
 	  glEnd();
 	}
@@ -875,7 +875,7 @@ GiLightObject::drawLines(QGLViewer *viewer,
 	  glBegin(GL_POINTS);
 	  for(int i=0; i<m_points.count();i++)
 	    {
-	      Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+	      Vec pt = vMv(m_points[i], voxelScaling);
 	      glVertex3fv(pt);
 	    }
 	  glEnd();
@@ -888,7 +888,7 @@ GiLightObject::drawLines(QGLViewer *viewer,
 	  Vec voxelScaling = Global::voxelScaling();
 	  glPointSize(25);
 	  glBegin(GL_POINTS);
-	  Vec pt = VECPRODUCT(m_points[m_pointPressed], voxelScaling);
+	  Vec pt = vMv(m_points[m_pointPressed], voxelScaling);
 	  glVertex3fv(pt);
 	  glEnd();
 	}
@@ -944,7 +944,7 @@ GiLightObject::postdrawPointNumbers(QGLViewer *viewer)
   Vec voxelScaling = Global::voxelScaling();
   for(int i=0; i<m_points.count();i++)
     {
-      Vec pt = VECPRODUCT(m_points[i], voxelScaling);
+      Vec pt = vMv(m_points[i], voxelScaling);
       Vec scr = viewer->camera()->projectedCoordinatesOf(pt);
       int x = scr.x;
       int y = scr.y;

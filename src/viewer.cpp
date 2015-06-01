@@ -306,9 +306,9 @@ Viewer::switchDrawVolume()
 void
 Viewer::showFullScene()
 {
-  Vec smin = VECPRODUCT(m_hiresVolume->volumeMin(),
+  Vec smin = vMv(m_hiresVolume->volumeMin(),
 			Global::voxelScaling());
-  Vec smax = VECPRODUCT(m_hiresVolume->volumeMax(),
+  Vec smax = vMv(m_hiresVolume->volumeMax(),
 			Global::voxelScaling());
 
   setSceneBoundingBox(smin, smax);
@@ -328,14 +328,14 @@ Viewer::updateScaling()
 {
   if (m_hiresVolume->raised())
     {
-      Vec smin = VECPRODUCT(m_hiresVolume->volumeMin(), Global::voxelScaling());
-      Vec smax = VECPRODUCT(m_hiresVolume->volumeMax(), Global::voxelScaling());
+      Vec smin = vMv(m_hiresVolume->volumeMin(), Global::voxelScaling());
+      Vec smax = vMv(m_hiresVolume->volumeMax(), Global::voxelScaling());
       setSceneBoundingBox(smin, smax);
     }
   else
     {
-//      Vec smin = VECPRODUCT(m_lowresVolume->volumeMin(), Global::voxelScaling());
-//      Vec smax = VECPRODUCT(m_lowresVolume->volumeMax(), Global::voxelScaling());
+//      Vec smin = vMv(m_lowresVolume->volumeMin(), Global::voxelScaling());
+//      Vec smax = vMv(m_lowresVolume->volumeMax(), Global::voxelScaling());
       Vec smin = m_lowresVolume->volumeMin();
       Vec smax = m_lowresVolume->volumeMax();
       setSceneBoundingBox(smin, smax);
@@ -631,7 +631,7 @@ Viewer::checkPointSelectedInViewport(int ic, QPoint screenPt)
   Camera clipCam;
   clipCam = *camera();
   clipCam.setOrientation(clipInfo.rot[ic]);
-  Vec cpos = VECPRODUCT(clipInfo.pos[ic], voxelScaling);
+  Vec cpos = vMv(clipInfo.pos[ic], voxelScaling);
   cpos = cpos -
     clipCam.viewDirection()*sceneRadius()*2*(1.0/viewportScale[ic]);
   clipCam.setPosition(cpos);
@@ -1369,15 +1369,15 @@ void
 Viewer::drawCarveCircle()
 {
   Vec voxelScaling = Global::voxelScaling();
-  Vec chp = VECPRODUCT(carveHitPoint, voxelScaling);
+  Vec chp = vMv(carveHitPoint, voxelScaling);
 
  glActiveTexture(GL_TEXTURE0);
   glEnable(GL_TEXTURE_2D);
   glBindTexture(GL_TEXTURE_2D, Global::hollowSpriteTexture());
   glDisable(GL_DEPTH_TEST);
 
-  Vec p = VECPRODUCT(camera()->upVector(), voxelScaling);
-  Vec q = VECPRODUCT(camera()->rightVector(), voxelScaling);
+  Vec p = vMv(camera()->upVector(), voxelScaling);
+  Vec q = vMv(camera()->rightVector(), voxelScaling);
 
   float lod = m_hiresVolume->getDragSubsamplingLevel();
   float r,d;
@@ -2366,7 +2366,7 @@ Viewer::setViewportCamera(int ic, Camera& clipCam)
   int vx, vy, vh, vw;
   QVector4D vp = clipInfo.viewport[ic];
   clipCam.setOrientation(clipInfo.rot[ic]);
-  Vec cpos = VECPRODUCT(clipInfo.pos[ic], voxelScaling);
+  Vec cpos = vMv(clipInfo.pos[ic], voxelScaling);
   cpos = cpos -
     clipCam.viewDirection()*sceneRadius()*2*(1.0/viewportScale[ic]);
   clipCam.setPosition(cpos);
@@ -2690,7 +2690,7 @@ Viewer::mouseMoveEvent(QMouseEvent *event)
       found)
     {
       Vec voxelScaling = Global::voxelScaling();
-      Vec pt = VECDIVIDE(target, voxelScaling);
+      Vec pt = vDv(target, voxelScaling);
       if (!mouseButtonPressed)
 	{
 	  carveHitPointOK = true;
@@ -2723,7 +2723,7 @@ Viewer::mouseMoveEvent(QMouseEvent *event)
       Vec dmin = m_hiresVolume->volumeMin();
       if (ic >= 0) // we are in a viewport
 	{
-	  cp = VECDIVIDE(clipPos[ic], voxelScaling);
+	  cp = vDv(clipPos[ic], voxelScaling);
 	  PruneHandler::setPlanarCarve(cp, clipNormal[ic], clipThickness[ic]+1, dmin);
 	}
       else
@@ -2732,7 +2732,7 @@ Viewer::mouseMoveEvent(QMouseEvent *event)
 	    {
 	      if (fabs(clipNormal[c] *(pt - clipPos[c])) < 0.1)
 		{
-		  cp = VECDIVIDE(clipPos[c], voxelScaling);
+		  cp = vDv(clipPos[c], voxelScaling);
 		  PruneHandler::setPlanarCarve(cp, clipNormal[c], clipThickness[c]+1, dmin);
 		  break;
 		}

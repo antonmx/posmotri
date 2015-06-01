@@ -91,17 +91,24 @@ class QVecEdit : public QLineEdit {
   Q_OBJECT;
   
 private:
+  qglviewer::Vec _min;
+  qglviewer::Vec _max;
   qglviewer::Vec oldVec;
   
 public:  
   QVecEdit(QWidget * parent = 0);  
   qglviewer::Vec value() const ;  
+  const qglviewer::Vec & minimum() const {return _min;}
+  const qglviewer::Vec & maximum() const {return _max;}
+  static QString toString(const qglviewer::Vec & );
+  static qglviewer::Vec toVec(const QString & , bool * ok=0);
   
 public slots:
-  void setValue(const qglviewer::Vec & vec);
+  void setValue(const qglviewer::Vec & );
+  void setRange(const qglviewer::Vec & , const qglviewer::Vec & );
   
 signals:
-  void valueChanged(const qglviewer::Vec & vec);
+  void valueChanged(const qglviewer::Vec & );
   
 private slots:
   void retranslateNewValue();
