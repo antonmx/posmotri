@@ -3,7 +3,8 @@
 
 #include <QGLViewer/vec.h>
 #include <QGLViewer/quaternion.h>
-using namespace qglviewer;
+#include <QSettings>
+
 
 #include <fstream>
 using namespace std;
@@ -32,8 +33,8 @@ class LightingInformation
 					 float);
 
   void clear();
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings &);
+  void save(QSettings &) const;
 
   bool applyEmissive;
   bool applyLighting;
@@ -41,8 +42,8 @@ class LightingInformation
   bool applyColoredShadows;
   bool applyBackplane;
   bool peel;
-  Vec colorAttenuation;
-  Vec userLightVector;
+  qglviewer::Vec colorAttenuation;
+  qglviewer::Vec userLightVector;
   float shadowBlur;
   float shadowScale;
   float shadowIntensity;

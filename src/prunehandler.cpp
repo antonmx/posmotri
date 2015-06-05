@@ -10,6 +10,8 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QProgressDialog>
+#include <QDebug>
+#include <QElapsedTimer>
 
 
 #define vDv(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
@@ -405,30 +407,18 @@ PruneHandler::saveImage(QString flnm)
 
 }
 
-QByteArray
-PruneHandler::getPruneBuffer()
-{
+QByteArray PruneHandler::getPruneBuffer() {
   if (!m_mopActive)
     return QByteArray();
-
   QImage pimg = (m_pruneBuffer->toImage()).mirrored(false, true);
-  uchar *pbdata = new uchar[4*m_dtexX*m_dtexY];
-  memcpy(pbdata, pimg.bits(), 4*m_dtexX*m_dtexY);
-  QByteArray pb((char*)pbdata, 4*m_dtexX*m_dtexY);
-  QByteArray compressed = qCompress(pb, 9);
-  delete [] pbdata;
-  return compressed;
+  QByteArray pb( (char*) pimg.bits(), 4*m_dtexX*m_dtexY);
+  return qCompress(pb, 0);
 }
 
-void
-PruneHandler::setPruneBuffer(QByteArray cpb, bool compressed)
-{
+void PruneHandler::setPruneBuffer(QByteArray cpb, bool compressed) {
+  
   m_mopActive = true;
-  QByteArray pb;
-  if (compressed)
-    pb = qUncompress(cpb);
-  else
-    pb = cpb;
+  QByteArray pb = compressed  ?  qUncompress(cpb) : cpb;
 
   uchar *pbdata = new uchar[4*m_dtexX*m_dtexY];
   memcpy(pbdata, (uchar*)pb.data(), pb.count());

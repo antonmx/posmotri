@@ -1,32 +1,24 @@
 #ifndef GILIGHTINFO_H
 #define GILIGHTINFO_H
 
-//#include <QtGui>
-
+#include <QSettings>
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
-
-#include <fstream>
-using namespace std;
-
 #include "gilightobjectinfo.h"
 
-class GiLightInfo
-{
- public :
+class GiLightInfo {
+
+public :
+
   GiLightInfo();
   ~GiLightInfo();
 
   void clear();
 
-  GiLightInfo& operator=(const GiLightInfo&);
+  GiLightInfo &operator=(const GiLightInfo &);
+  static GiLightInfo interpolate(const GiLightInfo &, const GiLightInfo &, float);
 
-  static GiLightInfo interpolate(const GiLightInfo,
-				 const GiLightInfo,
-				 float);
-
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings &);
+  void save(QSettings &) const;
 
   QList<GiLightObjectInfo> gloInfo;
 
@@ -37,14 +29,15 @@ class GiLightInfo
   int lightLod;
   int lightDiffuse;
 
-  Vec aoLightColor;
+  qglviewer::Vec aoLightColor;
   int aoRad, aoTimes;
   float aoFrac, aoDensity1, aoDensity2;
-  
+
   int emisTF;
   float emisDecay;
   float emisBoost;
   int emisTimes;
+
 };
 
 #endif

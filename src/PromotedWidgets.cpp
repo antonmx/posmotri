@@ -23,8 +23,10 @@
 #include <QString>
 #include <math.h>
 #include <limits>
+#include <fstream>
 
 using namespace qglviewer;
+using namespace std;
 
 
 
@@ -173,7 +175,7 @@ QValidator::State QVecValidtor::validate(QString & input, int & pos) const {
 
 
 QVecEdit::QVecEdit(QWidget * parent)
-  : QLineEdit(parent) 
+  : QLineEdit(parent)
   , oldVec(0,0,0)
 {
   bool ok;
@@ -183,14 +185,14 @@ QVecEdit::QVecEdit(QWidget * parent)
   const double rm=std::numeric_limits<double>::max();
   setRange( Vec(-rm,-rm,-rm), Vec(rm,rm,rm));
   setValue( initvec );
-  
+
   setValidator(new QVecValidtor(this));
-  
+
   connect(this, SIGNAL(returnPressed()), SLOT(retranslateNewValue()));
   //connect(this, SIGNAL(editingFinished()), SLOT(retranslateNewValue()));
 }
- 
- 
+
+
 Vec QVecEdit::value() const {
   return hasAcceptableInput()  ?  toVec(text())  :  oldVec;
 }
@@ -241,4 +243,12 @@ void QVecEdit::setRange ( const Vec & min, const Vec & max) {
 
 
 
+QString nextString(fstream &fin,  char delim) {
+  string read_me;
+  if (delim)
+    getline(fin, read_me,  delim);
+  else
+    getline(fin, read_me);
+  return QString::fromStdString(read_me);
+}
 

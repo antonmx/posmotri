@@ -58,7 +58,7 @@ class HitPoints : public QObject
  public slots :
   void add(Vec);
   void setPoints(QList<Vec>);
-  void setBarePoints(QList<Vec>);
+  void setBarePoints(const QList<Vec> &);
   void addPoints(QString);
   void addBarePoints(QString);
   void savePoints(QString);

@@ -16,9 +16,7 @@ using namespace qglviewer;
 #include "pathobject.h"
 #include "trisetinformation.h"
 #include "networkinformation.h"
-
-#include <fstream>
-using namespace std;
+# include <QSettings>
 
 class ViewInformation
 {
@@ -28,8 +26,8 @@ class ViewInformation
   ~ViewInformation();
   ViewInformation& operator=(const ViewInformation&);
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings &cfg);
+  void save(QSettings &cfg) const;
 
   void setStepsizeStill(float);
   void setStepsizeDrag(float);

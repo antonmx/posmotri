@@ -1,7 +1,9 @@
 #include "global.h"
 #include "keyframeinformation.h"
 #include "enums.h"
+#include "PromotedWidgets.h"
 #include <QBuffer>
+#include <QDebug>
 
 void KeyFrameInformation::setDrawBox(bool flag) { m_drawBox = flag; }
 void KeyFrameInformation::setDrawAxis(bool flag) { m_drawAxis = flag; }
@@ -511,12 +513,94 @@ KeyFrameInformation::operator=(const KeyFrameInformation& kfi)
 //---- load and save -------------
 //--------------------------------
 
-void
-KeyFrameInformation::load(fstream &fin)
-{
-  bool done = false;
-  char keyword[100];
-  float f[3];
+
+
+void KeyFrameInformation::save(QSettings & cfg) const {
+
+  cfg.beginGroup("KeyFrameInformation");
+
+  cfg.setValue("framenumber", m_frameNumber);
+  cfg.setValue("drawbox", m_drawBox);
+  cfg.setValue("drawaxis", m_drawAxis);
+  cfg.setValue("backgroundcolor", QVecEdit::toString(m_backgroundColor));
+  cfg.setValue("backgroundimage",  m_backgroundImageFile);
+  cfg.setValue("morphtf", m_morphTF);
+  cfg.setValue("focusdistance", m_focusDistance);
+  cfg.setValue("eyeseparation", m_eyeSeparation);
+  cfg.setValue("volumenumber", m_volumeNumber);
+  cfg.setValue("volumenumber2", m_volumeNumber2);
+  cfg.setValue("volumenumber3", m_volumeNumber3);
+  cfg.setValue("volumenumber4", m_volumeNumber4);
+  cfg.setValue("volmin", QVecEdit::toString(m_volMin));
+  cfg.setValue("volmax", QVecEdit::toString(m_volMax));
+  cfg.setValue("position",  QVecEdit::toString(m_position));
+  cfg.setValue("rotation_axis",  QVecEdit::toString(m_rotation.axis()));
+  cfg.setValue("rotation_angle",  m_rotation.angle());
+  cfg.setValue("image", m_image);
+  cfg.setValue("ticksize", m_tickSize);
+  cfg.setValue("tickstep", m_tickStep);
+  cfg.setValue("labelX", m_labelX);
+  cfg.setValue("labelY", m_labelY);
+  cfg.setValue("labelZ", m_labelZ);
+  cfg.setValue("mixinfo", m_mixvol);
+  cfg.setValue("mixcolor",  m_mixColor);
+  cfg.setValue("mixopacity", m_mixOpacity);
+  cfg.setValue("mixtag", m_mixTag);
+  cfg.setValue("interpbgcolor", m_interpBGColor);
+  cfg.setValue("interpcaptions", m_interpCaptions);
+  cfg.setValue("interpfocus", m_interpFocus);
+  cfg.setValue("interptagcolors", m_interpTagColors);
+  cfg.setValue("interptickinfo", m_interpTickInfo);
+  cfg.setValue("interpvolumebounds", m_interpVolumeBounds);
+  cfg.setValue("interpcamerapos", m_interpCameraPosition);
+  cfg.setValue("interpcamerarot", m_interpCameraOrientation);
+  cfg.setValue("interpbrickinfo", m_interpBrickInfo);
+  cfg.setValue("interpclipinfo", m_interpClipInfo);
+  cfg.setValue("interplightinfo", m_interpLightInfo);
+  cfg.setValue("interpgilightinfo", m_interpGiLightInfo);
+  cfg.setValue("interptf", m_interpTF);
+  cfg.setValue("interpcrop", m_interpCrop);
+  cfg.setValue("interpmop", m_interpMop);
+  cfg.setValue("pointsize", m_pointSize);
+  cfg.setValue("pointcolor",  QVecEdit::toString(m_pointColor));
+  cfg.setValue("tagcolors",  QByteArray( (const char*) m_tagColors, 1024) );
+  if (m_lut)
+    cfg.setValue("lookuptable",
+      QByteArray( (const char*) m_lut,  Global::lutSize()*256*256*4) );
+
+  m_lightInfo.save(cfg);
+  m_giLightInfo.save(cfg);
+  m_clipInfo.save(cfg);
+
+  QSettingsSetValArray(cfg, "Points",  m_points);
+  QSettingsSetValArray(cfg, "BarePoints",  m_barepoints);
+
+  QSettingsSaveArray(cfg, "BrickInformation", m_brickInfo);
+  QSettingsSaveArray(cfg, "SplineInformation", m_splineInfo);
+  QSettingsSaveArray(cfg, "CaptionObject",  m_captions);
+  QSettingsSaveArray(cfg, "ColorBarObject", m_colorbars);
+  QSettingsSaveArray(cfg, "ScaleBarObject", m_scalebars);
+  QSettingsSaveArray(cfg, "PathObject", m_paths);
+  QSettingsSaveArray(cfg, "GridObject", m_grids);
+  QSettingsSaveArray(cfg, "CropObject", m_crops);
+  QSettingsSaveArray(cfg, "PathGroupObject", m_pathgroups);
+  QSettingsSaveArray(cfg, "TrisetInformation", m_trisets);
+  QSettingsSaveArray(cfg, "NetworkInformation", m_networks);
+
+  if (!m_pruneBuffer.isEmpty()) {
+    cfg.setValue("pruneblend", m_pruneBlend);
+    cfg.setValue("prunebuffer", m_pruneBuffer);
+  }
+
+  cfg.endGroup();
+
+}
+
+
+
+
+
+void KeyFrameInformation::load(QSettings & cfg) {
 
   m_brickInfo.clear();
   m_pruneBuffer.clear();
@@ -538,658 +622,85 @@ KeyFrameInformation::load(fstream &fin)
   m_interpCrop = Enums::KFIT_Linear;
   m_interpMop = Enums::KFIT_None;
 
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
+  cfg.beginGroup("KeyFrameInformation");
 
-      if (strcmp(keyword, "keyframeend") == 0)
-	done = true;
-      else if (strcmp(keyword, "drawbox") == 0)
-	fin.read((char*)&m_drawBox, sizeof(bool));
-      else if (strcmp(keyword, "drawaxis") == 0)
-	fin.read((char*)&m_drawAxis, sizeof(bool));
-      else if (strcmp(keyword, "backgroundcolor") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_backgroundColor = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "backgroundimage") == 0)
-	{
-	  char *str;
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_backgroundImageFile = QString(str);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "framenumber") == 0)
-	fin.read((char*)&m_frameNumber, sizeof(int));
-      else if (strcmp(keyword, "morphtf") == 0)
-	fin.read((char*)&m_morphTF, sizeof(bool));
-      else if (strcmp(keyword, "focusdistance") == 0)
-	fin.read((char*)&m_focusDistance, sizeof(float));
-      else if (strcmp(keyword, "eyeseparation") == 0)
-	fin.read((char*)&m_eyeSeparation, sizeof(float));
-      else if (strcmp(keyword, "volumenumber4") == 0)
-	fin.read((char*)&m_volumeNumber4, sizeof(int));
-      else if (strcmp(keyword, "volumenumber3") == 0)
-	fin.read((char*)&m_volumeNumber3, sizeof(int));
-      else if (strcmp(keyword, "volumenumber2") == 0)
-	fin.read((char*)&m_volumeNumber2, sizeof(int));
-      else if (strcmp(keyword, "volumenumber") == 0)
-	fin.read((char*)&m_volumeNumber, sizeof(int));
-      else if (strcmp(keyword, "volmin") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_volMin = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "volmax") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_volMax = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_position = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "rotation") == 0)
-	{
-	  Vec axis;
-	  float angle;
-	  fin.read((char*)&f, 3*sizeof(float));
-	  axis = Vec(f[0], f[1], f[2]);
-	  fin.read((char*)&angle, sizeof(float));
-	  m_rotation.setAxisAngle(axis, angle);
-	}
-      else if (strcmp(keyword, "lookuptable") == 0)
-	{
-	  if (!m_lut)
-	    m_lut = new unsigned char[Global::lutSize()*256*256*4];
-	  int n;
-	  fin.read((char*)&n, sizeof(int));
-	  n = qMin(n, Global::lutSize());
-	  fin.read((char*)m_lut, n*256*256*4);
-	}
-      else if (strcmp(keyword, "image") == 0)
-	{
-	  int n;
-	  fin.read((char*)&n, sizeof(int));
-	  unsigned char *tmp = new unsigned char[n+1];
-	  fin.read((char*)tmp, n);
-	  m_image = QImage::fromData(tmp, n);
-	  delete [] tmp;
-	}
-      else if (strcmp(keyword, "lightinginformation") == 0)
-	m_lightInfo.load(fin);
-      else if (strcmp(keyword, "gilightinfo") == 0)
-	m_giLightInfo.load(fin);
-      else if (strcmp(keyword, "clipinformation") == 0)
-	m_clipInfo.load(fin);
-      else if (strcmp(keyword, "tickinfo") == 0)
-	{
-	  fin.read((char*)&m_tickSize, sizeof(int));
-	  fin.read((char*)&m_tickStep, sizeof(int));
-	  char *str;
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_labelX = QString(str);
-	  delete [] str;
+  m_frameNumber = getQSettingsValue(cfg, "framenumber", m_frameNumber );
+  m_drawBox = getQSettingsValue(cfg, "drawbox", m_drawBox );
+  m_drawAxis = getQSettingsValue(cfg, "drawaxis", m_drawAxis );
+  m_backgroundColor = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "backgroundColor") );
+  m_backgroundImageFile = getQSettingsValue(cfg, "backgroundimage", m_backgroundImageFile );
+  m_morphTF = getQSettingsValue(cfg, "morphtf", m_morphTF );
+  m_focusDistance = getQSettingsValue(cfg, "focusdistance", m_focusDistance );
+  m_eyeSeparation = getQSettingsValue(cfg, "eyeseparation", m_eyeSeparation );
+  m_volumeNumber = getQSettingsValue(cfg, "volumenumber", m_volumeNumber );
+  m_volumeNumber2 = getQSettingsValue(cfg, "volumenumber2", m_volumeNumber2 );
+  m_volumeNumber3 = getQSettingsValue(cfg, "volumenumber3", m_volumeNumber3 );
+  m_volumeNumber4 = getQSettingsValue(cfg, "volumenumber4", m_volumeNumber4 );
+  m_volMin = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmin") );
+  m_volMax = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmax") );
+  m_position = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") );
+  m_rotation.setAxisAngle( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "rotation_axis") ),
+                           getQSettingsValue<qreal>(cfg, "rotation_angle"));
+  m_image = getQSettingsValue(cfg, "image", m_image );
+  m_tickSize = getQSettingsValue(cfg, "tickstep", m_tickSize );
+  m_tickStep = getQSettingsValue(cfg, "tickstep", m_tickStep );
+  m_labelX = getQSettingsValue(cfg, "labelX", m_labelX );
+  m_labelY = getQSettingsValue(cfg, "labelY", m_labelY );
+  m_labelZ = getQSettingsValue(cfg, "labelZ", m_labelZ );
+  m_mixvol = getQSettingsValue(cfg, "mixinfo", m_mixvol );
+  m_mixColor = getQSettingsValue(cfg, "mixcolor", m_mixColor );
+  m_mixOpacity = getQSettingsValue(cfg, "mixopacity", m_mixOpacity );
+  m_mixTag = getQSettingsValue(cfg, "mixtag", m_mixTag );
+  m_interpBGColor = getQSettingsValue(cfg, "interpbgcolor", m_interpBGColor );
+  m_interpCaptions = getQSettingsValue(cfg, "interpcaptions", m_interpCaptions );
+  m_interpFocus = getQSettingsValue(cfg, "interpfocus", m_interpFocus );
+  m_interpTagColors = getQSettingsValue(cfg, "interptagcolors", m_interpTagColors );
+  m_interpTickInfo = getQSettingsValue(cfg, "interptickinfo", m_interpTickInfo );
+  m_interpVolumeBounds = getQSettingsValue(cfg, "interpvolumebounds", m_interpVolumeBounds );
+  m_interpCameraPosition = getQSettingsValue(cfg, "interpcamerapos", m_interpCameraPosition );
+  m_interpCameraOrientation = getQSettingsValue(cfg, "interpcamerarot", m_interpCameraOrientation );
+  m_interpBrickInfo = getQSettingsValue(cfg, "interpbrickinfo", m_interpBrickInfo );
+  m_interpClipInfo = getQSettingsValue(cfg, "interpclipinfo", m_interpClipInfo );
+  m_interpLightInfo = getQSettingsValue(cfg, "interplightinfo", m_interpLightInfo );
+  m_interpGiLightInfo = getQSettingsValue(cfg, "interpgilightinfo", m_interpGiLightInfo );
+  m_interpTF = getQSettingsValue(cfg, "interptf", m_interpTF );
+  m_interpCrop = getQSettingsValue(cfg, "interpcrop", m_interpCrop );
+  m_interpMop = getQSettingsValue(cfg, "interpmop", m_interpMop );
+  m_pointSize = getQSettingsValue(cfg, "pointsize", m_pointSize );
+  m_pointColor = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "m_pointColor") );
+  m_tagColors = getQSettingsValue(cfg, "tagcolors",  m_tagColors,  1024);
+  if ( cfg.contains("lookuptable") ) {
+    if (!m_lut)
+      m_lut = new unsigned char[Global::lutSize()*256*256*4];
+    m_lut = getQSettingsValue(cfg, "lookuptable",  m_lut,  Global::lutSize()*256*256*4);
+  }
 
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_labelY = QString(str);
-	  delete [] str;
+  m_lightInfo.load(cfg);
+  m_giLightInfo.load(cfg);
+  m_clipInfo.load(cfg);
 
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_labelZ = QString(str);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "mixinfo") == 0)
-	{
-	  fin.read((char*)&m_mixvol, sizeof(int));
-	  fin.read((char*)&m_mixColor, sizeof(bool));
-	  fin.read((char*)&m_mixOpacity, sizeof(bool));
-	}
-      else if (strcmp(keyword, "mixtag") == 0)
-	  fin.read((char*)&m_mixTag, sizeof(bool));
-      else if (strcmp(keyword, "brickinformation") == 0)
-	{
-	  BrickInformation brickInfo;
-	  brickInfo.load(fin);
-	  m_brickInfo.append(brickInfo);
-	}
-      else if (strcmp(keyword, "splineinfostart") == 0)
-	{
-	  SplineInformation splineInfo;
-	  splineInfo.load(fin);
-	  m_splineInfo.append(splineInfo);
-	}
-      else if (strcmp(keyword, "captionobjectstart") == 0)
-	{
-	  CaptionObject co;
-	  co.load(fin);
-	  m_captions.append(co);
-	}
-      else if (strcmp(keyword, "colorbarobjectstart") == 0)
-	{
-	  ColorBarObject co;
-	  co.load(fin);
-	  m_colorbars.append(co);
-	}
-      else if (strcmp(keyword, "scalebarobjectstart") == 0)
-	{
-	  ScaleBarObject so;
-	  so.load(fin);
-	  m_scalebars.append(so);
-	}
-      else if (strcmp(keyword, "pointsstart") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      Vec v;
-	      float f[3];
-	      fin.read((char*)&f, 3*sizeof(float));
-	      v = Vec(f[0],f[1],f[2]);
-	      m_points.append(v);
-	    }
-	  // "pointsend"
-	  fin.getline(keyword, 100, 0);
-	}
-      else if (strcmp(keyword, "barepointsstart") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      Vec v;
-	      float f[3];
-	      fin.read((char*)&f, 3*sizeof(float));
-	      v = Vec(f[0],f[1],f[2]);
-	      m_barepoints.append(v);
-	    }
-	  // "barepointsend"
-	  fin.getline(keyword, 100, 0);
-	}
-      else if (strcmp(keyword, "pointsize") == 0)
-	{
-	  int sz;
-	  fin.read((char*)&sz, sizeof(int));
-	  m_pointSize = sz;
-	}
-      else if (strcmp(keyword, "pointcolor") == 0)
-	{
-	  float f[3];
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_pointColor = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "pathobjectstart") == 0)
-	{
-	  PathObject po;
-	  po.load(fin);
-	  m_paths.append(po);
-	}
-      else if (strcmp(keyword, "gridobjectstart") == 0)
-	{
-	  GridObject go;
-	  go.load(fin);
-	  m_grids.append(go);
-	}
-      else if (strcmp(keyword, "cropobjectstart") == 0)
-	{
-	  CropObject co;
-	  co.load(fin);
-	  m_crops.append(co);
-	}
-      else if (strcmp(keyword, "pathgroupobjectstart") == 0)
-	{
-	  PathGroupObject po;
-	  po.load(fin);
-	  m_pathgroups.append(po);
-	}
-      else if (strcmp(keyword, "trisetinformation") == 0)
-	{
-	  TrisetInformation ti;
-	  ti.load(fin);
-	  m_trisets.append(ti);
-	}
-      else if (strcmp(keyword, "networkinformation") == 0)
-	{
-	  NetworkInformation ni;
-	  ni.load(fin);
-	  m_networks.append(ni);
-	}
-      else if (strcmp(keyword, "tagcolors") == 0)
-	{
-	  int n;
-	  fin.read((char*)&n, sizeof(int)); // n must be 1024
-	  fin.read((char*)m_tagColors, 1024);
-	}
-      else if (strcmp(keyword, "pruneblend") == 0)
-	{
-	  fin.read((char*)&m_pruneBlend, sizeof(bool));
-	}
-      else if (strcmp(keyword, "prunebuffer") == 0)
-	{
-	  int n;
-	  fin.read((char*)&n, sizeof(int));
-	  char *data = new char[n];
-	  fin.read(data, n);
-	  m_pruneBuffer = QByteArray(data, n);
-	  delete [] data;
-	}
-      else if (strcmp(keyword, "interpbgcolor") == 0)
-	fin.read((char*)&m_interpBGColor, sizeof(int));
-      else if (strcmp(keyword, "interpcaptions") == 0)
-	fin.read((char*)&m_interpCaptions, sizeof(int));
-      else if (strcmp(keyword, "interpfocus") == 0)
-	fin.read((char*)&m_interpFocus, sizeof(int));
-      else if (strcmp(keyword, "interptagcolors") == 0)
-	fin.read((char*)&m_interpTagColors, sizeof(int));
-      else if (strcmp(keyword, "interptickinfo") == 0)
-	fin.read((char*)&m_interpTickInfo, sizeof(int));
-      else if (strcmp(keyword, "interpvolumebounds") == 0)
-	fin.read((char*)&m_interpVolumeBounds, sizeof(int));
-      else if (strcmp(keyword, "interpcamerapos") == 0)
-	fin.read((char*)&m_interpCameraPosition, sizeof(int));
-      else if (strcmp(keyword, "interpcamerarot") == 0)
-	fin.read((char*)&m_interpCameraOrientation, sizeof(int));
-      else if (strcmp(keyword, "interpbrickinfo") == 0)
-	fin.read((char*)&m_interpBrickInfo, sizeof(int));
-      else if (strcmp(keyword, "interpclipinfo") == 0)
-	fin.read((char*)&m_interpClipInfo, sizeof(int));
-      else if (strcmp(keyword, "interplightinfo") == 0)
-	fin.read((char*)&m_interpLightInfo, sizeof(int));
-      else if (strcmp(keyword, "interpgilightinfo") == 0)
-	fin.read((char*)&m_interpGiLightInfo, sizeof(int));
-      else if (strcmp(keyword, "interptf") == 0)
-	fin.read((char*)&m_interpTF, sizeof(int));
-      else if (strcmp(keyword, "interpcrop") == 0)
-	fin.read((char*)&m_interpCrop, sizeof(int));
-      else if (strcmp(keyword, "interpmop") == 0)
-	fin.read((char*)&m_interpMop, sizeof(int));
-    }
+  QSettingsGetValArray(cfg, "Points",  m_points);
+  QSettingsGetValArray(cfg, "BarePoints",  m_barepoints);
+
+  QSettingsLoadArray(cfg, "BrickInformation", m_brickInfo);
+  QSettingsLoadArray(cfg, "SplineInformation", m_splineInfo);
+  QSettingsLoadArray(cfg, "CaptionObject",  m_captions);
+  QSettingsLoadArray(cfg, "ColorBarObject", m_colorbars);
+  QSettingsLoadArray(cfg, "ScaleBarObject", m_scalebars);
+  QSettingsLoadArray(cfg, "PathObject", m_paths);
+  QSettingsLoadArray(cfg, "PathGroupObject", m_pathgroups);
+  QSettingsLoadArray(cfg, "GridObject", m_grids);
+  QSettingsLoadArray(cfg, "CropObject", m_crops);
+  QSettingsLoadArray(cfg, "TrisetInformation", m_trisets);
+  QSettingsLoadArray(cfg, "NetworkInformation", m_networks);
+
+  if (cfg.contains("pruneblend")) {
+    m_pruneBlend = getQSettingsValue(cfg, "pruneblend",  m_pruneBlend);
+    m_pruneBuffer = getQSettingsValue(cfg, "prunebuffer", m_pruneBuffer);
+  }
+
+  cfg.endGroup();
+
 }
 
-void
-KeyFrameInformation::save(fstream &fout)
-{
-  char keyword[100];
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keyframestart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "framenumber");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_frameNumber, sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "drawbox");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_drawBox, sizeof(bool));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "drawaxis");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_drawAxis, sizeof(bool));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "backgroundcolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_backgroundColor.x;
-  f[1] = m_backgroundColor.y;
-  f[2] = m_backgroundColor.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "backgroundimage");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int len;
-  len = m_backgroundImageFile.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_backgroundImageFile.toLatin1().data(), len*sizeof(char));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "morphtf");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_morphTF, sizeof(bool));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "focusdistance");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_focusDistance, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "eyeseparation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_eyeSeparation, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "volumenumber");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_volumeNumber, sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "volumenumber2");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_volumeNumber2, sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "volumenumber3");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_volumeNumber3, sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "volumenumber4");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_volumeNumber4, sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "volmin");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_volMin.x;
-  f[1] = m_volMin.y;
-  f[2] = m_volMin.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "volmax");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_volMax.x;
-  f[1] = m_volMax.y;
-  f[2] = m_volMax.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "position");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_position.x;
-  f[1] = m_position.y;
-  f[2] = m_position.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "rotation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  Vec axis;
-  qreal angle;
-  m_rotation.getAxisAngle(axis, angle);
-  f[0] = axis.x;
-  f[1] = axis.y;
-  f[2] = axis.z;
-  fout.write((char*)&f, 3*sizeof(float));
-  fout.write((char*)&angle, sizeof(qreal));
-
-
-  if (m_lut)
-    {
-      memset(keyword, 0, 100);
-      sprintf(keyword, "lookuptable");
-      fout.write((char*)keyword, strlen(keyword)+1);
-      int n = Global::lutSize();
-      fout.write((char*)&n, sizeof(int));
-      fout.write((char*)m_lut, Global::lutSize()*256*256*4);
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "image");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  QByteArray bytes;
-  QBuffer buffer(&bytes);
-  buffer.open(QIODevice::WriteOnly);
-  m_image.save(&buffer, "PNG");
-  int n = bytes.size();
-  fout.write((char*)&n, sizeof(int));
-  fout.write((char*)bytes.data(), n);
-
-
-  m_lightInfo.save(fout);
-  m_giLightInfo.save(fout);
-  m_clipInfo.save(fout);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tickinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_tickSize, sizeof(int));
-  fout.write((char*)&m_tickStep, sizeof(int));
-  len = m_labelX.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_labelX.toLatin1().data(), len*sizeof(char));
-  len = m_labelY.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_labelY.toLatin1().data(), len*sizeof(char));
-  len = m_labelZ.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_labelZ.toLatin1().data(), len*sizeof(char));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "mixinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_mixvol, sizeof(int));
-  fout.write((char*)&m_mixColor, sizeof(bool));
-  fout.write((char*)&m_mixOpacity, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "mixtag");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_mixTag, sizeof(bool));
-
-
-  for(int i=0; i<m_brickInfo.size(); i++)
-    m_brickInfo[i].save(fout);
-
-
-  for(int i=0; i<m_splineInfo.size(); i++)
-    m_splineInfo[i].save(fout);
-
-
-  for(int i=0; i<m_captions.size(); i++)
-    m_captions[i].save(fout);
-
-  for(int i=0; i<m_colorbars.size(); i++)
-    m_colorbars[i].save(fout);
-
-  for(int i=0; i<m_scalebars.size(); i++)
-    m_scalebars[i].save(fout);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointsstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int npts = m_points.count();
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<m_points.size(); i++)
-    {
-      f[0] = m_points[i].x;
-      f[1] = m_points[i].y;
-      f[2] = m_points[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointsend");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "barepointsstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  npts = m_barepoints.count();
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<m_barepoints.size(); i++)
-    {
-      f[0] = m_barepoints[i].x;
-      f[1] = m_barepoints[i].y;
-      f[2] = m_barepoints[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-  memset(keyword, 0, 100);
-  sprintf(keyword, "barepointsend");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointsize");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_pointSize, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointcolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_pointColor.x;
-  f[1] = m_pointColor.y;
-  f[2] = m_pointColor.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  for(int i=0; i<m_paths.size(); i++)
-    m_paths[i].save(fout);
-
-  for(int i=0; i<m_grids.size(); i++)
-    m_grids[i].save(fout);
-
-  for(int i=0; i<m_crops.size(); i++)
-    m_crops[i].save(fout);
-
-  for(int i=0; i<m_pathgroups.size(); i++)
-    m_pathgroups[i].save(fout);
-
-
-  for(int i=0; i<m_trisets.size(); i++)
-    m_trisets[i].save(fout);
-
-  for(int i=0; i<m_networks.size(); i++)
-    m_networks[i].save(fout);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tagcolors");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int tcn = 1024;
-  fout.write((char*)&tcn, sizeof(int));
-  fout.write((char*)m_tagColors, 1024);
-
-
-  if (!m_pruneBuffer.isEmpty())
-    {
-      memset(keyword, 0, 100);
-      sprintf(keyword, "pruneblend");
-      fout.write((char*)keyword, strlen(keyword)+1);
-      fout.write((char*)&m_pruneBlend, sizeof(bool));
-
-      int pn = m_pruneBuffer.count();
-      memset(keyword, 0, 100);
-      sprintf(keyword, "prunebuffer");
-      fout.write((char*)keyword, strlen(keyword)+1);
-      fout.write((char*)&pn, sizeof(int));
-      fout.write((char*)m_pruneBuffer.data(), pn);
-    }
-
-  //------------------------------------------------------
-  // -- write keyframe interpolation types
-  //------------------------------------------------------
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpbgcolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpBGColor, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpcaptions");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpCaptions, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpfocus");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpFocus, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interptagcolors");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpTagColors, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interptickinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpTickInfo, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpvolumebounds");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpVolumeBounds, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpcamerapos");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpCameraPosition, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpcamerarot");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpCameraOrientation, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpbrickinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpBrickInfo, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpclipinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpClipInfo, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interplightinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpLightInfo, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpgilightinfo");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpGiLightInfo, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interptf");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpTF, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpcrop");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpCrop, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "interpmop");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_interpMop, sizeof(int));
-
-  //------------------------------------------------------
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keyframeend");
-  fout.write((char*)keyword, strlen(keyword)+1);
-}
 

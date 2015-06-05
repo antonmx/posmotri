@@ -2,6 +2,8 @@
 #include "glewinitialisation.h"
 #include "viewinformation.h"
 #include <QBuffer>
+#include <QDebug>
+#include "PromotedWidgets.h"
 
 void ViewInformation::setVolumeNumber(int vn) { m_volumeNumber = vn; }
 void ViewInformation::setVolumeNumber2(int vn) { m_volumeNumber2 = vn; }
@@ -211,363 +213,102 @@ ViewInformation::operator=(const ViewInformation& viewInfo)
 //--------------------------------
 //---- load and save -------------
 //--------------------------------
-void
-ViewInformation::load(fstream &fin)
-{
-  bool done = false;
-  char keyword[100];
-  float f[3];
+
+
+void ViewInformation::load(QSettings &cfg) {
 
   m_brickInfo.clear();
   m_splineInfo.clear();
 
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
+  cfg.beginGroup("ViewInformation");
 
-      if (strcmp(keyword, "viewend") == 0)
-	done = true;
-      else if (strcmp(keyword, "volumenumber") == 0)
-	fin.read((char*)&m_volumeNumber, sizeof(int));
-      else if (strcmp(keyword, "volumenumber2") == 0)
-	fin.read((char*)&m_volumeNumber2, sizeof(int));
-      else if (strcmp(keyword, "volumenumber3") == 0)
-	fin.read((char*)&m_volumeNumber3, sizeof(int));
-      else if (strcmp(keyword, "volumenumber4") == 0)
-	fin.read((char*)&m_volumeNumber4, sizeof(int));
-      else if (strcmp(keyword, "stepsizestill") == 0)
-	fin.read((char*)&m_stepsizeStill, sizeof(float));
-      else if (strcmp(keyword, "stepsizedrag") == 0)
-	fin.read((char*)&m_stepsizeDrag, sizeof(float));
-      else if (strcmp(keyword, "drawbox") == 0)
-	fin.read((char*)&m_drawBox, sizeof(bool));
-      else if (strcmp(keyword, "drawaxis") == 0)
-	fin.read((char*)&m_drawAxis, sizeof(bool));
-      else if (strcmp(keyword, "backgroundcolor") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_backgroundColor = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "backgroundimage") == 0)
-	{
-	  char *str;
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_backgroundImageFile = QString(str);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_position = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "rotation") == 0)
-	{
-	  Vec axis;
-	  float angle;
-	  fin.read((char*)&f, 3*sizeof(float));
-	  axis = Vec(f[0], f[1], f[2]);
-	  fin.read((char*)&angle, sizeof(float));
-	  m_rotation.setAxisAngle(axis, angle);
-	}
-      else if (strcmp(keyword, "focusdistance") == 0)
-	fin.read((char*)&m_focusDistance, sizeof(float));
-      else if (strcmp(keyword, "image") == 0)
-	{
-	  int n;
-	  fin.read((char*)&n, sizeof(int));
-	  uchar *tmp = new uchar[n+1];
-	  fin.read((char*)tmp, n);
-	  m_image = QImage::fromData(tmp, n);
-	  delete [] tmp;
-	}
-      else if (strcmp(keyword, "renderquality") == 0)
-	fin.read((char*)&m_renderQuality, sizeof(int));
-      else if (strcmp(keyword, "lightinginformation") == 0)
-	m_lightInfo.load(fin);
-      else if (strcmp(keyword, "clipinformation") == 0)
-	m_clipInfo.load(fin);
-      else if (strcmp(keyword, "brickinformation") == 0)
-	{
-	  BrickInformation brickInfo;
-	  brickInfo.load(fin);
-	  m_brickInfo.append(brickInfo);
-	}
-      else if (strcmp(keyword, "volmin") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_volMin = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "volmax") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_volMax = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "splineinfostart") == 0)
-	{
-	  SplineInformation splineInfo;
-	  splineInfo.load(fin);
-	  m_splineInfo.append(splineInfo);
-	}
-      else if (strcmp(keyword, "tickinfo") == 0)
-	{
-	  fin.read((char*)&m_tickSize, sizeof(int));
-	  fin.read((char*)&m_tickStep, sizeof(int));
-	  char *str;
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_labelX = QString(str);
-	  delete [] str;
+  m_volumeNumber = getQSettingsValue(cfg, "volumenumber", m_volumeNumber );
+  m_volumeNumber2 = getQSettingsValue(cfg, "volumenumber2", m_volumeNumber2 );
+  m_volumeNumber3 = getQSettingsValue(cfg, "volumenumber3", m_volumeNumber3 );
+  m_volumeNumber4 = getQSettingsValue(cfg, "volumenumber4", m_volumeNumber4 );
+  m_stepsizeStill = getQSettingsValue(cfg, "stepsizestill", m_stepsizeStill );
+  m_stepsizeDrag = getQSettingsValue(cfg, "stepsizedrag", m_stepsizeDrag );
+  m_drawBox = getQSettingsValue(cfg, "drawbox", m_drawBox );
+  m_drawAxis = getQSettingsValue(cfg, "drawaxis", m_drawAxis );
+  m_backgroundColor = QVecEdit::toVec( getQSettingsValue(cfg, "backgroundcolor", m_backgroundColor ) );
+  m_backgroundImageFile = getQSettingsValue(cfg, "backgroundimage", m_backgroundImageFile );
+  m_position = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") );
+  m_rotation.setAxisAngle( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "rotation_axis") ),
+                           getQSettingsValue<qreal>(cfg, "rotation_angle"));
+  m_focusDistance = getQSettingsValue(cfg, "focusdistance", m_focusDistance );
+  m_image = getQSettingsValue(cfg, "image", m_image );
+  m_renderQuality = getQSettingsValue(cfg, "renderquality", m_renderQuality );
+  m_volMin = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmin ") );
+  m_volMax = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmax ") );
+  m_tickSize = getQSettingsValue(cfg, "tickstep", m_tickSize );
+  m_tickStep = getQSettingsValue(cfg, "tickstep", m_tickStep );
+  m_labelX = getQSettingsValue(cfg, "labelX", m_labelX );
+  m_labelY = getQSettingsValue(cfg, "labelY", m_labelY );
+  m_labelZ = getQSettingsValue(cfg, "labelZ", m_labelZ );
+  m_tagColors = getQSettingsValue(cfg, "tagcolors",  m_tagColors, 1024);
 
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_labelY = QString(str);
-	  delete [] str;
+  m_lightInfo.load(cfg);
+  m_clipInfo.load(cfg);
 
-	  fin.read((char*)&len, sizeof(int));
-	  str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_labelZ = QString(str);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "captionobjectstart") == 0)
-	{
-	  CaptionObject co;
-	  co.load(fin);
-	  m_captions.append(co);
-	}
-      else if (strcmp(keyword, "pointsstart") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_points.append(Vec(f[0], f[1], f[2]));
-	    }
-	  // "pointsend"
-	  fin.getline(keyword, 100, 0);
-	}
-      else if (strcmp(keyword, "pathobjectstart") == 0)
-	{
-	  PathObject po;
-	  po.load(fin);
-	  m_paths.append(po);
-	}
-      else if (strcmp(keyword, "pathgroupobjectstart") == 0)
-	{
-	  PathGroupObject po;
-	  po.load(fin);
-	  m_pathgroups.append(po);
-	}
-      else if (strcmp(keyword, "trisetinformation") == 0)
-	{
-	  TrisetInformation ti;
-	  ti.load(fin);
-	  m_trisets.append(ti);
-	}
-      else if (strcmp(keyword, "networkinformation") == 0)
-	{
-	  NetworkInformation ni;
-	  ni.load(fin);
-	  m_networks.append(ni);
-	}
-      else if (strcmp(keyword, "tagcolors") == 0)
-	{
-	  int n;
-	  fin.read((char*)&n, sizeof(int)); // n must be 1024
-	  fin.read((char*)m_tagColors, 1024);
-	}
-    }
+  QSettingsGetValArray(cfg, "Points",  m_points);
+  QSettingsLoadArray(cfg, "BrickInformation", m_brickInfo);
+  QSettingsLoadArray(cfg, "SplineInformation", m_splineInfo);
+  QSettingsLoadArray(cfg, "CaptionObject",  m_captions);
+  QSettingsLoadArray(cfg, "PathObject", m_paths);
+  QSettingsLoadArray(cfg, "PathGroupObject", m_pathgroups);
+  QSettingsLoadArray(cfg, "TrisetInformation", m_trisets);
+  QSettingsLoadArray(cfg, "NetworkInformation", m_networks);
+
+  cfg.endGroup();
+
 }
 
-void
-ViewInformation::save(fstream &fout)
-{
-  QString keyword;
-  float f[3];
-
-  keyword = "viewstart";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-
-  keyword = "volumenumber";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_volumeNumber, sizeof(int));
 
 
-  keyword = "volumenumber2";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_volumeNumber2, sizeof(int));
 
 
-  keyword = "volumenumber3";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_volumeNumber3, sizeof(int));
+void ViewInformation::save(QSettings &cfg) const {
+
+  cfg.beginGroup("ViewInformation");
+
+  cfg.setValue("volumenumber", m_volumeNumber);
+  cfg.setValue("volumenumber2", m_volumeNumber2);
+  cfg.setValue("volumenumber3", m_volumeNumber3);
+  cfg.setValue("volumenumber4", m_volumeNumber4);
+  cfg.setValue("stepsizestill", m_stepsizeStill);
+  cfg.setValue("stepsizedrag", m_stepsizeDrag);
+  cfg.setValue("drawbox", m_drawBox);
+  cfg.setValue("drawaxis", m_drawAxis);
+  cfg.setValue("backgroundcolor", QVecEdit::toString(m_backgroundColor));
+  cfg.setValue("backgroundimage", m_backgroundImageFile);
+  cfg.setValue("position",  QVecEdit::toString(m_position) );
+  cfg.setValue("rotation_axis",  QVecEdit::toString(m_rotation.axis()));
+  cfg.setValue("rotation_angle",  m_rotation.angle());
+  cfg.setValue("focusdistance", m_focusDistance);
+  cfg.setValue("image", m_image);
+  cfg.setValue("renderquality",  m_renderQuality);
+  cfg.setValue("volmin ", QVecEdit::toString(m_volMin));
+  cfg.setValue("volmax ", QVecEdit::toString(m_volMax));
+  cfg.setValue("ticksize", m_tickSize);
+  cfg.setValue("tickstep", m_tickStep);
+  cfg.setValue("labelX", m_labelX);
+  cfg.setValue("labelY", m_labelY);
+  cfg.setValue("labelZ", m_labelZ);
+  cfg.setValue("tagcolors", QByteArray(m_tagColors, 1024));
+
+  m_lightInfo.save(cfg);
+  m_clipInfo.save(cfg);
 
 
-  keyword = "volumenumber4";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_volumeNumber4, sizeof(int));
+  QSettingsSetValArray(cfg, "Points",  m_points);
+  QSettingsSaveArray(cfg, "BrickInformation", m_brickInfo);
+  QSettingsSaveArray(cfg, "SplineInformation", m_splineInfo);
+  QSettingsSaveArray(cfg, "CaptionObject",  m_captions);
+  QSettingsSaveArray(cfg, "PathObject", m_paths);
+  QSettingsSaveArray(cfg, "PathGroupObject", m_pathgroups);
+  QSettingsSaveArray(cfg, "TrisetInformation", m_trisets);
+  QSettingsSaveArray(cfg, "NetworkInformation", m_networks);
 
+  cfg.endGroup();
 
-  keyword = "stepsizestill";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_stepsizeStill, sizeof(float));
-
-  keyword = "stepsizedrag";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_stepsizeDrag, sizeof(float));
-
-  keyword = "drawbox";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_drawBox, sizeof(bool));
-
-  keyword = "drawaxis";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_drawAxis, sizeof(bool));
-
-  keyword = "backgroundcolor";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  f[0] = m_backgroundColor.x;
-  f[1] = m_backgroundColor.y;
-  f[2] = m_backgroundColor.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  keyword = "backgroundimage";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  int len;
-  len = m_backgroundImageFile.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_backgroundImageFile.toLatin1().data(), len*sizeof(char));
-
-  keyword = "position";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  f[0] = m_position.x;
-  f[1] = m_position.y;
-  f[2] = m_position.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  keyword = "rotation";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  Vec axis;
-  qreal angle;
-  m_rotation.getAxisAngle(axis, angle);
-  f[0] = axis.x;
-  f[1] = axis.y;
-  f[2] = axis.z;
-  fout.write((char*)&f, 3*sizeof(float));
-  fout.write((char*)&angle, sizeof(qreal));
-
-
-  keyword = "focusdistance";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_focusDistance, sizeof(float));
-
-
-  keyword = "image";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  QByteArray bytes;
-  QBuffer buffer(&bytes);
-  buffer.open(QIODevice::WriteOnly);
-  m_image.save(&buffer, "PNG");
-  int n = bytes.size();
-  fout.write((char*)&n, sizeof(int));
-  fout.write((char*)bytes.data(), n);
-
-
-  keyword = "renderquality";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_renderQuality, sizeof(int));
-
-
-  m_lightInfo.save(fout);
-  m_clipInfo.save(fout);
-
-  for(int i=0; i<m_brickInfo.size(); i++)
-    m_brickInfo[i].save(fout);
-
-  keyword = "volmin";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  f[0] = m_volMin.x;
-  f[1] = m_volMin.y;
-  f[2] = m_volMin.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  keyword = "volmax";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  f[0] = m_volMax.x;
-  f[1] = m_volMax.y;
-  f[2] = m_volMax.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  for(int i=0; i<m_splineInfo.size(); i++)
-    m_splineInfo[i].save(fout);
-
-
-  for(int i=0; i<m_captions.size(); i++)
-    m_captions[i].save(fout);
-
-
-  keyword = "pointsstart";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  int npts = m_points.count();
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<m_points.size(); i++)
-    {
-      f[0] = m_points[i].x;
-      f[1] = m_points[i].y;
-      f[2] = m_points[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-  keyword = "pointsend";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-
-
-  for(int i=0; i<m_paths.size(); i++)
-    m_paths[i].save(fout);
-
-
-  for(int i=0; i<m_pathgroups.size(); i++)
-    m_pathgroups[i].save(fout);
-
-
-  for(int i=0; i<m_trisets.size(); i++)
-    m_trisets[i].save(fout);
-
-  for(int i=0; i<m_networks.size(); i++)
-    m_networks[i].save(fout);
-
-
-  keyword = "tickinfo";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  fout.write((char*)&m_tickSize, sizeof(int));
-  fout.write((char*)&m_tickStep, sizeof(int));
-  len = m_labelX.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_labelX.toLatin1().data(), len*sizeof(char));
-  len = m_labelY.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_labelY.toLatin1().data(), len*sizeof(char));
-  len = m_labelZ.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_labelZ.toLatin1().data(), len*sizeof(char));
-
-
-  keyword = "tagcolors";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-  int tcn = 1024;
-  fout.write((char*)&tcn, sizeof(int));
-  fout.write((char*)m_tagColors, 1024);
-
-
-  keyword = "viewend";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
 }

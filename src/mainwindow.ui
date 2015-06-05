@@ -17,7 +17,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -44,6 +44,7 @@
      <addaction name="actionGrids"/>
     </widget>
     <addaction name="menuLoad_Volume"/>
+    <addaction name="actionLoad_Volumes"/>
     <addaction name="actionLoad_Project"/>
     <addaction name="menuLoad_Geometry"/>
     <addaction name="actionLoad_TFfromproject"/>
@@ -564,6 +565,11 @@
    </property>
    <property name="text">
     <string>Hires Mode (F2)</string>
+   </property>
+  </action>
+  <action name="actionLoad_Volumes">
+   <property name="text">
+    <string>Load Volumes</string>
    </property>
   </action>
  </widget>

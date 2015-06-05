@@ -13,10 +13,9 @@ class KeyFrame : public QObject
 
   void clear();
 
-  void load(fstream&);
-  void import(QString);
-
-  void save(fstream&);
+  void import(const QString &);
+  void load(QSettings &cfg);
+  void save(QSettings &cfg);
 
   void draw(float);
 

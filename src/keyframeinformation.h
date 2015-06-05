@@ -4,10 +4,6 @@
 
 #include <QObject>
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
-
-#include <fstream>
-using namespace std;
 
 #include "camerapathnode.h"
 #include "clipinformation.h"
@@ -36,8 +32,8 @@ class KeyFrameInformation
 
   void clear();
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings & cfg);
+  void save(QSettings & cfg) const;
 
   void setDrawBox(bool);
   void setDrawAxis(bool);
@@ -76,7 +72,7 @@ class KeyFrameInformation
   void setTagColors(uchar*);
   void setPruneBuffer(QByteArray);
   void setPruneBlend(bool);
-  
+
   bool hasCaption(QStringList);
   bool drawBox();
   bool drawAxis();

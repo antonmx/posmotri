@@ -3,12 +3,11 @@
 
 #include "global.h"
 
-class SelectRegion
-{
- public :
-  bool valid;
-  int frame0, frame1;
-  int keyframe0, keyframe1;
+class SelectRegion {
+public :
+    bool valid;
+    int frame0, frame1;
+    int keyframe0, keyframe1;
 };
 
 
@@ -16,18 +15,17 @@ namespace Ui {
   class KeyFrameEditor;
 }
 
-class KeyFrameEditor : public QWidget
-{
+class KeyFrameEditor : public QWidget {
   Q_OBJECT;
-  
+
 private:
   Ui::KeyFrameEditor * ui;
 
- public :
-  KeyFrameEditor(QWidget *parent=0);
+public :
+  KeyFrameEditor ( QWidget *parent=0 );
 
-  void paintEvent(QPaintEvent*);
-  void resizeEvent(QResizeEvent*);
+  void paintEvent ( QPaintEvent * );
+  void resizeEvent ( QResizeEvent * );
 
   void enterEvent(QEvent*);
   void leaveEvent(QEvent*);
@@ -85,12 +83,11 @@ private:
  private :
 
   SelectRegion m_selectRegion;
-  const int m_lineHeight, m_tickHeight;
+  int m_lineHeight, m_tickHeight;
   int m_tickStep;
-  const QPoint m_p0;
-  QPoint m_p1;
+  QPoint m_p0, m_p1;
   const int m_imgSize, m_imgSpacer;
-  const int m_editorHeight;
+  int m_editorHeight;
   int m_minFrame, m_maxFrame, m_frameStep;
   int m_prevX;
   bool m_reordered;
@@ -133,5 +130,9 @@ private:
 
   void showHelp();
 };
+
+
+
+
 
 #endif

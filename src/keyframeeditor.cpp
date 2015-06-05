@@ -54,26 +54,27 @@ KeyFrameEditor::sizeHint() const
 KeyFrameEditor::KeyFrameEditor(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::KeyFrameEditor)
-  , m_lineHeight(70)
   , m_tickHeight(10)
   , m_tickStep(50)
-  , m_p0(60, m_lineHeight)
-  , m_p1(100, m_lineHeight)
   , m_imgSpacer(35)
   , m_imgSize(100)
-  , m_editorHeight(m_lineHeight + m_tickHeight + m_imgSpacer + m_imgSize + 10)
   , m_minFrame(1)
   , m_frameStep(10)
   , m_currFrame(1)
   , m_selected(-1)
   , m_playFrames(false)
-  , m_hiresMode(false)  
-  , m_copyFno(-1)  
+  , m_hiresMode(false)
+  , m_copyFno(-1)
 {
   ui->setupUi(this);
   ui->zoomP->setAutoRepeat(true);
   ui->zoomM->setAutoRepeat(true);
-  
+
+  m_lineHeight = ui->buttons->geometry().bottom();
+  m_p0 = QPoint(60, m_lineHeight);
+  m_p1 = QPoint(100, m_lineHeight);
+  m_editorHeight = m_lineHeight + m_tickHeight + m_imgSpacer + m_imgSize + 10;
+
   calcMaxFrame();
   clear();
 
@@ -87,9 +88,6 @@ KeyFrameEditor::KeyFrameEditor(QWidget *parent)
   connect(ui->pasteFrame, SIGNAL(pressed()), SLOT(pasteFrame()));
   connect(this, SIGNAL(startPlay()), SLOT(playKeyFrames()));
 
-  setMinimumSize(400, 150);
-  setMaximumHeight(m_editorHeight);
-  setBaseSize(400, m_editorHeight);
 }
 
 void KeyFrameEditor::setHiresMode(bool flag) {
@@ -300,9 +298,7 @@ KeyFrameEditor::calcMaxFrame()
   calcRect();
 }
 
-void
-KeyFrameEditor::drawSelectRegion(QPainter *p)
-{
+void KeyFrameEditor::drawSelectRegion(QPainter *p) {
   if (m_selectRegion.valid == false)
     return;
 
@@ -324,18 +320,17 @@ KeyFrameEditor::drawSelectRegion(QPainter *p)
   tick0 = m_p0.x() + (f0-m_minFrame)*m_tickStep/(m_frameStep);
   tick1 = m_p0.x() + (f1-m_minFrame)*m_tickStep/(m_frameStep);
 
-
   p->setBrush(QColor(250, 150, 100));
   p->setPen(Qt::transparent);
   p->drawRect(tick0,
-	      m_lineHeight-m_tickHeight,
-	      tick1-tick0,
-	      m_tickHeight);
+      m_lineHeight - m_tickHeight,
+      tick1 - tick0,
+      m_tickHeight);
+
 }
 
-void
-KeyFrameEditor::drawVisibleRange(QPainter *p)
-{
+void KeyFrameEditor::drawVisibleRange(QPainter *p) {
+
   int bg = 50;
   int sz = size().width()-100;
 
@@ -356,41 +351,40 @@ KeyFrameEditor::drawVisibleRange(QPainter *p)
   float nframes = (m_fno[m_fno.count()-1]-m_fno[0]);
 
   // --- draw for selection range ----
-  if (m_selectRegion.valid)
-    {
-      int f0 = m_selectRegion.frame0;
-      int f1 = m_selectRegion.frame1;
+  if (m_selectRegion.valid) {
 
-      f0 = sz*(f0-m_fno[0])/nframes;
-      f1 = sz*(f1-m_fno[0])/nframes;
+    int f0 = m_selectRegion.frame0;
+    int f1 = m_selectRegion.frame1;
 
-      if (f0 < 0) f0 = -bg+10;
-      if (f0 > sz) f0 = sz+10;
-      f0 += bg;
+    f0 = sz * (f0 - m_fno[0]) / nframes;
+    f1 = sz * (f1 - m_fno[0]) / nframes;
 
-      if (f1 < 0) f1 = -bg+40;
-      if (f1 > sz) f1 = sz+40;
-      f1 += bg;
+    if (f0 < 0) f0 = -bg+10;
+    if (f0 > sz) f0 = sz+10;
+    f0 += bg;
 
-      p->setPen(QPen(QColor(250, 150, 100), 5,
-		     Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      p->drawLine(QPoint(f0,5), QPoint(f1, 5));
-    }
+    if (f1 < 0) f1 = -bg+40;
+    if (f1 > sz) f1 = sz+40;
+    f1 += bg;
 
-  for(int i=0; i<m_fno.count(); i++)
-    {
-      int v0 = sz*(m_fno[i]-m_fno[0])/nframes;
-      if (v0 < 0) v0 = -bg+10;
-      if (v0 > sz) v0 = sz+10;
-      v0 += bg;
+    p->setPen(QPen(QColor(250, 150, 100), 5,
+      Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    p->drawLine(QPoint(f0,5), QPoint(f1, 5));
+  }
 
-      p->setPen(QPen(Qt::black, 7,
-		     Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      p->drawPoint(v0,5);
-      p->setPen(QPen(Qt::lightGray, 5,
-		     Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
-      p->drawPoint(v0,5);
-    }
+  for(int i=0; i<m_fno.count(); i++)  {
+    int v0 = sz*(m_fno[i]-m_fno[0])/nframes;
+    if (v0 < 0) v0 = -bg+10;
+    if (v0 > sz) v0 = sz+10;
+    v0 += bg;
+
+    p->setPen(QPen(Qt::black, 7,
+      Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    p->drawPoint(v0,5);
+    p->setPen(QPen(Qt::lightGray, 5,
+      Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    p->drawPoint(v0,5);
+  }
 
   int bg0 = sz*(m_minFrame-m_fno[0])/nframes;
   int bg1 = sz*(m_maxFrame-m_fno[0])/nframes;
@@ -404,12 +398,13 @@ KeyFrameEditor::drawVisibleRange(QPainter *p)
   bg1 += bg;
 
   p->setPen(QPen(QColor(255, 255, 255), 2,
-		 Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   p->drawLine(QPoint(bg0,5), QPoint(bg1, 5));
+
 }
 
 void KeyFrameEditor::drawTicks(QPainter *p) {
-  
+
   if (m_playFrames || m_draggingCurrFrame)  {
     p->setBrush(QColor(70, 50, 20, 50));
     p->setPen(Qt::transparent);
@@ -418,22 +413,22 @@ void KeyFrameEditor::drawTicks(QPainter *p) {
                 m_p1.x()-m_p0.x()+10,
                 2*m_tickHeight+25);
   }
-  
+
   p->setBrush(Qt::transparent);
   p->setPen(Qt::darkGray);
   p->drawLine(m_p0, m_p1);
-  
+
   int nticks = (m_p1.x() - m_p0.x())/m_tickStep;
   if (nticks*m_tickStep < m_p1.x() - m_p0.x())
     nticks ++;
   int prevtick = 0;
-  
+
   for(int t=0; t<=nticks; t++) {
-    
+
     int frameNumber = m_minFrame + t*m_frameStep;
     int tick = m_p0.x() + t*m_tickStep;
     int sticks = 10;
-    
+
     if (t == nticks) {
       float frc = (float)(frameNumber-m_maxFrame)/(float)m_frameStep;
       sticks *= (1-frc);
@@ -468,14 +463,14 @@ void KeyFrameEditor::drawTicks(QPainter *p) {
     }
 
     prevtick = tick;
-    
+
   }
 }
 
 void
 KeyFrameEditor::drawkeyframe(QPainter *p,
-			     QColor penColor, QColor brushColor,
-			      int fno, QRect rect, QImage img)
+    QColor penColor, QColor brushColor,
+    int fno, QRect rect, QImage img)
 {
   if (fno < m_minFrame || fno > m_maxFrame)
     return;
@@ -501,9 +496,8 @@ KeyFrameEditor::drawkeyframe(QPainter *p,
   p->drawRoundRect(rect);
 }
 
-void
-KeyFrameEditor::drawKeyFrames(QPainter *p)
-{
+void KeyFrameEditor::drawKeyFrames(QPainter *p) {
+
   p->setFont(QFont("Helvetica", 12));
 
   for(int i=0; i<m_fno.count(); i++)
@@ -550,9 +544,8 @@ KeyFrameEditor::drawKeyFrames(QPainter *p)
     }
 }
 
-void
-KeyFrameEditor::drawCurrentFrame(QPainter *p)
-{
+void KeyFrameEditor::drawCurrentFrame(QPainter *p) {
+
   if (m_currFrame < m_minFrame ||
       m_currFrame > m_maxFrame)
     return;
@@ -579,34 +572,32 @@ KeyFrameEditor::drawCurrentFrame(QPainter *p)
 
 }
 
-void
-KeyFrameEditor::paintEvent(QPaintEvent *event)
-{
+void KeyFrameEditor::paintEvent(QPaintEvent *event) {
+
   QPainter p(this);
   p.setRenderHint(QPainter::Antialiasing);
 
   drawSelectRegion(&p);
-
   drawVisibleRange(&p);
-
   drawTicks(&p);
-
   drawCurrentFrame(&p);
-
   drawKeyFrames(&p);
 
-  if (Global::morphTF())
-    {
+  if (Global::morphTF()) {
       p.setFont(QFont("Helvetica", 8));
       p.setPen(QPen(QColor(130, 100, 60),2));
       p.drawText(230, 30, "Transfer function morphing enabled");
-    }
+  }
+
 }
 
-void
-KeyFrameEditor::resizeEvent(QResizeEvent *event)
-{
+void KeyFrameEditor::resizeEvent(QResizeEvent *event) {
+  m_lineHeight = 30 + ui->spacer->geometry().top();
+  m_p0 = QPoint(60, m_lineHeight);
   m_p1 = QPoint(size().width()-60, m_lineHeight);
+  m_editorHeight = m_lineHeight + m_tickHeight + m_imgSpacer + m_imgSize + 10;
+  setMaximumHeight(m_editorHeight);
+  setMinimumHeight(m_editorHeight);
   calcMaxFrame();
 }
 
@@ -923,23 +914,23 @@ void KeyFrameEditor::pasteFrame() {
           break;
         }
       }
-      
+
       if (onTop > -1)
         emit pasteFrameOnTop(onTop);
       else {
         emit pasteFrame(m_currFrame);
-        
+
         m_fno.append(m_currFrame);
         m_fRect.append(QRect(-10,-10,1,1));
         m_fImage.append(m_copyImage);
-        
+
         calcRect();
         reorder();
         update();
       }
     }
   }
-    
+
 }
 
 
@@ -948,14 +939,14 @@ void KeyFrameEditor::enterEvent(QEvent *e) { setFocus(); grabKeyboard(); }
 void KeyFrameEditor::leaveEvent(QEvent *e) { clearFocus(); releaseKeyboard(); }
 
 void KeyFrameEditor::keyPressEvent(QKeyEvent *event) {
-  
+
   if (event->key() == Qt::Key_Space)  {
-    
+
     if (m_selected > -1)
       emit editFrameInterpolation(m_selected);
-    
+
   } else if (event->key() == Qt::Key_Left) {
-    
+
     m_currFrame = qMax(m_currFrame-1, 1);
     m_selected = -1;
     for(int f=0; f<m_fno.count(); f++) {
@@ -967,9 +958,9 @@ void KeyFrameEditor::keyPressEvent(QKeyEvent *event) {
     update();
     emit playFrameNumber(m_currFrame);
     qApp->processEvents();
-    
+
   } else if (event->key() == Qt::Key_Right)  {
-    
+
     m_currFrame = m_currFrame+1;
     m_selected = -1;
     for(int f=0; f<m_fno.count(); f++) {
@@ -981,27 +972,27 @@ void KeyFrameEditor::keyPressEvent(QKeyEvent *event) {
     update();
     emit playFrameNumber(m_currFrame);
     qApp->processEvents();
-    
+
   } else if ( event->key() == Qt::Key_C &&
               (event->modifiers() & Qt::ControlModifier ||
                event->modifiers() & Qt::MetaModifier) )  {
-    
+
       copyFrame();
-  
+
   } else if (event->key() == Qt::Key_H &&
 	           (event->modifiers() & Qt::ControlModifier ||
 	            event->modifiers() & Qt::MetaModifier) ) {
-    
+
     showHelp();
-  
+
   } else if (event->key() == Qt::Key_V &&
 	         (event->modifiers() & Qt::ControlModifier ||
 	          event->modifiers() & Qt::MetaModifier) )  {
-    
+
     pasteFrame();
-    
+
   }
-  
+
 }
 
 

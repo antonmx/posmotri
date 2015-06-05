@@ -1,16 +1,10 @@
 #ifndef BRICKINFORMATION_H
 #define BRICKINFORMATION_H
 
-
-
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+# include <QSettings>
 
-#include <fstream>
-using namespace std;
-
-class DrawBrickInformation
-{
+class DrawBrickInformation {
  public :
   DrawBrickInformation();
   ~DrawBrickInformation();
@@ -18,28 +12,28 @@ class DrawBrickInformation
   void reset();
   int numBricks();
   int subvolSize();
-  Vec subvol(int);
+  qglviewer::Vec subvol(int);
 
   bool get(int, int&,
-	   Vec*, Vec*,
-	   Vec&, Vec&,
+	   qglviewer::Vec*, qglviewer::Vec*,
+	   qglviewer::Vec&, qglviewer::Vec&,
 	   QList<bool>&,
-	   Vec&, Vec&);
+	   qglviewer::Vec&, qglviewer::Vec&);
   void append(int,
-	      Vec*, Vec*,
-	      Vec, Vec,
+	      qglviewer::Vec*, qglviewer::Vec*,
+	      qglviewer::Vec, qglviewer::Vec,
 	      QList<bool>,
-	      Vec, Vec);
+	      qglviewer::Vec, qglviewer::Vec);
 
  private :
   int m_numBricks;
   QList<int> m_tfSet;
-  QList<Vec> m_subvol;
-  QList<Vec> m_subcorner;
-  QList<Vec> m_subdim;
-  QList<Vec> m_scalepivot;
-  QList<Vec> m_scale;
-  QList<Vec> m_texture;
+  QList<qglviewer::Vec> m_subvol;
+  QList<qglviewer::Vec> m_subcorner;
+  QList<qglviewer::Vec> m_subdim;
+  QList<qglviewer::Vec> m_scalepivot;
+  QList<qglviewer::Vec> m_scale;
+  QList<qglviewer::Vec> m_texture;
 
   QList< QList<bool> > m_clips;
 };
@@ -48,9 +42,9 @@ class BrickBounds
 {
  public :
   BrickBounds();
-  BrickBounds(Vec, Vec);
+  BrickBounds(qglviewer::Vec, qglviewer::Vec);
   BrickBounds& operator=(const BrickBounds&);
-  Vec brickMin, brickMax;
+  qglviewer::Vec brickMin, brickMax;
 };
 
 class BrickInformation
@@ -61,8 +55,8 @@ class BrickInformation
   BrickInformation(const BrickInformation&);
   BrickInformation& operator=(const BrickInformation&);
 
-  Vec getCorrectedPivot();
-  Vec getCorrectedScalePivot();
+  qglviewer::Vec getCorrectedPivot();
+  qglviewer::Vec getCorrectedScalePivot();
 
   static BrickInformation interpolate(const BrickInformation,
 				      const BrickInformation,
@@ -72,18 +66,19 @@ class BrickInformation
 					     const QList<BrickInformation>,
 					     float);
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings&);
+  void save(QSettings&) const;
+
 
   int tfSet;
   int linkBrick;
-  Vec brickMin, brickMax;
-  Vec position;
-  Vec pivot;
-  Vec axis;
+  qglviewer::Vec brickMin, brickMax;
+  qglviewer::Vec position;
+  qglviewer::Vec pivot;
+  qglviewer::Vec axis;
   float angle;
-  Vec scalepivot;
-  Vec scale;
+  qglviewer::Vec scalepivot;
+  qglviewer::Vec scale;
   QList<bool> clippers;
 
  private :

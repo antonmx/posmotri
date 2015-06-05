@@ -1,5 +1,6 @@
 #include "global.h"
 #include "captionobject.h"
+#include "PromotedWidgets.h"
 
 QImage CaptionObject::image()
 {
@@ -486,67 +487,18 @@ CaptionObject::interpolate(CaptionObject& cap1,
 }
 
 
-void
-CaptionObject::load(fstream& fin)
-{
+void CaptionObject::load(QSettings & cfg) {
+
   clear();
 
-  int len;
-  bool done = false;
-  char keyword[100];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "captionobjectend") == 0)
-	done = true;
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  float x, y;
-	  fin.read((char*)&x, sizeof(float));
-	  fin.read((char*)&y, sizeof(float));
-	  m_pos = QPointF(x,y);
-	}
-      else if (strcmp(keyword, "text") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  char *str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_text = QString(str);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "font") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  char *str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  QString fontStr = QString(str);
-	  m_font.fromString(fontStr);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "color") == 0)
-	{
-	  unsigned char r, g, b, a;
-	  fin.read((char*)&r, sizeof(unsigned char));
-	  fin.read((char*)&g, sizeof(unsigned char));
-	  fin.read((char*)&b, sizeof(unsigned char));
-	  fin.read((char*)&a, sizeof(unsigned char));
-	  m_color = QColor(r,g,b,a);
-	}
-      else if (strcmp(keyword, "halocolor") == 0)
-	{
-	  unsigned char r, g, b, a;
-	  fin.read((char*)&r, sizeof(unsigned char));
-	  fin.read((char*)&g, sizeof(unsigned char));
-	  fin.read((char*)&b, sizeof(unsigned char));
-	  fin.read((char*)&a, sizeof(unsigned char));
-	  m_haloColor = QColor(r,g,b,a);
-	}
-      else if (strcmp(keyword, "angle") == 0)
-	{
-	  fin.read((char*)&m_angle, sizeof(float));
-	}
-    }
+  cfg.beginGroup("CaptionObject");
+  m_pos = getQSettingsValue(cfg, "position", m_pos);
+  m_text = getQSettingsValue(cfg, "text", m_text);
+  m_font = getQSettingsValue(cfg, "font", m_font);
+  m_color = getQSettingsValue(cfg, "color", m_color);
+  m_haloColor = getQSettingsValue(cfg, "halocolor", m_haloColor);
+  m_angle = getQSettingsValue(cfg, "angle", m_angle);
+  cfg.endGroup();
 
   QFontMetrics metric(m_font);
   m_height = metric.height();
@@ -555,70 +507,17 @@ CaptionObject::load(fstream& fin)
   createImage();
 }
 
-void
-CaptionObject::save(fstream& fout)
-{
-  char keyword[100];
-  int len;
 
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
 
-  float x = m_pos.x();
-  float y = m_pos.y();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "position");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&x, sizeof(float));
-  fout.write((char*)&y, sizeof(float));
 
-  memset(keyword, 0, 100);
-  sprintf(keyword, "text");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_text.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_text.toLatin1().data(), len*sizeof(char));
-
-  QString fontStr = m_font.toString();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "font");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = fontStr.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)fontStr.toLatin1().data(), len*sizeof(char));
-
-  unsigned char r = m_color.red();
-  unsigned char g = m_color.green();
-  unsigned char b = m_color.blue();
-  unsigned char a = m_color.alpha();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "color");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&r, sizeof(unsigned char));
-  fout.write((char*)&g, sizeof(unsigned char));
-  fout.write((char*)&b, sizeof(unsigned char));
-  fout.write((char*)&a, sizeof(unsigned char));
-
-  r = m_haloColor.red();
-  g = m_haloColor.green();
-  b = m_haloColor.blue();
-  a = m_haloColor.alpha();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "halocolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&r, sizeof(unsigned char));
-  fout.write((char*)&g, sizeof(unsigned char));
-  fout.write((char*)&b, sizeof(unsigned char));
-  fout.write((char*)&a, sizeof(unsigned char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "angle");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_angle, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionobjectend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void CaptionObject::save(QSettings & cfg) const {
+  cfg.beginGroup("CaptionObject");
+  cfg.setValue("position", m_pos);
+  cfg.setValue("text", m_text);
+  cfg.setValue("font", m_font);
+  cfg.setValue("color", m_color);
+  cfg.setValue("halocolor", m_haloColor);
+  cfg.setValue("angle", m_angle);
+  cfg.endGroup();
 }
 

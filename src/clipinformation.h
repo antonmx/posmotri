@@ -5,6 +5,8 @@
 
 #include <QGLViewer/vec.h>
 #include <QGLViewer/quaternion.h>
+# include <QSettings>
+
 using namespace qglviewer;
 
 #include <fstream>
@@ -23,8 +25,8 @@ class ClipInformation
 				     const ClipInformation,
 				     float);
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings &cfg);
+  void save(QSettings &cfg) const;
 
   void clear();
   int size();

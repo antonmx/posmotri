@@ -1,5 +1,10 @@
+#include <QDebug>
 #include "brickinformation.h"
 #include "staticfunctions.h"
+#include "PromotedWidgets.h"
+
+using namespace qglviewer;
+
 
 //----------------------------------
 int DrawBrickInformation::subvolSize() { return m_subvol.size(); }
@@ -87,7 +92,7 @@ DrawBrickInformation::get(int i,
 
   scalepivot = m_scalepivot[i];
   scale = m_scale[i];
-  
+
   return true;
 }
 void
@@ -224,7 +229,7 @@ BrickInformation::interpolate(const BrickInformation brickInfo1,
 
   brickInfo.tfSet = brickInfo1.tfSet;
   brickInfo.linkBrick = brickInfo1.linkBrick;
-  
+
   brickInfo.brickMin = StaticFunctions::interpolate(brickInfo1.brickMin,
 						    brickInfo2.brickMin,
 						    frc);
@@ -331,166 +336,41 @@ BrickInformation::interpolate(const QList<BrickInformation> brickInfo1,
   return brickInfo;
 }
 
-void
-BrickInformation::load(fstream &fin)
-{
-  bool done = false;
-  char keyword[100];
-  float f[3];
-  
-  reset();
 
-  while(!done)
-    { 
-      fin.getline(keyword, 100, 0);
-      if (strcmp(keyword, "end") == 0)
-	done = true;
-      else if (strcmp(keyword, "tfset") == 0)
-	fin.read((char*)&tfSet, sizeof(int));
-      else if (strcmp(keyword, "linkbrick") == 0)
-	fin.read((char*)&linkBrick, sizeof(int));
-      else if (strcmp(keyword, "brickmin") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  brickMin = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "brickmax") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  brickMax = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  position = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "pivot") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  pivot = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "axis") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  axis = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "angle") == 0)
-	fin.read((char*)&angle, sizeof(float));
-      else if (strcmp(keyword, "scalepivot") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  scalepivot = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "scale") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  scale = Vec(f[0],f[1],f[2]);
-	}
-      else if (strcmp(keyword, "clippers") == 0)
-	{
-	  int n;
-	  fin.read((char*)&n, sizeof(int));
-	  for(int i=0; i<n; i++)
-	    {
-	      bool b;
-	      fin.read((char*)&b, sizeof(bool));
-	      clippers.append(b);
-	    }
-	}
-    }
+
+
+
+
+void BrickInformation::load(QSettings & cfg) {
+  cfg.beginGroup("BrickInformation");
+  tfSet = getQSettingsValue(cfg, "tfset", tfSet );
+  linkBrick = getQSettingsValue(cfg, "linkbrick", linkBrick );
+  brickMin = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "brickmin") );
+  brickMax = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "brickmax") );
+  position = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") );
+  pivot = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "pivot") );
+  axis = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "axis") );
+  angle = getQSettingsValue(cfg, "angle", angle);
+  scalepivot = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "scalepivot") );
+  scale = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "scale") );
+  QSettingsGetValArray(cfg, "Clippers",  clippers);
+  cfg.endGroup();
 }
 
-void
-BrickInformation::save(fstream &fout)
-{
-  char keyword[100];
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "brickinformation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tfset");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&tfSet, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "linkbrick");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&linkBrick, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "brickmin");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = brickMin.x;
-  f[1] = brickMin.y;
-  f[2] = brickMin.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "brickmax");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = brickMax.x;
-  f[1] = brickMax.y;
-  f[2] = brickMax.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "position");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = position.x;
-  f[1] = position.y;
-  f[2] = position.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pivot");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = pivot.x;
-  f[1] = pivot.y;
-  f[2] = pivot.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "axis");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = axis.x;
-  f[1] = axis.y;
-  f[2] = axis.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "angle");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&angle, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scalepivot");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = scalepivot.x;
-  f[1] = scalepivot.y;
-  f[2] = scalepivot.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scale");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = scale.x;
-  f[1] = scale.y;
-  f[2] = scale.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "clippers");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int n = clippers.size();
-  fout.write((char*)&n, sizeof(int));
-  for(int i=0; i<clippers.size(); i++)
-    fout.write((char*)&clippers[i], sizeof(bool));
 
 
-  memset(keyword, 0, 100);
-  sprintf(keyword, "end");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void BrickInformation::save(QSettings & cfg) const {
+  cfg.beginGroup("BrickInformation");
+  cfg.setValue("tfset", tfSet );
+  cfg.setValue("linkbrick", linkBrick );
+  cfg.setValue("brickmin", QVecEdit::toString(brickMin) );
+  cfg.setValue("brickmax", QVecEdit::toString(brickMax) );
+  cfg.setValue("position", QVecEdit::toString(position) );
+  cfg.setValue("pivot", QVecEdit::toString(pivot) );
+  cfg.setValue("axis", QVecEdit::toString(axis) );
+  cfg.setValue("angle", angle);
+  cfg.setValue("scalepivot", QVecEdit::toString(scalepivot));
+  cfg.setValue("scale", QVecEdit::toString(scale) );
+  QSettingsSetValArray(cfg, "Clippers",  clippers);
+  cfg.endGroup();
 }

@@ -1,21 +1,20 @@
 #ifndef CAPTIONOBJECT_H
 #define CAPTIONOBJECT_H
 
-//#include <QtGui>
+#include <QSettings>
+#include <QPointF>
+#include <QColor>
+#include <QFont>
 
-#include <fstream>
-using namespace std;
-
-class CaptionObject
-{
- public :
+class CaptionObject {
+public :
   CaptionObject();
   ~CaptionObject();
-  
+
   QImage image();
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(QSettings & cfg);
+  void save(QSettings & cfg) const;
 
   void clear();
 
@@ -40,14 +39,9 @@ class CaptionObject
   int width();
   float angle();
 
-  static CaptionObject interpolate(CaptionObject&,
-				   CaptionObject&,
-				   float);
+  static CaptionObject interpolate(CaptionObject&, CaptionObject&, float);
+  static QList<CaptionObject> interpolate(QList<CaptionObject>, QList<CaptionObject>, float);
 
-  static QList<CaptionObject> interpolate(QList<CaptionObject>,
-					  QList<CaptionObject>,
-					  float);
-  
  private :
   QImage m_image;
   QPointF m_pos;
@@ -61,6 +55,7 @@ class CaptionObject
   bool m_recreate;
 
   void createImage();
+  
 };
 
 #endif

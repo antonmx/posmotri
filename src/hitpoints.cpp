@@ -5,13 +5,15 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QKeyEvent>
+#include "PromotedWidgets.h"
+#include <QDebug>
 
 #include <fstream>
 using namespace std;
 
 int HitPoints::bareCount() { return m_barePoints.count(); }
 QList<Vec> HitPoints::barePoints() { return m_barePoints; }
-void HitPoints::setBarePoints(QList<Vec> pts) { m_barePoints = pts; }
+void HitPoints::setBarePoints(const QList<Vec> & pts) { m_barePoints = pts; }
 void HitPoints::removeBarePoints() { m_barePoints.clear(); }
 
 void HitPoints::setPointSize(int sz) { m_pointSize = sz; }
@@ -237,121 +239,64 @@ HitPoints::grabsMouse()
   return false;
 }
 
-void
-HitPoints::savePoints(QString flnm)
-{
-  int npts = m_points.count();
+void HitPoints::savePoints(QString flnm) {
   fstream fp(flnm.toLatin1().data(), ios::out);
-  fp << npts << "\n";
-  for(int i=0; i<npts; i++)
-    {
-      Vec pt = m_points[i]->point();
-      fp << pt.x << " " << pt.y << " " << pt.z << "\n";
-    }
+  foreach (HitPointGrabber * hpg,  m_points)
+    fp << "point " << QVecEdit::toString(hpg->point()).toStdString() <<  endl;
   fp.close();
-
   QMessageBox::information(0, "Save points", "Saved points to "+flnm);
 }
 
 
-void
-HitPoints::addBarePoints(QString flnm)
-{
+
+
+QList<Vec> pointsFromFile(const QString & flnm) {
+
   QList<Vec> pts;
 
-  QFile fpoints(flnm);
-  fpoints.open(QFile::ReadOnly);
-  QTextStream fd(&fpoints);
-  while (! fd.atEnd())
-    {
-      QString line = fd.readLine();
-      QStringList list = line.split(" ", QString::SkipEmptyParts);
-      if (list.count() == 1)
-	{
-	  int npts = list[0].toInt();
-	  for(int i=0; i<npts; i++)
-	    {
-	      if (fd.atEnd())
-		break;
-	      else
-		{
-		  QString line = fd.readLine();
-		  QStringList list = line.split(" ", QString::SkipEmptyParts);
-		  if (list.count() == 3)
-		    {
-		      float x = list[0].toFloat();
-		      float y = list[1].toFloat();
-		      float z = list[2].toFloat();
-		      pts.append(Vec(x,y,z));
-		    }
-		}
-	    }
-	}
-    }
+  fstream fp(flnm.toLatin1().data(), ios::in);
 
+  bool done = false;
+  QString keyword;
+
+  while ( !fp.eof()  &&  ! (keyword = nextString(fp,  ' ')).isEmpty() ) {
+    if (keyword == "point")
+      pts.append( QVecEdit::toVec(nextString(fp)) );
+    else if ( ! keyword.isEmpty() ) {
+      qDebug() <<  "Unrecognized or empty keyword for HitPoints " << keyword << ".";
+      keyword.clear();
+    }
+  }
+  fp.close();
+
+  return pts;
+
+}
+
+void HitPoints::addBarePoints(QString flnm) {
+  QList<Vec> pts = pointsFromFile(flnm);
   if (pts.count() > 0)
     setBarePoints(pts);
-
-  QMessageBox::information(0, "", QString("No. of bare points in the scene : %1").\
-			   arg(m_barePoints.count()));
+  QMessageBox::information(0, "", QString("No. of bare points in the scene : %1").arg(m_barePoints.count()));
 }
 
 
-void
-HitPoints::addPoints(QString flnm)
-{
-  QList<Vec> pts;
+void HitPoints::addPoints(QString flnm) {
+  QList<Vec> pts = pointsFromFile(flnm);
+  if (pts.count() > 0)  {
+    foreach( Vec pnt,  pts)
+      m_points.append( new HitPointGrabber(pnt));
+    m_rawValues.clear();
+    m_tagValues.clear();
+    updatePointDialog();
+  }
 
-  QFile fpoints(flnm);
-  fpoints.open(QFile::ReadOnly);
-  QTextStream fd(&fpoints);
-  while (! fd.atEnd())
-    {
-      QString line = fd.readLine();
-      QStringList list = line.split(" ", QString::SkipEmptyParts);
-      if (list.count() == 1)
-	{
-	  int npts = list[0].toInt();
-	  for(int i=0; i<npts; i++)
-	    {
-	      if (fd.atEnd())
-		break;
-	      else
-		{
-		  QString line = fd.readLine();
-		  QStringList list = line.split(" ", QString::SkipEmptyParts);
-		  if (list.count() == 3)
-		    {
-		      float x = list[0].toFloat();
-		      float y = list[1].toFloat();
-		      float z = list[2].toFloat();
-		      pts.append(Vec(x,y,z));
-		    }
-		}
-	    }
-	}
-    }
-
-  if (pts.count() > 0)
-    {
-      for(int i=0; i<pts.count(); i++)
-	{
-	  HitPointGrabber *hpg = new HitPointGrabber(pts[i]);
-	  m_points.append(hpg);
-	}
-
-      m_rawValues.clear();
-      m_tagValues.clear();
-
-      updatePointDialog();
-    }
-
-  QMessageBox::information(0, "", QString("No. of points in the scene : %1").\
-			   arg(m_points.count()));
+  QMessageBox::information(0, "", QString("No. of points in the scene : %1").arg(m_points.count()));
 
   removeFromMouseGrabberPool();
   if (m_grab)
     addInMouseGrabberPool();
+
 }
 
 HitPointGrabber *dummyHpg = 0;

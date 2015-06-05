@@ -8,6 +8,7 @@
 #include "mainwindowui.h"
 #include "lighthandler.h"
 #include <QMessageBox>
+#include <PromotedWidgets.h>
 
 
 
@@ -1191,93 +1192,6 @@ KeyFrame::playFrameNumber(int fno)
 //--------------------------------
 //---- load and save -------------
 //--------------------------------
-void
-KeyFrame::load(fstream &fin)
-{
-  char keyword[100];
-
-  clear();
-
-  int n;
-  fin.read((char*)&n, sizeof(int));
-
-  bool savedFirst = false;
-  while (!fin.eof())
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "done") == 0)
-	break;
-
-      if (strcmp(keyword, "keyframestart") == 0)
-	{
-	  // the zeroeth keyframe should be moved to m_savedKeyFrame
-	  if (!savedFirst)
-	    {
-	      m_savedKeyFrame.load(fin);
-	      savedFirst = true;
-	    }
-	  else
-	    {
-	      KeyFrameInformation *kfi = new KeyFrameInformation();
-	      kfi->load(fin);
-	      m_keyFrameInfo.append(kfi);
-	    }
-	}
-    }
-
-  // read all keyframes.  now generate the camerapath information
-  for (int i=0; i<m_keyFrameInfo.size(); i++)
-    {
-      Vec pos = m_keyFrameInfo[i]->position();
-      Quaternion rot = m_keyFrameInfo[i]->orientation();
-
-      CameraPathNode *cam = new CameraPathNode(pos, rot);
-      m_cameraList.append(cam);
-      connect(cam, SIGNAL(modified()),
-	      this, SLOT(updateKeyFrameInterpolator()));
-    }
-
-  updateCameraPath();
-
-
-  // --- build list for keyframe editor
-  QList<int> framenumbers;
-  QList<QImage> images;
-  for (int i=0; i<m_keyFrameInfo.size(); i++)
-    {
-      framenumbers.append(m_keyFrameInfo[i]->frameNumber());
-      images.append(m_keyFrameInfo[i]->image());
-    }
-
-  emit loadKeyframes(framenumbers, images);
-  qApp->processEvents();
-
-
-  //playSavedKeyFrame();
-  // ----------------------------------
-}
-
-void
-KeyFrame::save(fstream& fout)
-{
-  char keyword[100];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keyframes");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  int n = numberOfKeyFrames();
-  fout.write((char*)&n, sizeof(int));
-
-  m_savedKeyFrame.save(fout);
-
-  for(int kf=0; kf<numberOfKeyFrames(); kf++)
-    m_keyFrameInfo[kf]->save(fout);
-
-  sprintf(keyword, "done");
-  fout.write((char*)keyword, strlen(keyword)+1);
-}
 
 
 void
@@ -1975,29 +1889,80 @@ KeyFrame::replaceKeyFrameImage(int kfn, QImage img)
   m_keyFrameInfo[kfn]->setImage(img);
 }
 
+
+
+
+
+void KeyFrame::load(QSettings &cfg) {
+
+  clear();
+
+  cfg.beginGroup("KeyFrames");
+  m_savedKeyFrame.load(cfg);
+  QSettingsLoadArray(cfg, "KeyFarameInfo", m_keyFrameInfo);
+  cfg.endGroup();
+
+  for (int i = 0; i < m_keyFrameInfo.size(); i++) {
+    Vec pos = m_keyFrameInfo[i]->position();
+    Quaternion rot = m_keyFrameInfo[i]->orientation();
+
+    CameraPathNode *cam = new CameraPathNode(pos, rot);
+    m_cameraList.append(cam);
+    connect(cam, SIGNAL(modified()),
+        this, SLOT(updateKeyFrameInterpolator()));
+  }
+
+  updateCameraPath();
+
+  QList<int> framenumbers;
+  QList<QImage> images;
+  for (int i = 0; i < m_keyFrameInfo.size(); i++)  {
+    framenumbers.append(m_keyFrameInfo[i]->frameNumber());
+    images.append(m_keyFrameInfo[i]->image());
+  }
+
+  emit loadKeyframes(framenumbers, images);
+  qApp->processEvents();
+
+  //playSavedKeyFrame();
+
+}
+
+void KeyFrame::save(QSettings &cfg) const {
+  cfg.beginGroup("KeyFrames");
+  m_savedKeyFrame.save(cfg);
+  QSettingsSaveArray(cfg, "KeyFarameInfo", m_keyFrameInfo);
+  cfg.endGroup();
+}
+
+
+
+
+
+
 void
-KeyFrame::import(QString flnm)
+KeyFrame::import(const QString & flnm)
 {
   //--------------------------------
   if (m_keyFrameInfo.count() == 0)
     {
       QMessageBox::information(0,
-			       "Import KeyFrames",
-			       "Need atleast one keyframe in the keyframe editor before import can take place");
+                               "Import KeyFrames",
+                               "Need atleast one keyframe in the keyframe editor before import can take place");
       return;
     }
   //--------------------------------
 
 
   //--------------------------------
-  fstream fin(flnm.toLatin1().data(), ios::binary|ios::in);
+  fstream fin(flnm.toAscii().data(), ios::binary|ios::in);
 
   char keyword[100];
   fin.getline(keyword, 100, 0);
   if (strcmp(keyword, "Drishti Keyframes") != 0)
     {
       QMessageBox::information(0, "Import Keyframes",
-			       QString("Invalid .keyframes file : ")+flnm);
+                               QString("Invalid .keyframes file : ")+flnm);
       return;
     }
 

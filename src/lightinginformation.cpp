@@ -1,5 +1,6 @@
 #include "lightinginformation.h"
 #include "staticfunctions.h"
+#include "PromotedWidgets.h"
 
 Highlights::Highlights(float _ambient, float _diffuse, float _specular,  int _specularCoefficient)
   : ambient(_ambient)
@@ -196,224 +197,77 @@ LightingInformation::interpolate(const LightingInformation lightInfo1,
 
   return lightInfo;
 }
-void
-LightingInformation::load(fstream &fin)
-{
-  bool done = false;
-  char keyword[100];
-  float f[3];
 
-  while(!done)
-    {
-      fin.getline(keyword, 100, 0);
-      if (strcmp(keyword, "end") == 0)
-	done = true;
-      else if (strcmp(keyword, "applyemissive") == 0)
-	fin.read((char*)&applyEmissive, sizeof(bool));
-      else if (strcmp(keyword, "applylighting") == 0)
-	fin.read((char*)&applyLighting, sizeof(bool));
-      else if (strcmp(keyword, "applyshadows") == 0)
-	fin.read((char*)&applyShadows, sizeof(bool));
-      else if (strcmp(keyword, "applycoloredshadows") == 0)
-	fin.read((char*)&applyColoredShadows, sizeof(bool));
-      else if (strcmp(keyword, "applybackplane") == 0)
-	fin.read((char*)&applyBackplane, sizeof(bool));
-      else if (strcmp(keyword, "peel") == 0)
-	fin.read((char*)&peel, sizeof(bool));
-      else if (strcmp(keyword, "colorattenuation") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  colorAttenuation = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "userlightvector") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  userLightVector = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "shadowblur") == 0)
-	fin.read((char*)&shadowBlur, sizeof(float));
-      else if (strcmp(keyword, "shadowscale") == 0)
-	fin.read((char*)&shadowScale, sizeof(float));
-      else if (strcmp(keyword, "shadowintensity") == 0)
-	fin.read((char*)&shadowIntensity, sizeof(float));
-      else if (strcmp(keyword, "shadowfovoffset") == 0)
-	fin.read((char*)&shadowFovOffset, sizeof(float));
-      else if (strcmp(keyword, "lightdistanceoffset") == 0)
-	fin.read((char*)&lightDistanceOffset, sizeof(float));
-      else if (strcmp(keyword, "backplaneshadowscale") == 0)
-	fin.read((char*)&backplaneShadowScale, sizeof(float));
-      else if (strcmp(keyword, "backplaneintensity") == 0)
-	fin.read((char*)&backplaneIntensity, sizeof(float));
-      else if (strcmp(keyword, "ambient") == 0)
-	fin.read((char*)&highlights.ambient, sizeof(float));
-      else if (strcmp(keyword, "diffuse") == 0)
-	fin.read((char*)&highlights.diffuse, sizeof(float));
-      else if (strcmp(keyword, "specular") == 0)
-	fin.read((char*)&highlights.specular, sizeof(float));
-      else if (strcmp(keyword, "specularcoefficient") == 0)
-	fin.read((char*)&highlights.specularCoefficient, sizeof(int));
-      else if (strcmp(keyword, "peeltype") == 0)
-	fin.read((char*)&peelType, sizeof(int));
-      else if (strcmp(keyword, "peelmin") == 0)
-	fin.read((char*)&peelMin, sizeof(float));
-      else if (strcmp(keyword, "peelmax") == 0)
-	fin.read((char*)&peelMax, sizeof(float));
-      else if (strcmp(keyword, "peelmix") == 0)
-	fin.read((char*)&peelMix, sizeof(float));
-    }
+
+
+
+
+
+
+
+void LightingInformation::save(QSettings & cfg) const {
+
+  cfg.beginGroup("LightingInformation");
+
+  cfg.setValue("applyemissive", applyEmissive);
+  cfg.setValue("applylighting", applyLighting);
+  cfg.setValue("applyshadows", applyShadows);
+  cfg.setValue("applycoloredshadows", applyColoredShadows);
+  cfg.setValue("applybackplane", applyBackplane);
+  cfg.setValue("colorattenuation",  QVecEdit::toString(colorAttenuation));
+  cfg.setValue("userlightvector",  QVecEdit::toString(userLightVector));
+  cfg.setValue("shadowblur", shadowBlur);
+  cfg.setValue("shadowscale", shadowScale);
+  cfg.setValue("shadowintensity", shadowIntensity);
+  cfg.setValue("shadowfovoffset", shadowFovOffset);
+  cfg.setValue("lightdistanceoffset", lightDistanceOffset);
+  cfg.setValue("backplaneshadowscale", backplaneShadowScale);
+  cfg.setValue("backplaneintensity", backplaneIntensity);
+  cfg.setValue("ambient", highlights.ambient);
+  cfg.setValue("diffuse", highlights.diffuse);
+  cfg.setValue("specular", highlights.specular);
+  cfg.setValue("specularcoefficient", highlights.specularCoefficient);
+  cfg.setValue("peel", peel);
+  cfg.setValue("peeltype", peelType);
+  cfg.setValue("peelmin", peelMin);
+  cfg.setValue("peelmax", peelMax);
+  cfg.setValue("peelmix", peelMix);
+
+  cfg.endGroup();
 
 }
 
-void
-LightingInformation::save(fstream &fout)
-{
-  char keyword[100];
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "lightinginformation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "applyemissive");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&applyEmissive, sizeof(bool));
 
 
-  memset(keyword, 0, 100);
-  sprintf(keyword, "applylighting");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&applyLighting, sizeof(bool));
+void LightingInformation::load(QSettings & cfg) {
 
+  cfg.beginGroup("LightingInformation");
 
-  memset(keyword, 0, 100);
-  sprintf(keyword, "applyshadows");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&applyShadows, sizeof(bool));
+  applyEmissive = getQSettingsValue(cfg, "applyemissive", applyEmissive);
+  applyLighting = getQSettingsValue(cfg, "applylighting", applyLighting);
+  applyShadows = getQSettingsValue(cfg, "applyshadows", applyShadows);
+  applyColoredShadows = getQSettingsValue(cfg, "applycoloredshadows", applyColoredShadows);
+  applyBackplane = getQSettingsValue(cfg, "applybackplane", applyBackplane);
+  colorAttenuation = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "colorattenuation") );
+  userLightVector = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "userlightvector") );
+  shadowBlur = getQSettingsValue(cfg, "shadowblur", shadowBlur);
+  shadowScale = getQSettingsValue(cfg, "shadowscale", shadowScale);
+  shadowIntensity = getQSettingsValue(cfg, "shadowintensity", shadowIntensity);
+  shadowFovOffset = getQSettingsValue(cfg, "shadowfovoffset", shadowFovOffset);
+  lightDistanceOffset = getQSettingsValue(cfg, "lightdistanceoffset", lightDistanceOffset);
+  backplaneShadowScale = getQSettingsValue(cfg, "backplaneshadowscale", backplaneShadowScale);
+  backplaneIntensity = getQSettingsValue(cfg, "backplaneintensity", backplaneIntensity);
+  highlights.ambient = getQSettingsValue(cfg, "ambient", highlights.ambient);
+  highlights.diffuse = getQSettingsValue(cfg, "diffuse", highlights.diffuse);
+  highlights.specular = getQSettingsValue(cfg, "specular", highlights.specular);
+  highlights.specularCoefficient = getQSettingsValue(cfg, "specularcoefficient", highlights.specularCoefficient);
+  peel = getQSettingsValue(cfg, "peel", peel);
+  peelType = getQSettingsValue(cfg, "peeltype", peelType);
+  peelMin = getQSettingsValue(cfg, "peelmin", peelMin);
+  peelMax = getQSettingsValue(cfg, "peelmax", peelMax);
+  peelMix = getQSettingsValue(cfg, "peelmix", peelMix);
 
+  cfg.endGroup();
 
-  memset(keyword, 0, 100);
-  sprintf(keyword, "applycoloredshadows");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&applyColoredShadows, sizeof(bool));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "applybackplane");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&applyBackplane, sizeof(bool));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "colorattenuation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = colorAttenuation.x;
-  f[1] = colorAttenuation.y;
-  f[2] = colorAttenuation.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "userlightvector");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = userLightVector.x;
-  f[1] = userLightVector.y;
-  f[2] = userLightVector.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "shadowblur");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&shadowBlur, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "shadowscale");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&shadowScale, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "shadowintensity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&shadowIntensity, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "shadowfovoffset");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&shadowFovOffset, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "lightdistanceoffset");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&lightDistanceOffset, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "backplaneshadowscale");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&backplaneShadowScale, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "backplaneintensity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&backplaneIntensity, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "ambient");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&highlights.ambient, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "diffuse");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&highlights.diffuse, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "specular");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&highlights.specular, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "specularcoefficient");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&highlights.specularCoefficient, sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "peel");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&peel, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "peeltype");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&peelType, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "peelmin");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&peelMin, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "peelmax");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&peelMax, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "peelmix");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&peelMix, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "end");
-  fout.write((char*)keyword, strlen(keyword)+1);
 }
+

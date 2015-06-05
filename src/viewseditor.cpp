@@ -1,6 +1,8 @@
 #include "global.h"
 #include "viewseditor.h"
 #include "geometryobjects.h"
+#include "PromotedWidgets.h"
+#include <QDebug>
 
 ViewsEditor::ViewsEditor(QWidget *parent) :
   QWidget(parent)
@@ -62,7 +64,7 @@ ViewsEditor::calcRect()
       int r,c;
       r = i/ncols;
       c = i%ncols;
-      
+
       if (r < rowmx && r >= m_row)
 	{
 	  QRect rect = QRect(c*m_imgSize + gap + m_leftMargin,
@@ -95,7 +97,7 @@ ViewsEditor::drawView(QPainter *p,
 {
   if (rect.y()+rect.height()+11 < size().height() &&
       rect.y() > m_topMargin)
-    {      
+    {
       QRect prect = rect.adjusted(5, 5, -5, -5);
       p->drawImage(prect, img, QRect(0, 0, 100, 100));
 
@@ -142,13 +144,13 @@ ViewsEditor::paintEvent(QPaintEvent *event)
 {
   QPainter p(this);
   p.setRenderHint(QPainter::Antialiasing);
-  
+
   for(int i=0; i<m_viewInfo.count(); i++)
     {
       QRect rect = m_Rect[i];
 
       QColor penColor, brushColor;
-      
+
       if (i != m_selected)
 	{
 	  brushColor = QColor(170, 170, 170);
@@ -160,10 +162,10 @@ ViewsEditor::paintEvent(QPaintEvent *event)
 	  penColor = QColor(50, 30, 10);
 	}
 
-      drawView(&p, 
+      drawView(&p,
 	       penColor, brushColor,
-	       i+1, rect, m_viewInfo[i]->image());      
-    }    
+	       i+1, rect, m_viewInfo[i]->image());
+    }
 
 
   if (m_inTransition)
@@ -179,7 +181,7 @@ ViewsEditor::addView(float stepStill,
 		     Vec pos, Quaternion rot,
 		     float focusDistance,
 		     QImage image,
-		     int renderQuality, 
+		     int renderQuality,
 		     LightingInformation lightInfo,
 		     QList<BrickInformation> brickInfo,
 		     Vec bmin, Vec bmax,
@@ -307,7 +309,7 @@ ViewsEditor::on_restore_pressed()
       return;
     }
 
-  
+
   float stepStill = m_viewInfo[m_selected]->stepsizeStill();
   float stepDrag = m_viewInfo[m_selected]->stepsizeDrag();
   int renderQuality = m_viewInfo[m_selected]->renderQuality();
@@ -364,20 +366,20 @@ ViewsEditor::on_restore_pressed()
       emit updateVolumeBounds(volnum1, volnum2, volnum3, volnum4, bmin, bmax);
     }
   //emit updateVolInfo(volnum);
-  //emit updateVolumeBounds(volnum, bmin, bmax);  
+  //emit updateVolumeBounds(volnum, bmin, bmax);
   emit updateLookFrom(pos, rot, focus);
   emit updateLightInfo(lightInfo);
   emit updateBrickInfo(brickInfo);
   emit updateParameters(stepStill, stepDrag,
 			renderQuality,
-			drawBox, drawAxis, 
+			drawBox, drawAxis,
 			backgroundColor,
 			backgroundImage,
 			sz, st, xl, yl, zl);
 
   // update transfer functions only after stepsizes have been updated
   emit updateTransferFunctionManager(splineInfo);
-  
+
   Global::setTagColors(m_viewInfo[m_selected]->tagColors());
   emit updateTagColors();
 
@@ -439,48 +441,37 @@ ViewsEditor::updateTransition()
   update();
 }
 
-void
-ViewsEditor::load(fstream &fin)
-{
-  char keyword[100];
+void ViewsEditor::load(fstream &fin) {
 
   clear();
+  bool done = false;
+  QString keyword;
 
-  int n;
-  fin.read((char*)&n, sizeof(int));
+  while ( ! done  &&  ! fin.eof() ) {
 
-  while (!fin.eof())
-    {
-      fin.getline(keyword, 100, 0);
+    keyword = nextString(fin,  ' ');
 
-      if (strcmp(keyword, "done") == 0)
-	break;
-
-      if (strcmp(keyword, "viewstart") == 0)
-	{
-	  ViewInformation *vi = new ViewInformation();
-	  vi->load(fin);
-	  m_viewInfo.append(vi);
-	}
+    if (keyword == "views_end")
+      done = true;
+    else if (keyword == "viewstart") {
+      ViewInformation *vi = new ViewInformation();
+      vi->load(fin);
+      m_viewInfo.append(vi);
+    } else {
+      qDebug() <<  "Unrecognized or empty keyword for ViewsEditor" << keyword << ".";
+      done = true;
     }
+
+  }
 
   ui.groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
   update();
+
 }
 
-void
-ViewsEditor::save(fstream &fout)
-{
-  QString keyword;
-  keyword = "views";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);  
-
-  int n = m_viewInfo.count();
-  fout.write((char*)&n, sizeof(int));
-
-  for(int vi=0; vi<n; vi++)
-    m_viewInfo[vi]->save(fout);
-
-  keyword = "done";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);  
+void ViewsEditor::save(fstream &fout) {
+  fout << "views" <<  endl;
+  foreach( ViewInformation * vi,  m_viewInfo)
+    vi->save(fout);
+  fout << "views_end" <<  endl;
 }

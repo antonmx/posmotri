@@ -70,6 +70,7 @@ class MainWindow : public QMainWindow
    void on_actionGrids_triggered();
    void on_actionNetwork_triggered();
    void on_actionTriset_triggered();
+   void on_actionLoad_Volumes_triggered(QStringList flnm = QStringList());
    void on_actionLoad_1_Volume_triggered();
    void on_actionLoad_2_Volumes_triggered();
    void on_actionLoad_3_Volumes_triggered();
@@ -296,8 +297,6 @@ class MainWindow : public QMainWindow
    void loadProjectRunKeyframesAndExit();
    bool fromStringList(QStringList, BatchJob&);
    bool fromFile(QString, BatchJob&);
-
-   void loadSingleVolume(QStringList);
 
    bool haveGrid();
 

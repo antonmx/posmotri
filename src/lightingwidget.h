@@ -12,34 +12,34 @@
 
 class LightDisc : public QWidget {
   Q_OBJECT;
-  
+
 private :
   QPointF m_direction;
   bool m_backlit;
-  
+
 public :
-  
+
   LightDisc(QWidget *parent = NULL);
-  inline QPointF direction() const {return m_direction;}  
+  inline QPointF direction() const {return m_direction;}
 
 public slots:
-  
+
   void setDirection(const QPointF & pos);
-  void setBacklit(bool); 
+  void setBacklit(bool);
 
 signals :
   void directionChanged(const QPointF &);
-  
+
 private:
   void onMouseSet(const QPointF & pos);
-  
+
 private slots:
-  
+
   void mousePressEvent(QMouseEvent*);
   void mouseMoveEvent(QMouseEvent*);
   void paintEvent(QPaintEvent*);
   void resizeEvent(QResizeEvent*);
-  
+
 };
 
 
@@ -50,12 +50,12 @@ namespace Ui {
 
 class DirectionVectorWidget : public QFrame {
  Q_OBJECT;
- 
+
 private :
   Ui::DirectionVectorWidget * ui;
 
 public :
-  
+
   DirectionVectorWidget(QWidget *parent=NULL);
 
   void setVector(const qglviewer::Vec &);
@@ -63,21 +63,21 @@ public :
 
 signals :
   void directionChanged(qglviewer::Vec);
-  
+
 private slots :
-  
+
   void updateDirection(QPointF);
   void onDirectionChange();
   void onLenChange();
   void resizeEvent(QResizeEvent*);
-  
+
 };
 
 
 
 namespace Ui {
     class LightingWidget;
-} 
+}
 
 
 class LightingWidget : public QWidget {
@@ -125,7 +125,7 @@ signals :
   void backplaneShadowScale(float);
   void backplaneIntensity(float);
 
-  void directionChanged(Vec);
+  void directionChanged(qglviewer::Vec);
   void lightDistanceOffset(float);
 
   void peel(bool);

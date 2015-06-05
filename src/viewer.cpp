@@ -940,24 +940,23 @@ Viewer::displayMessage(QString mesg, bool warn)
 QStringList ssmesg;
 int ssdmn = 0;
 void
-Viewer::splashScreen()
-{
-  if (GlewInit::initialised())
-    {
-      if (ssmesg.count() == 0)
-	{
-	  ssmesg << "When data is loaded, press spacebar to bring up command dialog";
-	  ssmesg << "While hovering over geometry, press spacebar to bring up related parameter dialog.";
-	  ssmesg << "Within panels, press Ctrl+H to bring up related help menu.";
-	  ssmesg << "When data is loaded, you usually start in lowres mode.";
-	  ssmesg << "Press F2 (or Fn+F2) to toggle between lowres and hires modes.";
-	  ssmesg << "Press 1 to toggle shadow rendering.";
-	  ssmesg << "To get (non transparent) black background switch on \"Backplane\" under \"Shader Widget\"";
-	}
 
-      MainWindowUI::mainWindowUI()->statusBar->showMessage(ssmesg[ssdmn]);
-      ssdmn = (ssdmn+1)%7;
-    }
+Viewer::splashScreen() {
+
+  if (GlewInit::initialised()) {
+    if (ssmesg.count() == 0)	{
+      ssmesg << "When data is loaded, press spacebar to bring up command dialog";
+      ssmesg << "While hovering over geometry, press spacebar to bring up related parameter dialog.";
+      ssmesg << "Within panels, press Ctrl+H to bring up related help menu.";
+      ssmesg << "When data is loaded, you usually start in lowres mode.";
+      ssmesg << "Press F2 (or Fn+F2) to toggle between lowres and hires modes.";
+      ssmesg << "Press 1 to toggle shadow rendering.";
+      ssmesg << "To get (non transparent) black background switch on \"Backplane\" under \"Shader Widget\"";
+     }
+
+    MainWindowUI::mainWindowUI()->statusBar->showMessage(ssmesg[ssdmn]);
+    ssdmn = (ssdmn+1)%7;
+  }
 
 #ifdef MAC_OS_X_VERSION_10_8
   if (GlewInit::initialised() && m_copyShader)
@@ -1012,6 +1011,8 @@ Viewer::splashScreen()
   return; // do not show the splash screen on Mountain Lion
 #endif
 
+/*
+
   //-------------
   // calculate font scale based on dpi
   float fscl = 120.0/Global::dpi();
@@ -1036,6 +1037,9 @@ Viewer::splashScreen()
   p.setRenderHint(QPainter::TextAntialiasing, true);
   QPainterPath textPath;
   p.drawPath(textPath);
+
+  */
+
 }
 
 bool
@@ -1412,6 +1416,7 @@ Viewer::drawCarveCircle()
   glEnable(GL_DEPTH_TEST);
  glActiveTexture(GL_TEXTURE0);
   glDisable(GL_TEXTURE_2D);
+ 
 }
 
 void
@@ -2137,7 +2142,7 @@ Viewer::fastDraw()
   if (!m_lowresVolume->raised() &&
       !m_hiresVolume->raised())
     {
-      splashScreen();
+      //splashScreen();
       return;
     }
 
@@ -2179,7 +2184,7 @@ Viewer::draw()
   if (!m_lowresVolume->raised() &&
       !m_hiresVolume->raised())
     {
-      splashScreen();
+      //splashScreen();
       return;
     }
 

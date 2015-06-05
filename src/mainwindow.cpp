@@ -133,7 +133,6 @@ MainWindow::MainWindow(QWidget *parent) :
   ui.statusBar->setSizeGripEnabled(true);
   ui.statusBar->addWidget(Global::progressBar());
 
-
   MainWindowUI::setMainWindowUI(&ui);
 
   setWindowIcon(QPixmap(":/images/drishti_32.png"));
@@ -1606,19 +1605,32 @@ MainWindow::on_actionTriset_triggered()
   Global::setPreviousDirectory(f.absolutePath());
 }
 
-void
-MainWindow::loadSingleVolume(QStringList flnm)
-{
-  Global::resetCurrentProjectFile();
-  Global::addRecentFile(flnm[0]);
-  updateRecentFileAction();
 
+void MainWindow::on_actionLoad_Volumes_triggered(QStringList flnm) {
+
+  if (flnm.isEmpty())
+    flnm = QFileDialog::getOpenFileNames(0,
+      "Load volume files",
+      Global::previousDirectory(),
+      "NetCDF Files (*.pvl.nc)");
+
+  if (flnm.isEmpty())
+    return;
+
+  Global::resetCurrentProjectFile();
   createHiresLowresWindows();
 
-  if (VolumeInformation::checkRGB(flnm[0]))
-    loadVolumeRGB(flnm[0].toLatin1().data());
+  if ( flnm.size() == 1 ) {
+    if (VolumeInformation::checkRGB(flnm.at(0)))
+      loadVolumeRGB(flnm.at(0).toLatin1().data());
+    else
+      loadVolumeList(QStringList(flnm.at(0)), false);
+  } else if ( flnm.size() == 2 )
+    loadVolume2List(QStringList(flnm.at(0)), QStringList(flnm.at(1)), false);
+  else if ( flnm.size() == 3 )
+    loadVolume3List(QStringList(flnm.at(0)), QStringList(flnm.at(1)), QStringList(flnm.at(2)), false);
   else
-    loadVolumeList(flnm, false);
+    loadVolume4List(QStringList(flnm.at(0)), QStringList(flnm.at(1)), QStringList(flnm.at(2)), QStringList(flnm.at(3)), false);
 
   // reset
   m_bricks->reset();
@@ -1631,7 +1643,11 @@ MainWindow::loadSingleVolume(QStringList flnm)
   m_keyFrameEditor->clear();
   m_gallery->clear();
   m_lightingWidget->setLightInfo(LightingInformation());
+
+
 }
+
+
 
 void
 MainWindow::on_actionLoad_1_Volume_triggered()
@@ -1655,7 +1671,29 @@ MainWindow::on_actionLoad_1_Volume_triggered()
   if (flnm.isEmpty())
     return;
 
-  loadSingleVolume(flnm);
+  Global::resetCurrentProjectFile();
+  Global::addRecentFile(flnm[0]);
+  updateRecentFileAction();
+
+  createHiresLowresWindows();
+
+  if (VolumeInformation::checkRGB(flnm.at(0)))
+    loadVolumeRGB(flnm.at(0).toLatin1().data());
+  else
+    loadVolumeList(flnm, false);
+
+    // reset
+  m_bricks->reset();
+  m_bricksWidget->refresh();
+
+  LightHandler::reset();
+  GeometryObjects::clear();
+
+  m_keyFrame->clear();
+  m_keyFrameEditor->clear();
+  m_gallery->clear();
+  m_lightingWidget->setLightInfo(LightingInformation());
+
 }
 
 void
@@ -1896,78 +1934,58 @@ MainWindow::openRecentFile()
 	  return;
 	}
 
-      if (StaticFunctions::checkExtension(filename, ".pvl.nc"))
-	{
-	  QStringList flist;
-	  flist << filename;
-	  loadSingleVolume(flist);
-	}
-      else if (StaticFunctions::checkExtension(filename, ".xml"))
-	{
-	  Global::addRecentFile(filename);
-	  updateRecentFileAction();
-	  createHiresLowresWindows();
-	  loadProject(filename.toLatin1().data());
-	}
+      if (StaticFunctions::checkExtension(filename, ".pvl.nc")) {
+        on_actionLoad_Volumes_triggered(QStringList(filename));
+      } else if (StaticFunctions::checkExtension(filename, ".xml")) {
+         Global::addRecentFile(filename);
+         updateRecentFileAction();
+         createHiresLowresWindows();
+         loadProject(filename.toLatin1().data());
+      }
+
     }
 }
 
-void
-MainWindow::dropEvent(QDropEvent *event)
-{
-  if (! GlewInit::initialised())
-    {
-      QMessageBox::information(0, "Drishti", "Not yet ready to start work!");
-      return;
-    }
+void MainWindow::dropEvent(QDropEvent *event)  {
 
-  if (event && event->mimeData())
-    {
-      const QMimeData *data = event->mimeData();
-      if (data->hasUrls())
-	{
-	  QUrl url = data->urls()[0];
-	  QFileInfo info(url.toLocalFile());
-	  if (info.exists() && info.isFile())
-	    {
-	      if (StaticFunctions::checkExtension(url.toLocalFile(), ".pvl.nc"))
-		{
-		  QStringList flist;
-		  QList<QUrl> urls = data->urls();
-		  for(int i=0; i<urls.count(); i++)
-		    flist.append(urls[i].toLocalFile());
+  if (! GlewInit::initialised())    {
+    QMessageBox::information(0, "Drishti", "Not yet ready to start work!");
+    return;
+  }
 
-		  loadSingleVolume(flist);
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".xml"))
-		{
-		  Global::addRecentFile(url.toLocalFile());
-		  updateRecentFileAction();
-		  createHiresLowresWindows();
-		  loadProject(url.toLocalFile().toLatin1().data());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".keyframes"))
-		{
-		  m_keyFrame->import(url.toLocalFile());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".triset") ||
-		       StaticFunctions::checkExtension(url.toLocalFile(), ".ply"))
-		{
-		  if (StaticFunctions::checkExtension(url.toLocalFile(), ".triset"))
-		    GeometryObjects::trisets()->addTriset(url.toLocalFile());
-		  else
-		    GeometryObjects::trisets()->addPLY(url.toLocalFile());
-		  if (Global::volumeType() == Global::DummyVolume)
-		    {
-		      int nx, ny, nz;
-		      GeometryObjects::trisets()->allGridSize(nx, ny, nz);
-		      loadDummyVolume(nx, ny, nz);
-		    }
+  if (event && event->mimeData())  {
+    const QMimeData *data = event->mimeData();
+    if (data->hasUrls()) {
+      QUrl url = data->urls()[0];
+      QFileInfo info(url.toLocalFile());
+      if (info.exists() && info.isFile())  {
+        if (StaticFunctions::checkExtension(url.toLocalFile(), ".pvl.nc")) {
+          QStringList flist;
+          foreach (QUrl url,  data->urls())
+            flist <<  url.toLocalFile();
+          on_actionLoad_Volumes_triggered(flist);
+        } else if (StaticFunctions::checkExtension(url.toLocalFile(), ".xml")) {
+          Global::addRecentFile(url.toLocalFile());
+          updateRecentFileAction();
+          createHiresLowresWindows();
+          loadProject(url.toLocalFile().toLatin1().data());
+        } else if (StaticFunctions::checkExtension(url.toLocalFile(), ".keyframes")) {
+           m_keyFrame->import(url.toLocalFile());
+        } else if (StaticFunctions::checkExtension(url.toLocalFile(), ".triset") ||
+                   StaticFunctions::checkExtension(url.toLocalFile(), ".ply")) {
+          if (StaticFunctions::checkExtension(url.toLocalFile(), ".triset"))
+            GeometryObjects::trisets()->addTriset(url.toLocalFile());
+          else
+		        GeometryObjects::trisets()->addPLY(url.toLocalFile());
+          if (Global::volumeType() == Global::DummyVolume) {
+            int nx, ny, nz;
+            GeometryObjects::trisets()->allGridSize(nx, ny, nz);
+            loadDummyVolume(nx, ny, nz);
+          }
 
-		  QFileInfo f(url.toLocalFile());
-		  Global::setPreviousDirectory(f.absolutePath());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), "porethroat.nc") ||
+          QFileInfo f(url.toLocalFile());
+          Global::setPreviousDirectory(f.absolutePath());
+        }  else if (StaticFunctions::checkExtension(url.toLocalFile(), "porethroat.nc") ||
 		       StaticFunctions::checkExtension(url.toLocalFile(), "graphml") ||
 		       StaticFunctions::checkExtension(url.toLocalFile(), "network"))
 		{
@@ -2889,19 +2907,16 @@ MainWindow::loadTransferFunctionsOnly(const char* flnm)
   m_tfManager->append(flnm);
 }
 
-void
-MainWindow::loadProject(const char* flnm)
-{
-  if (! GlewInit::initialised())
-    {
-      QMessageBox::information(0, "Drishti", "Not yet ready to start work!");
-      return;
-    }
-  if (!Global::batchMode())
-    {
-      Global::setEmptySpaceSkip(true);
-      MainWindowUI::mainWindowUI()->actionEmptySpaceSkip->setChecked(Global::emptySpaceSkip());
-    }
+void MainWindow::loadProject(const char* flnm) {
+
+  if (! GlewInit::initialised())  {
+    QMessageBox::information(0, "Drishti", "Not yet ready to start work!");
+    return;
+  }
+  if (!Global::batchMode())  {
+    Global::setEmptySpaceSkip(true);
+    MainWindowUI::mainWindowUI()->actionEmptySpaceSkip->setChecked(Global::emptySpaceSkip());
+  }
 
   Global::disableViewerUpdate();
   MainWindowUI::changeDrishtiIcon(false);
@@ -2930,10 +2945,8 @@ MainWindow::loadProject(const char* flnm)
     loadVolume3List(m_volFiles1, m_volFiles2, m_volFiles3, false);
   else if (projectType == Global::QuadVolume)
     loadVolume4List(m_volFiles1, m_volFiles2, m_volFiles3, m_volFiles4, false);
-  else if (projectType == Global::RGBVolume ||
-	   projectType == Global::RGBAVolume)
+  else if (projectType == Global::RGBVolume  ||   projectType == Global::RGBAVolume)
     loadVolumeRGB(m_volFiles1[0].toLatin1().data());
-
 
   m_bricks->reset();
   GeometryObjects::clipplanes()->reset();
@@ -2946,22 +2959,21 @@ MainWindow::loadProject(const char* flnm)
     emit showMessage("Volume loaded. Loading Project ....", false);
 
   m_Lowres->load(flnm);
-  if (projectType == Global::DummyVolume)
-    {
-      Vec bmin, bmax;
-      m_Lowres->subvolumeBounds(bmin, bmax);
+  if (projectType == Global::DummyVolume)  {
+    Vec bmin, bmax;
+    m_Lowres->subvolumeBounds(bmin, bmax);
 
-      Vec vmax = m_Lowres->volumeMax();
-      int nx = vmax.x;
-      int ny = vmax.y;
-      int nz = vmax.z;
-      loadDummyVolume(nx, ny, nz);
+    Vec vmax = m_Lowres->volumeMax();
+    int nx = vmax.x;
+    int ny = vmax.y;
+    int nz = vmax.z;
+    loadDummyVolume(nx, ny, nz);
 
-      Vec sbmin, sbmax;
-      sbmin = Vec(bmin.z, bmin.y, bmin.x);
-      sbmax = Vec(bmax.z, bmax.y, bmax.x);
-      m_Lowres->setSubvolumeBounds(sbmin, sbmax);
-    }
+    Vec sbmin, sbmax;
+    sbmin = Vec(bmin.z, bmin.y, bmin.x);
+    sbmax = Vec(bmax.z, bmax.y, bmax.x);
+    m_Lowres->setSubvolumeBounds(sbmin, sbmax);
+  }
 
   //m_preferencesWidget->load(flnm);
   m_tfManager->load(flnm);
@@ -2978,14 +2990,12 @@ MainWindow::loadProject(const char* flnm)
   m_Viewer->switchToHires();
   m_keyFrameEditor->setHiresMode(true);
   m_gallery->setHiresMode(true);
-  if (Global::volumeType() != Global::DummyVolume)
-    {
-      if (m_Volume->pvlVoxelType(0) == 0)
-	m_tfEditor->setHistogramImage(m_Hires->histogramImage1D(),
-				      m_Hires->histogramImage2D());
-      else
-	m_tfEditor->setHistogram2D(m_Hires->histogram2D());
-    }
+  if (Global::volumeType() != Global::DummyVolume) {
+    if (m_Volume->pvlVoxelType(0) == 0)
+      m_tfEditor->setHistogramImage(m_Hires->histogramImage1D(), m_Hires->histogramImage2D());
+    else
+      m_tfEditor->setHistogram2D(m_Hires->histogram2D());
+  }
 
   m_dockGallery->setVisible(galleryVisible);
   m_dockKeyframe->setVisible(keyframesVisible);
@@ -3009,18 +3019,17 @@ MainWindow::loadProject(const char* flnm)
 
   m_Viewer->updateLookupTable();
 
-  if (!Global::batchMode())
-    {
-      if (Global::use1D())
-	emit showMessage("Project loaded. Currently in 1D Transfer Function mode", false);
-      else
-	emit showMessage("Project loaded", false);
-    }
+  if (!Global::batchMode()) {
+    if (Global::use1D())
+      emit showMessage("Project loaded. Currently in 1D Transfer Function mode", false);
+    else
+      emit showMessage("Project loaded", false);
+  }
+
 }
 
-void
-MainWindow::saveProject(const char* flnm)
-{
+void MainWindow::saveProject(const char *flnm) {
+
   //m_Viewer->saveProject();
   Vec bmin, bmax;
   m_Lowres->subvolumeBounds(bmin, bmax);
@@ -3032,24 +3041,24 @@ MainWindow::saveProject(const char* flnm)
   int mv;
   bool mc, mo, mt;
   m_Hires->getMix(mv, mc, mo, mt);
-  m_keyFrame->saveProject(m_Viewer->camera()->position(),
-			  m_Viewer->camera()->orientation(),
-			  m_Viewer->camera()->focusDistance(),
-			  m_Viewer->camera()->IODistance(),
-			  Global::volumeNumber(),
-			  Global::volumeNumber(1),
-			  Global::volumeNumber(2),
-			  Global::volumeNumber(3),
-			  m_Viewer->lookupTable(),
-			  m_Hires->lightInfo(),
-			  m_Hires->bricks(),
-			  bmin, bmax,
-			  image,
-			  sz, st, xl, yl, zl,
-			  mv, mc, mo, mt,
-			  PruneHandler::getPruneBuffer());
-
-
+  m_keyFrame->saveProject(
+    m_Viewer->camera()->position(),
+    m_Viewer->camera()->orientation(),
+    m_Viewer->camera()->focusDistance(),
+    m_Viewer->camera()->IODistance(),
+    Global::volumeNumber(),
+    Global::volumeNumber(1),
+    Global::volumeNumber(2),
+    Global::volumeNumber(3),
+    m_Viewer->lookupTable(),
+    m_Hires->lightInfo(),
+    m_Hires->bricks(),
+    bmin, bmax,
+    image,
+    sz, st, xl, yl, zl,
+    mv, mc, mo, mt,
+    PruneHandler::getPruneBuffer()
+  );
 
   saveVolumeIntoProject(flnm);
   m_Lowres->save(flnm);
@@ -3063,6 +3072,7 @@ MainWindow::saveProject(const char* flnm)
   Global::setCurrentProjectFile(QString(flnm));
 
   emit showMessage("Project saved", false);
+
 }
 
 void
