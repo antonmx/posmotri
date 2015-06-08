@@ -1,17 +1,11 @@
 #ifndef GILIGHTOBJECTINFO_H
 #define GILIGHTOBJECTINFO_H
 
-//#include <QtGui>
-
+#include "PromotedWidgets.h"
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
 
-#include <fstream>
-using namespace std;
-
-class GiLightObjectInfo
-{
- public :
+class GiLightObjectInfo {
+public :
   GiLightObjectInfo();
   ~GiLightObjectInfo();
 
@@ -19,14 +13,13 @@ class GiLightObjectInfo
 
   GiLightObjectInfo& operator=(const GiLightObjectInfo&);
 
-  static QList<GiLightObjectInfo> interpolate(QList<GiLightObjectInfo>,
-					      QList<GiLightObjectInfo>,
-					      float);
+  static QList<GiLightObjectInfo> interpolate(
+    QList<GiLightObjectInfo>, QList<GiLightObjectInfo>, float);
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
-  QList<Vec> points;
+  QList<qglviewer::Vec> points;
   bool allowInterpolation;
   bool doShadows;
   bool show;
@@ -34,7 +27,7 @@ class GiLightObjectInfo
   int rad;
   float decay;
   float angle;
-  Vec color;
+  qglviewer::Vec color;
   float opacity;
   int segments;
   int lod;

@@ -29,16 +29,16 @@ class PathGroups : public QObject
   bool checkForMultiplePaths(QString);
 
   int count();
-  void addPath(QList<Vec>);
+  void addPath(QList<qglviewer::Vec>);
   void addPath(PathGroupObject);
   void addPath(QString);
   void addVector(QString);
 
   void predraw(QGLViewer*, bool,
-	       QList<Vec>,
-	       QList<Vec>,
+	       QList<qglviewer::Vec>,
+	       QList<qglviewer::Vec>,
 	       QList<CropObject>);
-  void draw(QGLViewer*, bool, Vec, bool);
+  void draw(QGLViewer*, bool, qglviewer::Vec, bool);
   void postdraw(QGLViewer*);
 
   bool keyPressEvent(QKeyEvent*);
@@ -48,7 +48,7 @@ class PathGroups : public QObject
  signals :
   void showMessage(QString, bool);
   void updateGL();
-  void showProfile(int, int, QList<Vec>);
+  void showProfile(int, int, QList<qglviewer::Vec>);
 
  private slots :
   void selectForEditing(int, int);

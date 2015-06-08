@@ -4,8 +4,8 @@
 #include "propertyeditor.h"
 #include <QFileDialog>
 #include <QMessageBox>
-//#include <QtGui>
 
+using namespace qglviewer;
 
 
 int GiLights::count() { return m_giLights.count(); }

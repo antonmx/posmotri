@@ -2,6 +2,8 @@
 #include "pathshaderfactory.h"
 #include "geometryobjects.h"
 
+using namespace qglviewer;
+
 bool
 PathShaderFactory::cropPresent()
 {

@@ -5,14 +5,11 @@
 #include "mainwindowui.h"
 #include "xmlheaderfunctions.h"
 #include "volumeinformation.h"
-
-#include <fstream>
-using namespace std;
-
-
-//#include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+
+using namespace std;
+using namespace qglviewer;
 
 
 Vec VolumeRGBBase::getFullVolumeSize() { return m_fullVolumeSize; }

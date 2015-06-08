@@ -2,6 +2,8 @@
 #include "staticfunctions.h"
 #include "networkgrabber.h"
 
+using namespace qglviewer;
+
 NetworkGrabber::NetworkGrabber()
 {
   m_lastX = m_lastY = -1;

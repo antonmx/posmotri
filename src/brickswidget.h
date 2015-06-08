@@ -48,7 +48,7 @@ private slots :
   Bricks *m_bricks;
   int m_selected;
 
-  bool getHitpoint(Vec&);
+  bool getHitpoint(qglviewer::Vec&);
   void updateClipTable(int);
 
   void showHelp();

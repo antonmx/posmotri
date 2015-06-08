@@ -13,8 +13,7 @@
 #include <QDebug>
 #include <QElapsedTimer>
 
-
-#define vDv(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
+using namespace qglviewer;
 
 QGLFramebufferObject *PruneHandler::m_pruneBuffer=0;
 QGLFramebufferObject *PruneHandler::m_savedPruneBuffer=0;

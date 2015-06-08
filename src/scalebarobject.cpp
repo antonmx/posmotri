@@ -3,6 +3,8 @@
 #include "scalebarobject.h"
 #include "volumeinformation.h"
 
+using namespace qglviewer;
+
 ScaleBarObject::ScaleBarObject() { clear(); }
 ScaleBarObject::~ScaleBarObject() { clear(); }
 
@@ -83,72 +85,23 @@ ScaleBarObject::interpolate(ScaleBarObject& sb1,
   return sb;
 }
 
-void
-ScaleBarObject::load(fstream& fin)
-{
+void ScaleBarObject::load ( const QConfigMe & cfg) {
   clear();
-
-  int len;
-  bool done = false;
-  char keyword[100];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "scalebarobjectend") == 0)
-	done = true;
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  float x, y;
-	  fin.read((char*)&x, sizeof(float));
-	  fin.read((char*)&y, sizeof(float));
-	  m_pos = QPointF(x,y);
-	}
-      else if (strcmp(keyword, "voxels") == 0)
-	fin.read((char*)&m_voxels, sizeof(float));
-      else if (strcmp(keyword, "type") == 0)
-	fin.read((char*)&m_type, sizeof(bool));
-      else if (strcmp(keyword, "textpos") == 0)
-	fin.read((char*)&m_textpos, sizeof(bool));
-    }
+  cfg.beginGroup("ScaleBarObject");
+  cfg.getValue("position", m_pos);
+  cfg.getValue("voxels", m_voxels);
+  cfg.getValue("type", m_type);
+  cfg.getValue("textpos", m_textpos);
+  cfg.endGroup();
 }
 
-void
-ScaleBarObject::save(fstream& fout)
-{
-  char keyword[100];
-  int len;
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scalebarobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  float x = m_pos.x();
-  float y = m_pos.y();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "position");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&x, sizeof(float));
-  fout.write((char*)&y, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "voxels");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_voxels, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "type");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_type, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "textpos");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_textpos, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scalebarobjectend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void ScaleBarObject::save ( QConfigMe & cfg) const {
+  cfg.beginGroup("ScaleBarObject");
+  cfg.setValue("position", m_pos);
+  cfg.setValue("voxels", m_voxels);
+  cfg.setValue("type", m_type);
+  cfg.setValue("textpos", m_textpos);
+  cfg.endGroup();
 }
 
 void

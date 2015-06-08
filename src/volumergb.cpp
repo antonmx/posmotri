@@ -3,9 +3,11 @@
 #include "staticfunctions.h"
 #include "mainwindowui.h"
 #include "xmlheaderfunctions.h"
-//#include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+
+using namespace qglviewer;
+
 
 
 

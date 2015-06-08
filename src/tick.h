@@ -15,7 +15,7 @@
 #endif
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 class Tick
 {
@@ -36,9 +36,9 @@ class Tick
   static void setLabelZ(QString);
   static QString labelZ();
 
-  static void draw(Camera*, double*);
+  static void draw(qglviewer::Camera*, double*);
   static void drawTick(int,
-		       Vec, Vec,
+		       qglviewer::Vec, qglviewer::Vec,
 		       float, float, int, float, float,
 		       GLdouble*, GLdouble*, GLint*);
   static int findMaxDistance(int[4][2], GLdouble*, GLdouble*);

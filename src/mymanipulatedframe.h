@@ -3,9 +3,9 @@
 
 #include <QGLViewer/qglviewer.h>
 #include <QGLViewer/manipulatedFrame.h>
-using namespace qglviewer;
 
-class MyManipulatedFrame : public ManipulatedFrame {
+
+class MyManipulatedFrame : public qglviewer::ManipulatedFrame {
   Q_OBJECT
   public :
     MyManipulatedFrame();
@@ -21,11 +21,11 @@ class MyManipulatedFrame : public ManipulatedFrame {
 
     void mousePosition(int&, int&);
 
-    virtual void checkIfGrabsMouse(int, int, const Camera* const);
+    virtual void checkIfGrabsMouse(int, int, const qglviewer::Camera* const);
  protected :
-    virtual void mousePressEvent(QMouseEvent* const, Camera* const);
-    virtual void mouseMoveEvent(QMouseEvent* const, Camera* const);
-    virtual void mouseReleaseEvent(QMouseEvent* const, Camera* const);
+    virtual void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const);
+    virtual void mouseMoveEvent(QMouseEvent* const, qglviewer::Camera* const);
+    virtual void mouseReleaseEvent(QMouseEvent* const, qglviewer::Camera* const);
   private :
     int m_threshold;
     bool m_keepsGrabbingMouse;

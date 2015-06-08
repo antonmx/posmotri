@@ -5,6 +5,8 @@
 #include "staticfunctions.h"
 #include <GL/glut.h>
 
+using namespace qglviewer;
+
 QString Tick::m_labelX = "Height";
 void Tick::setLabelX(QString lbl) { m_labelX = lbl; }
 QString Tick::labelX() { return m_labelX; }

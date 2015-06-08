@@ -1,14 +1,11 @@
 #ifndef CROPGRABBER_H
 #define CROPGRABBER_H
 
-//#include <QtGui>
 #include <QGLViewer/mouseGrabber.h>
-
 #include "cropobject.h"
 
-class CropGrabber : public QObject, public MouseGrabber, public CropObject
-{
- Q_OBJECT
+class CropGrabber : public QObject, public qglviewer::MouseGrabber, public CropObject {
+ Q_OBJECT;
 
  public :
   CropGrabber();
@@ -17,11 +14,11 @@ class CropGrabber : public QObject, public MouseGrabber, public CropObject
   int pointPressed();
 
   void mousePosition(int&, int&);
-  void checkIfGrabsMouse(int, int, const Camera* const);
+  void checkIfGrabsMouse(int, int, const qglviewer::Camera* const);
 
-  void mousePressEvent(QMouseEvent* const, Camera* const);
-  void mouseMoveEvent(QMouseEvent* const, Camera* const);
-  void mouseReleaseEvent(QMouseEvent* const, Camera* const);
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseMoveEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseReleaseEvent(QMouseEvent* const, qglviewer::Camera* const);
 
  signals :
   void selectForEditing(int, int);

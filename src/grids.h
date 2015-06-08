@@ -26,22 +26,22 @@ class Grids : public QObject
   void setGrids(QList<GridObject>);
 
   int count();
-  void addGrid(QList<Vec>, int, int);
+  void addGrid(QList<qglviewer::Vec>, int, int);
   void addGrid(GridObject);
   void addGrid(QString);
 
-  void draw(QGLViewer*, bool, Vec);
+  void draw(QGLViewer*, bool, qglviewer::Vec);
   void postdraw(QGLViewer*);
 
   bool keyPressEvent(QKeyEvent*);
 
   void updateScaling();
-  void setPoints(int, QList<Vec>);
+  void setPoints(int, QList<qglviewer::Vec>);
 
  signals :
   void showMessage(QString, bool);
   void updateGL();
-  void gridStickToSurface(int, int, QList< QPair<Vec, Vec> >);
+  void gridStickToSurface(int, int, QList< QPair<qglviewer::Vec, qglviewer::Vec> >);
 
  private slots :
   void selectForEditing(int, int);

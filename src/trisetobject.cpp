@@ -5,7 +5,7 @@
 #include "volumeinformation.h"
 #include "ply.h"
 
-
+using namespace qglviewer;
 
 void
 TrisetObject::gridSize(int &nx, int &ny, int &nz)

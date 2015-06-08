@@ -5,9 +5,9 @@
 
 #include <QGLViewer/vec.h>
 #include <QGLViewer/quaternion.h>
-# include <QSettings>
+# include "PromotedWidgets.h"
 
-using namespace qglviewer;
+
 
 #include <fstream>
 using namespace std;
@@ -25,16 +25,16 @@ class ClipInformation
 				     const ClipInformation,
 				     float);
 
-  void load(QSettings &cfg);
-  void save(QSettings &cfg) const;
+  void load(const QConfigMe  &cfg);
+  void save(QConfigMe  &cfg) const;
 
   void clear();
   int size();
 
   QList<bool> show;
-  QList<Vec> pos;
-  QList<Quaternion> rot;
-  QList<Vec> color;
+  QList<qglviewer::Vec> pos;
+  QList<qglviewer::Quaternion> rot;
+  QList<qglviewer::Vec> color;
   QList<bool> solidColor;
   QList<bool> apply;
   QList<bool> applyFlip;

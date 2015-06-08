@@ -5,7 +5,7 @@
 #include <QGLViewer/manipulatedCameraFrame.h>
 #include <QMouseEvent>
 
-
+using namespace qglviewer;
 
 
 GridGrabber::GridGrabber()

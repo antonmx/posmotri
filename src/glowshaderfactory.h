@@ -13,8 +13,8 @@ class GlowShaderFactory
 
  private :
   static QString applyGlow(bool, bool, bool,
-			   Vec, float,
-			   Vec, Vec, Vec,
+			   qglviewer::Vec, float,
+			   qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 			   float, float,
 			   float, float,
 			   int, float,

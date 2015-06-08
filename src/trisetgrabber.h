@@ -1,12 +1,10 @@
 #ifndef TRISETGRABBER_H
 #define TRISETGRABBER_H
-
-//#include <QtGui>
 #include "trisetobject.h"
 #include <QGLViewer/mouseGrabber.h>
 
 
-class TrisetGrabber : public QObject, public MouseGrabber, public TrisetObject
+class TrisetGrabber : public QObject, public qglviewer::MouseGrabber, public TrisetObject
 {
   Q_OBJECT
 
@@ -26,14 +24,14 @@ class TrisetGrabber : public QObject, public MouseGrabber, public TrisetObject
 
   void mousePosition(int&, int&);
 
-  void checkIfGrabsMouse(int, int, const Camera* const);
+  void checkIfGrabsMouse(int, int, const qglviewer::Camera* const);
 
   int moveAxis();
   void setMoveAxis(int);
 
-  void mousePressEvent(QMouseEvent* const, Camera* const);
-  void mouseMoveEvent(QMouseEvent* const, Camera* const);
-  void mouseReleaseEvent(QMouseEvent* const, Camera* const);
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseMoveEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseReleaseEvent(QMouseEvent* const, qglviewer::Camera* const);
 
  private :
   int m_lastX, m_lastY;

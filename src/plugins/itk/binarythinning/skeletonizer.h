@@ -8,7 +8,7 @@
 #include "pathobject.h"
 
 #include <QGLViewer/vec.h>
-using namespace qglviewer;
+
 
 class Skeletonizer
 {

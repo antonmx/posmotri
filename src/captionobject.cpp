@@ -487,30 +487,30 @@ CaptionObject::interpolate(CaptionObject& cap1,
 }
 
 
-void CaptionObject::load(QSettings & cfg) {
-
+void CaptionObject::load(const QConfigMe & cfg) {
+  
   clear();
 
   cfg.beginGroup("CaptionObject");
-  m_pos = getQSettingsValue(cfg, "position", m_pos);
-  m_text = getQSettingsValue(cfg, "text", m_text);
-  m_font = getQSettingsValue(cfg, "font", m_font);
-  m_color = getQSettingsValue(cfg, "color", m_color);
-  m_haloColor = getQSettingsValue(cfg, "halocolor", m_haloColor);
-  m_angle = getQSettingsValue(cfg, "angle", m_angle);
+  cfg.getValue("position", m_pos );
+  cfg.getValue("text", m_text );
+  cfg.getValue("font", m_font );
+  cfg.getValue("color", m_color );
+  cfg.getValue("halocolor", m_haloColor );
+  cfg.getValue("angle", m_angle );
   cfg.endGroup();
 
   QFontMetrics metric(m_font);
   m_height = metric.height();
   m_width = metric.width(m_text);
-
   createImage();
+  
 }
 
 
 
 
-void CaptionObject::save(QSettings & cfg) const {
+void CaptionObject::save(QConfigMe & cfg) const {
   cfg.beginGroup("CaptionObject");
   cfg.setValue("position", m_pos);
   cfg.setValue("text", m_text);

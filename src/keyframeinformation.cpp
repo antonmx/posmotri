@@ -4,6 +4,7 @@
 #include "PromotedWidgets.h"
 #include <QBuffer>
 #include <QDebug>
+using namespace qglviewer;
 
 void KeyFrameInformation::setDrawBox(bool flag) { m_drawBox = flag; }
 void KeyFrameInformation::setDrawAxis(bool flag) { m_drawAxis = flag; }
@@ -17,11 +18,9 @@ void KeyFrameInformation::setVolumeNumber3(int vn) { m_volumeNumber3 = vn; }
 void KeyFrameInformation::setVolumeNumber4(int vn) { m_volumeNumber4 = vn; }
 void KeyFrameInformation::setPosition(Vec pos) { m_position = pos; }
 void KeyFrameInformation::setOrientation(Quaternion rot) { m_rotation = rot; }
-void KeyFrameInformation::setLut(unsigned char* lut)
-{
-  if (!m_lut)
-    m_lut = new unsigned char[Global::lutSize()*256*256*4];
-  memcpy(m_lut, lut, Global::lutSize()*256*256*4);
+void KeyFrameInformation::setLut(unsigned char* lut) {
+  m_lut.resize(Global::lutSize()*256*256*4);
+  memcpy(m_lut.data(), lut, Global::lutSize()*256*256*4);
 }
 void KeyFrameInformation::setLightInfo(LightingInformation li) { m_lightInfo = li; }
 void KeyFrameInformation::setGiLightInfo(GiLightInfo li) { m_giLightInfo = li; }
@@ -62,7 +61,7 @@ void KeyFrameInformation::setCrops(QList<CropObject> crops) { m_crops = crops; }
 void KeyFrameInformation::setPathGroups(QList<PathGroupObject> paths) { m_pathgroups = paths; }
 void KeyFrameInformation::setTrisets(QList<TrisetInformation> tinfo) { m_trisets = tinfo; }
 void KeyFrameInformation::setNetworks(QList<NetworkInformation> ninfo) { m_networks = ninfo; }
-void KeyFrameInformation::setTagColors(unsigned char* tc) { memcpy(m_tagColors, tc, 1024); }
+void KeyFrameInformation::setTagColors(unsigned char* tc) { memcpy(m_tagColors.data(), tc, 1024); }
 void KeyFrameInformation::setPruneBuffer(QByteArray pb) { m_pruneBuffer = pb; }
 void KeyFrameInformation::setPruneBlend(bool pb) { m_pruneBlend = pb; }
 
@@ -80,7 +79,7 @@ int KeyFrameInformation::volumeNumber3() { return m_volumeNumber3; }
 int KeyFrameInformation::volumeNumber4() { return m_volumeNumber4; }
 Vec KeyFrameInformation::position() { return m_position; }
 Quaternion KeyFrameInformation::orientation() { return m_rotation; }
-unsigned char* KeyFrameInformation::lut() { return m_lut; }
+unsigned char* KeyFrameInformation::lut() { return (unsigned char*) m_lut.data(); }
 LightingInformation KeyFrameInformation::lightInfo() { return m_lightInfo; }
 GiLightInfo KeyFrameInformation::giLightInfo() { return m_giLightInfo; }
 ClipInformation KeyFrameInformation::clipInfo() { return m_clipInfo; }
@@ -118,7 +117,7 @@ QList<CropObject> KeyFrameInformation::crops() { return m_crops; }
 QList<PathGroupObject> KeyFrameInformation::pathgroups() { return m_pathgroups; }
 QList<TrisetInformation> KeyFrameInformation::trisets() { return m_trisets; }
 QList<NetworkInformation> KeyFrameInformation::networks() { return m_networks; }
-unsigned char* KeyFrameInformation::tagColors() { return m_tagColors; }
+unsigned char* KeyFrameInformation::tagColors() { return (unsigned char*) m_tagColors.data(); }
 QByteArray KeyFrameInformation::pruneBuffer() { return m_pruneBuffer; }
 bool KeyFrameInformation::pruneBlend() { return m_pruneBlend; }
 
@@ -170,8 +169,7 @@ KeyFrameInformation::hasCaption(QStringList str)
   return false;
 }
 
-KeyFrameInformation::KeyFrameInformation()
-{
+KeyFrameInformation::KeyFrameInformation() {
   m_drawBox = false;
   m_drawAxis = false;
   m_backgroundColor = Vec(0,0,0);
@@ -185,9 +183,8 @@ KeyFrameInformation::KeyFrameInformation()
   m_volumeNumber4 = 0;
   m_position = Vec(0,0,0);
   m_rotation = Quaternion(Vec(1,0,0), 0);
-  //m_lut = new unsigned char[Global::lutSize()*256*256*4];
-  m_lut = 0;
-  m_tagColors = new unsigned char[1024];
+  m_lut = QByteArray(Global::lutSize()*256*256*4, (char) 0);
+  m_tagColors = QByteArray(1024, (char) 0);
   m_pruneBuffer.clear();
   m_pruneBlend = false;
   m_volMin = m_volMax = Vec(0,0,0);
@@ -252,11 +249,6 @@ KeyFrameInformation::clear()
   m_volumeNumber4 = 0;
   m_position = Vec(0,0,0);
   m_rotation = Quaternion(Vec(1,0,0), 0);
-  if (m_lut) delete [] m_lut;
-  m_lut = 0;
-  //m_lut = new unsigned char[Global::lutSize()*256*256*4];
-  if (m_tagColors) delete [] m_tagColors;
-  m_tagColors = new unsigned char[1024];
   m_pruneBuffer.clear();
   m_pruneBlend = false;
   m_volMin = m_volMax = Vec(0,0,0);
@@ -328,12 +320,9 @@ KeyFrameInformation::KeyFrameInformation(const KeyFrameInformation& kfi)
   m_position = kfi.m_position;
   m_rotation = kfi.m_rotation;
 
-  m_lut = new unsigned char[Global::lutSize()*256*256*4];
-  memcpy(m_lut, kfi.m_lut, Global::lutSize()*256*256*4);
-
-  m_tagColors = new unsigned char[1024];
-  memcpy(m_tagColors, kfi.m_tagColors, 1024);
-
+  m_lut = kfi.m_lut;
+  m_tagColors=kfi.m_tagColors;
+  
   m_pruneBuffer = kfi.m_pruneBuffer;
   m_pruneBlend = kfi.m_pruneBlend;
 
@@ -393,12 +382,7 @@ KeyFrameInformation::KeyFrameInformation(const KeyFrameInformation& kfi)
   m_interpMop = kfi.m_interpMop;
 }
 
-KeyFrameInformation::~KeyFrameInformation()
-{
-  if (m_lut)
-    delete [] m_lut;
-  if (m_tagColors)
-    delete [] m_tagColors;
+KeyFrameInformation::~KeyFrameInformation() {
   m_clipInfo.clear();
   m_brickInfo.clear();
   m_labelX.clear();
@@ -417,7 +401,6 @@ KeyFrameInformation::~KeyFrameInformation()
   m_trisets.clear();
   m_networks.clear();
   m_pruneBuffer.clear();
-  m_pruneBlend = false;
 }
 
 KeyFrameInformation&
@@ -442,11 +425,8 @@ KeyFrameInformation::operator=(const KeyFrameInformation& kfi)
   m_position = kfi.m_position;
   m_rotation = kfi.m_rotation;
 
-  if (!m_lut)
-    m_lut = new unsigned char[Global::lutSize()*256*256*4];
-  memcpy(m_lut, kfi.m_lut, Global::lutSize()*256*256*4);
-
-  memcpy(m_tagColors, kfi.m_tagColors, 1024);
+  m_lut = kfi.m_lut;
+  m_tagColors = kfi.m_tagColors;
 
   m_pruneBuffer = kfi.m_pruneBuffer;
   m_pruneBlend = kfi.m_pruneBlend;
@@ -515,14 +495,14 @@ KeyFrameInformation::operator=(const KeyFrameInformation& kfi)
 
 
 
-void KeyFrameInformation::save(QSettings & cfg) const {
+void KeyFrameInformation::save(QConfigMe & cfg) const {
 
   cfg.beginGroup("KeyFrameInformation");
 
   cfg.setValue("framenumber", m_frameNumber);
   cfg.setValue("drawbox", m_drawBox);
   cfg.setValue("drawaxis", m_drawAxis);
-  cfg.setValue("backgroundcolor", QVecEdit::toString(m_backgroundColor));
+  cfg.setValue("backgroundcolor", m_backgroundColor);
   cfg.setValue("backgroundimage",  m_backgroundImageFile);
   cfg.setValue("morphtf", m_morphTF);
   cfg.setValue("focusdistance", m_focusDistance);
@@ -531,11 +511,10 @@ void KeyFrameInformation::save(QSettings & cfg) const {
   cfg.setValue("volumenumber2", m_volumeNumber2);
   cfg.setValue("volumenumber3", m_volumeNumber3);
   cfg.setValue("volumenumber4", m_volumeNumber4);
-  cfg.setValue("volmin", QVecEdit::toString(m_volMin));
-  cfg.setValue("volmax", QVecEdit::toString(m_volMax));
-  cfg.setValue("position",  QVecEdit::toString(m_position));
-  cfg.setValue("rotation_axis",  QVecEdit::toString(m_rotation.axis()));
-  cfg.setValue("rotation_angle",  m_rotation.angle());
+  cfg.setValue("volmin", m_volMin);
+  cfg.setValue("volmax", m_volMax);
+  cfg.setValue("position",  m_position);
+  cfg.setValue("rotation",  m_rotation);
   cfg.setValue("image", m_image);
   cfg.setValue("ticksize", m_tickSize);
   cfg.setValue("tickstep", m_tickStep);
@@ -562,30 +541,28 @@ void KeyFrameInformation::save(QSettings & cfg) const {
   cfg.setValue("interpcrop", m_interpCrop);
   cfg.setValue("interpmop", m_interpMop);
   cfg.setValue("pointsize", m_pointSize);
-  cfg.setValue("pointcolor",  QVecEdit::toString(m_pointColor));
-  cfg.setValue("tagcolors",  QByteArray( (const char*) m_tagColors, 1024) );
-  if (m_lut)
-    cfg.setValue("lookuptable",
-      QByteArray( (const char*) m_lut,  Global::lutSize()*256*256*4) );
+  cfg.setValue("pointcolor",  m_pointColor);
+  cfg.setValue("tagcolors",  m_tagColors);
+  cfg.setValue("lookuptable", m_lut);
 
   m_lightInfo.save(cfg);
   m_giLightInfo.save(cfg);
   m_clipInfo.save(cfg);
 
-  QSettingsSetValArray(cfg, "Points",  m_points);
-  QSettingsSetValArray(cfg, "BarePoints",  m_barepoints);
-
-  QSettingsSaveArray(cfg, "BrickInformation", m_brickInfo);
-  QSettingsSaveArray(cfg, "SplineInformation", m_splineInfo);
-  QSettingsSaveArray(cfg, "CaptionObject",  m_captions);
-  QSettingsSaveArray(cfg, "ColorBarObject", m_colorbars);
-  QSettingsSaveArray(cfg, "ScaleBarObject", m_scalebars);
-  QSettingsSaveArray(cfg, "PathObject", m_paths);
-  QSettingsSaveArray(cfg, "GridObject", m_grids);
-  QSettingsSaveArray(cfg, "CropObject", m_crops);
-  QSettingsSaveArray(cfg, "PathGroupObject", m_pathgroups);
-  QSettingsSaveArray(cfg, "TrisetInformation", m_trisets);
-  QSettingsSaveArray(cfg, "NetworkInformation", m_networks);
+  cfg.setArrayValue("Points",  m_points);
+  cfg.setArrayValue("BarePoints",  m_barepoints);
+  
+  cfg.setClassArray("PathGroupObject", m_pathgroups);
+  cfg.setClassArray("BrickInformation", m_brickInfo);
+  cfg.setClassArray("SplineInformation", m_splineInfo);
+  cfg.setClassArray("CaptionObject",  m_captions);
+  cfg.setClassArray("ColorBarObject", m_colorbars);
+  cfg.setClassArray("ScaleBarObject", m_scalebars);
+  cfg.setClassArray("PathObject", m_paths);
+  cfg.setClassArray("GridObject", m_grids);
+  cfg.setClassArray("CropObject", m_crops);
+  cfg.setClassArray("TrisetInformation", m_trisets);
+  cfg.setClassArray("NetworkInformation", m_networks);
 
   if (!m_pruneBuffer.isEmpty()) {
     cfg.setValue("pruneblend", m_pruneBlend);
@@ -600,7 +577,7 @@ void KeyFrameInformation::save(QSettings & cfg) const {
 
 
 
-void KeyFrameInformation::load(QSettings & cfg) {
+void KeyFrameInformation::load(const QConfigMe & cfg) {
 
   m_brickInfo.clear();
   m_pruneBuffer.clear();
@@ -621,86 +598,82 @@ void KeyFrameInformation::load(QSettings & cfg) {
   m_interpTF = Enums::KFIT_Linear;
   m_interpCrop = Enums::KFIT_Linear;
   m_interpMop = Enums::KFIT_None;
-
+  
+  
   cfg.beginGroup("KeyFrameInformation");
 
-  m_frameNumber = getQSettingsValue(cfg, "framenumber", m_frameNumber );
-  m_drawBox = getQSettingsValue(cfg, "drawbox", m_drawBox );
-  m_drawAxis = getQSettingsValue(cfg, "drawaxis", m_drawAxis );
-  m_backgroundColor = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "backgroundColor") );
-  m_backgroundImageFile = getQSettingsValue(cfg, "backgroundimage", m_backgroundImageFile );
-  m_morphTF = getQSettingsValue(cfg, "morphtf", m_morphTF );
-  m_focusDistance = getQSettingsValue(cfg, "focusdistance", m_focusDistance );
-  m_eyeSeparation = getQSettingsValue(cfg, "eyeseparation", m_eyeSeparation );
-  m_volumeNumber = getQSettingsValue(cfg, "volumenumber", m_volumeNumber );
-  m_volumeNumber2 = getQSettingsValue(cfg, "volumenumber2", m_volumeNumber2 );
-  m_volumeNumber3 = getQSettingsValue(cfg, "volumenumber3", m_volumeNumber3 );
-  m_volumeNumber4 = getQSettingsValue(cfg, "volumenumber4", m_volumeNumber4 );
-  m_volMin = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmin") );
-  m_volMax = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmax") );
-  m_position = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") );
-  m_rotation.setAxisAngle( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "rotation_axis") ),
-                           getQSettingsValue<qreal>(cfg, "rotation_angle"));
-  m_image = getQSettingsValue(cfg, "image", m_image );
-  m_tickSize = getQSettingsValue(cfg, "tickstep", m_tickSize );
-  m_tickStep = getQSettingsValue(cfg, "tickstep", m_tickStep );
-  m_labelX = getQSettingsValue(cfg, "labelX", m_labelX );
-  m_labelY = getQSettingsValue(cfg, "labelY", m_labelY );
-  m_labelZ = getQSettingsValue(cfg, "labelZ", m_labelZ );
-  m_mixvol = getQSettingsValue(cfg, "mixinfo", m_mixvol );
-  m_mixColor = getQSettingsValue(cfg, "mixcolor", m_mixColor );
-  m_mixOpacity = getQSettingsValue(cfg, "mixopacity", m_mixOpacity );
-  m_mixTag = getQSettingsValue(cfg, "mixtag", m_mixTag );
-  m_interpBGColor = getQSettingsValue(cfg, "interpbgcolor", m_interpBGColor );
-  m_interpCaptions = getQSettingsValue(cfg, "interpcaptions", m_interpCaptions );
-  m_interpFocus = getQSettingsValue(cfg, "interpfocus", m_interpFocus );
-  m_interpTagColors = getQSettingsValue(cfg, "interptagcolors", m_interpTagColors );
-  m_interpTickInfo = getQSettingsValue(cfg, "interptickinfo", m_interpTickInfo );
-  m_interpVolumeBounds = getQSettingsValue(cfg, "interpvolumebounds", m_interpVolumeBounds );
-  m_interpCameraPosition = getQSettingsValue(cfg, "interpcamerapos", m_interpCameraPosition );
-  m_interpCameraOrientation = getQSettingsValue(cfg, "interpcamerarot", m_interpCameraOrientation );
-  m_interpBrickInfo = getQSettingsValue(cfg, "interpbrickinfo", m_interpBrickInfo );
-  m_interpClipInfo = getQSettingsValue(cfg, "interpclipinfo", m_interpClipInfo );
-  m_interpLightInfo = getQSettingsValue(cfg, "interplightinfo", m_interpLightInfo );
-  m_interpGiLightInfo = getQSettingsValue(cfg, "interpgilightinfo", m_interpGiLightInfo );
-  m_interpTF = getQSettingsValue(cfg, "interptf", m_interpTF );
-  m_interpCrop = getQSettingsValue(cfg, "interpcrop", m_interpCrop );
-  m_interpMop = getQSettingsValue(cfg, "interpmop", m_interpMop );
-  m_pointSize = getQSettingsValue(cfg, "pointsize", m_pointSize );
-  m_pointColor = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "m_pointColor") );
-  m_tagColors = getQSettingsValue(cfg, "tagcolors",  m_tagColors,  1024);
-  if ( cfg.contains("lookuptable") ) {
-    if (!m_lut)
-      m_lut = new unsigned char[Global::lutSize()*256*256*4];
-    m_lut = getQSettingsValue(cfg, "lookuptable",  m_lut,  Global::lutSize()*256*256*4);
-  }
+  cfg.getValue("framenumber", m_frameNumber);
+  cfg.getValue("drawbox", m_drawBox);
+  cfg.getValue("drawaxis", m_drawAxis);
+  cfg.getValue("backgroundcolor", m_backgroundColor);
+  cfg.getValue("backgroundimage",  m_backgroundImageFile);
+  cfg.getValue("morphtf", m_morphTF);
+  cfg.getValue("focusdistance", m_focusDistance);
+  cfg.getValue("eyeseparation", m_eyeSeparation);
+  cfg.getValue("volumenumber", m_volumeNumber);
+  cfg.getValue("volumenumber2", m_volumeNumber2);
+  cfg.getValue("volumenumber3", m_volumeNumber3);
+  cfg.getValue("volumenumber4", m_volumeNumber4);
+  cfg.getValue("volmin", m_volMin);
+  cfg.getValue("volmax", m_volMax);
+  cfg.getValue("position",  m_position);
+  cfg.getValue("rotation",  m_rotation);
+  cfg.getValue("image", m_image);
+  cfg.getValue("ticksize", m_tickSize);
+  cfg.getValue("tickstep", m_tickStep);
+  cfg.getValue("labelX", m_labelX);
+  cfg.getValue("labelY", m_labelY);
+  cfg.getValue("labelZ", m_labelZ);
+  cfg.getValue("mixinfo", m_mixvol);
+  cfg.getValue("mixcolor",  m_mixColor);
+  cfg.getValue("mixopacity", m_mixOpacity);
+  cfg.getValue("mixtag", m_mixTag);
+  cfg.getValue("interpbgcolor", m_interpBGColor);
+  cfg.getValue("interpcaptions", m_interpCaptions);
+  cfg.getValue("interpfocus", m_interpFocus);
+  cfg.getValue("interptagcolors", m_interpTagColors);
+  cfg.getValue("interptickinfo", m_interpTickInfo);
+  cfg.getValue("interpvolumebounds", m_interpVolumeBounds);
+  cfg.getValue("interpcamerapos", m_interpCameraPosition);
+  cfg.getValue("interpcamerarot", m_interpCameraOrientation);
+  cfg.getValue("interpbrickinfo", m_interpBrickInfo);
+  cfg.getValue("interpclipinfo", m_interpClipInfo);
+  cfg.getValue("interplightinfo", m_interpLightInfo);
+  cfg.getValue("interpgilightinfo", m_interpGiLightInfo);
+  cfg.getValue("interptf", m_interpTF);
+  cfg.getValue("interpcrop", m_interpCrop);
+  cfg.getValue("interpmop", m_interpMop);
+  cfg.getValue("pointsize", m_pointSize);
+  cfg.getValue("pointcolor",  m_pointColor);
+  cfg.getValue("tagcolors",  m_tagColors);
+  cfg.getValue("lookuptable", m_lut);
 
   m_lightInfo.load(cfg);
   m_giLightInfo.load(cfg);
   m_clipInfo.load(cfg);
 
-  QSettingsGetValArray(cfg, "Points",  m_points);
-  QSettingsGetValArray(cfg, "BarePoints",  m_barepoints);
-
-  QSettingsLoadArray(cfg, "BrickInformation", m_brickInfo);
-  QSettingsLoadArray(cfg, "SplineInformation", m_splineInfo);
-  QSettingsLoadArray(cfg, "CaptionObject",  m_captions);
-  QSettingsLoadArray(cfg, "ColorBarObject", m_colorbars);
-  QSettingsLoadArray(cfg, "ScaleBarObject", m_scalebars);
-  QSettingsLoadArray(cfg, "PathObject", m_paths);
-  QSettingsLoadArray(cfg, "PathGroupObject", m_pathgroups);
-  QSettingsLoadArray(cfg, "GridObject", m_grids);
-  QSettingsLoadArray(cfg, "CropObject", m_crops);
-  QSettingsLoadArray(cfg, "TrisetInformation", m_trisets);
-  QSettingsLoadArray(cfg, "NetworkInformation", m_networks);
+  cfg.getArrayValue("Points",  m_points);
+  cfg.getArrayValue("BarePoints",  m_barepoints);
+      
+  cfg.getClassArray("PathGroupObject", m_pathgroups);
+  cfg.getClassArray("BrickInformation", m_brickInfo);
+  cfg.getClassArray("SplineInformation", m_splineInfo);
+  cfg.getClassArray("CaptionObject",  m_captions);
+  cfg.getClassArray("ColorBarObject", m_colorbars);
+  cfg.getClassArray("ScaleBarObject", m_scalebars);
+  cfg.getClassArray("PathObject", m_paths);
+  cfg.getClassArray("GridObject", m_grids);
+  cfg.getClassArray("CropObject", m_crops);
+  cfg.getClassArray("TrisetInformation", m_trisets);
+  cfg.getClassArray("NetworkInformation", m_networks);
 
   if (cfg.contains("pruneblend")) {
-    m_pruneBlend = getQSettingsValue(cfg, "pruneblend",  m_pruneBlend);
-    m_pruneBuffer = getQSettingsValue(cfg, "prunebuffer", m_pruneBuffer);
+    cfg.getValue("pruneblend", m_pruneBlend);
+    cfg.getValue("prunebuffer", m_pruneBuffer);
   }
 
   cfg.endGroup();
-
+  
 }
 
 

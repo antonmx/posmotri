@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <QGLViewer/manipulatedCameraFrame.h>
 
+using namespace qglviewer;
 
 CropGrabber::CropGrabber()
 {

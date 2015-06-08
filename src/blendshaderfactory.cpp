@@ -1,6 +1,7 @@
 #include "global.h"
 #include "staticfunctions.h"
 #include "blendshaderfactory.h"
+using namespace qglviewer;
 
 QString
 BlendShaderFactory::generateBlend(QList<CropObject> crops,

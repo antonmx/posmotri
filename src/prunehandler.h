@@ -5,7 +5,7 @@
 #include <QVariant>
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 #include <QGLWidget>
 #include <QGLFramebufferObject>
@@ -58,7 +58,7 @@ class PruneHandler
 
     static void updateAndLoadPruneTexture(GLuint,
 					  int, int,
-					  Vec, Vec,
+					  qglviewer::Vec, qglviewer::Vec,
 					  uchar*);
 
     static void createPruneShader(bool);
@@ -81,8 +81,8 @@ class PruneHandler
     static void setChannel(int);
     static int channel();
 
-    static void getRaw(uchar*, int, Vec, Vec, bool maskUsingRed = false);
-    static void setRaw(uchar*, int, Vec, Vec);
+    static void getRaw(uchar*, int, qglviewer::Vec, qglviewer::Vec, bool maskUsingRed = false);
+    static void setRaw(uchar*, int, qglviewer::Vec, qglviewer::Vec);
 
     static void invert(int chan=-1);
     static void setValue(int, int, int, int);
@@ -116,21 +116,21 @@ class PruneHandler
 
     static void setCarve(bool);
     static bool carve();
-    static void sculpt(int, Vec,
-		       QList<Vec>,
+    static void sculpt(int, qglviewer::Vec,
+		       QList<qglviewer::Vec>,
 		       float rad = -1.0f, float decay = -1.0f,
 		       int tag=-1);
     static void setCarveRad(float, float);
     static void carveRad(float&, float&);
-    static void setPlanarCarve(Vec cp=Vec(0,0,0),
-			       Vec cn=Vec(0,0,0),
+    static void setPlanarCarve(qglviewer::Vec cp=qglviewer::Vec(0,0,0),
+			       qglviewer::Vec cn=qglviewer::Vec(0,0,0),
 			       float ct=1.0f,
-			       Vec dmin=Vec(0,0,0));
+			       qglviewer::Vec dmin=qglviewer::Vec(0,0,0));
 
-    static void clip(Vec, Vec, Vec);
-    static void crop(QString, Vec);
+    static void clip(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
+    static void crop(QString, qglviewer::Vec);
 
-    static void fillPathPatch(Vec, QList<Vec>, int, int, bool);
+    static void fillPathPatch(qglviewer::Vec, QList<qglviewer::Vec>, int, int, bool);
     static void removePatch(bool);
 
     static QByteArray interpolate(QByteArray,QByteArray,float);
@@ -156,7 +156,7 @@ class PruneHandler
     static bool m_carveActive;
     static float m_carveRadius;
     static float m_carveDecay;
-    static Vec m_carveP, m_carveN;
+    static qglviewer::Vec m_carveP, m_carveN;
     static float m_carveT;
 
     static GLuint m_pruneTex;
@@ -165,7 +165,7 @@ class PruneHandler
 
     static int m_channel;
     static int m_dtexX, m_dtexY;
-    static Vec m_dragInfo, m_subVolSize;
+    static qglviewer::Vec m_dragInfo, m_subVolSize;
 
     static bool m_useSavedBuffer;
 

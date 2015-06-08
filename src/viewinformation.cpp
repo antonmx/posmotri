@@ -5,6 +5,8 @@
 #include <QDebug>
 #include "PromotedWidgets.h"
 
+using namespace qglviewer;
+
 void ViewInformation::setVolumeNumber(int vn) { m_volumeNumber = vn; }
 void ViewInformation::setVolumeNumber2(int vn) { m_volumeNumber2 = vn; }
 void ViewInformation::setVolumeNumber3(int vn) { m_volumeNumber3 = vn; }
@@ -40,7 +42,7 @@ void ViewInformation::setPaths(QList<PathObject> paths) { m_paths = paths; }
 void ViewInformation::setPathGroups(QList<PathGroupObject> paths) { m_pathgroups = paths; }
 void ViewInformation::setTrisets(QList<TrisetInformation> tinfo) { m_trisets = tinfo; }
 void ViewInformation::setNetworks(QList<NetworkInformation> ninfo) { m_networks = ninfo; }
-void ViewInformation::setTagColors(uchar* tc) { memcpy(m_tagColors, tc, 1024); }
+void ViewInformation::setTagColors(uchar* tc) { memcpy(m_tagColors.data(), tc, 1024); }
 
 int ViewInformation::volumeNumber() { return m_volumeNumber; }
 int ViewInformation::volumeNumber2() { return m_volumeNumber2; }
@@ -77,7 +79,7 @@ QList<PathObject> ViewInformation::paths() { return m_paths; }
 QList<PathGroupObject> ViewInformation::pathgroups() { return m_pathgroups; }
 QList<TrisetInformation> ViewInformation::trisets() { return m_trisets; }
 QList<NetworkInformation> ViewInformation::networks() { return m_networks; }
-uchar* ViewInformation::tagColors() { return m_tagColors; }
+uchar* ViewInformation::tagColors() { return (uchar*) m_tagColors.data(); }
 
 
 ViewInformation::ViewInformation()
@@ -109,7 +111,7 @@ ViewInformation::ViewInformation()
   m_pathgroups.clear();
   m_trisets.clear();
   m_networks.clear();
-  m_tagColors = new uchar[1024];
+  m_tagColors.resize(1024);
 }
 
 ViewInformation::~ViewInformation()
@@ -127,7 +129,6 @@ ViewInformation::~ViewInformation()
   m_pathgroups.clear();
   m_trisets.clear();
   m_networks.clear();
-  if (m_tagColors) delete [] m_tagColors;
 }
 
 ViewInformation::ViewInformation(const ViewInformation& viewInfo)
@@ -164,9 +165,7 @@ ViewInformation::ViewInformation(const ViewInformation& viewInfo)
   m_pathgroups = viewInfo.m_pathgroups;
   m_trisets = viewInfo.m_trisets;
   m_networks = viewInfo.m_networks;
-
-  m_tagColors = new uchar[1024];
-  memcpy(m_tagColors, viewInfo.m_tagColors, 1024);
+  m_tagColors = viewInfo.m_tagColors;
 }
 
 
@@ -205,8 +204,8 @@ ViewInformation::operator=(const ViewInformation& viewInfo)
   m_pathgroups = viewInfo.m_pathgroups;
   m_trisets = viewInfo.m_trisets;
   m_networks = viewInfo.m_networks;
-  memcpy(m_tagColors, viewInfo.m_tagColors, 1024);
-
+  m_tagColors = viewInfo.m_tagColors;
+  
   return *this;
 }
 
@@ -215,49 +214,48 @@ ViewInformation::operator=(const ViewInformation& viewInfo)
 //--------------------------------
 
 
-void ViewInformation::load(QSettings &cfg) {
+void ViewInformation::load(const QConfigMe & cfg) {
 
   m_brickInfo.clear();
   m_splineInfo.clear();
 
   cfg.beginGroup("ViewInformation");
 
-  m_volumeNumber = getQSettingsValue(cfg, "volumenumber", m_volumeNumber );
-  m_volumeNumber2 = getQSettingsValue(cfg, "volumenumber2", m_volumeNumber2 );
-  m_volumeNumber3 = getQSettingsValue(cfg, "volumenumber3", m_volumeNumber3 );
-  m_volumeNumber4 = getQSettingsValue(cfg, "volumenumber4", m_volumeNumber4 );
-  m_stepsizeStill = getQSettingsValue(cfg, "stepsizestill", m_stepsizeStill );
-  m_stepsizeDrag = getQSettingsValue(cfg, "stepsizedrag", m_stepsizeDrag );
-  m_drawBox = getQSettingsValue(cfg, "drawbox", m_drawBox );
-  m_drawAxis = getQSettingsValue(cfg, "drawaxis", m_drawAxis );
-  m_backgroundColor = QVecEdit::toVec( getQSettingsValue(cfg, "backgroundcolor", m_backgroundColor ) );
-  m_backgroundImageFile = getQSettingsValue(cfg, "backgroundimage", m_backgroundImageFile );
-  m_position = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") );
-  m_rotation.setAxisAngle( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "rotation_axis") ),
-                           getQSettingsValue<qreal>(cfg, "rotation_angle"));
-  m_focusDistance = getQSettingsValue(cfg, "focusdistance", m_focusDistance );
-  m_image = getQSettingsValue(cfg, "image", m_image );
-  m_renderQuality = getQSettingsValue(cfg, "renderquality", m_renderQuality );
-  m_volMin = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmin ") );
-  m_volMax = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "volmax ") );
-  m_tickSize = getQSettingsValue(cfg, "tickstep", m_tickSize );
-  m_tickStep = getQSettingsValue(cfg, "tickstep", m_tickStep );
-  m_labelX = getQSettingsValue(cfg, "labelX", m_labelX );
-  m_labelY = getQSettingsValue(cfg, "labelY", m_labelY );
-  m_labelZ = getQSettingsValue(cfg, "labelZ", m_labelZ );
-  m_tagColors = getQSettingsValue(cfg, "tagcolors",  m_tagColors, 1024);
+  cfg.getValue("volumenumber", m_volumeNumber);
+  cfg.getValue("volumenumber2", m_volumeNumber2);
+  cfg.getValue("volumenumber3", m_volumeNumber3);
+  cfg.getValue("volumenumber4", m_volumeNumber4);
+  cfg.getValue("stepsizestill", m_stepsizeStill);
+  cfg.getValue("stepsizedrag", m_stepsizeDrag);
+  cfg.getValue("drawbox", m_drawBox);
+  cfg.getValue("drawaxis", m_drawAxis);
+  cfg.getValue("backgroundcolor", m_backgroundColor);
+  cfg.getValue("backgroundimage", m_backgroundImageFile);
+  cfg.getValue("position",  m_position);
+  cfg.getValue("rotation",  m_rotation);
+  cfg.getValue("focusdistance", m_focusDistance);
+  cfg.getValue("image", m_image);
+  cfg.getValue("renderquality",  m_renderQuality);
+  cfg.getValue("volmin ", m_volMin);
+  cfg.getValue("volmax ", m_volMax);
+  cfg.getValue("ticksize", m_tickSize);
+  cfg.getValue("tickstep", m_tickStep);
+  cfg.getValue("labelX", m_labelX);
+  cfg.getValue("labelY", m_labelY);
+  cfg.getValue("labelZ", m_labelZ);
+  cfg.getValue("tagcolors", m_tagColors);
 
   m_lightInfo.load(cfg);
   m_clipInfo.load(cfg);
 
-  QSettingsGetValArray(cfg, "Points",  m_points);
-  QSettingsLoadArray(cfg, "BrickInformation", m_brickInfo);
-  QSettingsLoadArray(cfg, "SplineInformation", m_splineInfo);
-  QSettingsLoadArray(cfg, "CaptionObject",  m_captions);
-  QSettingsLoadArray(cfg, "PathObject", m_paths);
-  QSettingsLoadArray(cfg, "PathGroupObject", m_pathgroups);
-  QSettingsLoadArray(cfg, "TrisetInformation", m_trisets);
-  QSettingsLoadArray(cfg, "NetworkInformation", m_networks);
+  cfg.getArrayValue("Points",  m_points);
+  cfg.getClassArray("BrickInformation", m_brickInfo);
+  cfg.getClassArray("SplineInformation", m_splineInfo);
+  cfg.getClassArray("CaptionObject",  m_captions);
+  cfg.getClassArray("PathObject", m_paths);
+  cfg.getClassArray("PathGroupObject", m_pathgroups);
+  cfg.getClassArray("TrisetInformation", m_trisets);
+  cfg.getClassArray("NetworkInformation", m_networks);
 
   cfg.endGroup();
 
@@ -267,7 +265,7 @@ void ViewInformation::load(QSettings &cfg) {
 
 
 
-void ViewInformation::save(QSettings &cfg) const {
+void ViewInformation::save(QConfigMe &cfg) const {
 
   cfg.beginGroup("ViewInformation");
 
@@ -279,35 +277,33 @@ void ViewInformation::save(QSettings &cfg) const {
   cfg.setValue("stepsizedrag", m_stepsizeDrag);
   cfg.setValue("drawbox", m_drawBox);
   cfg.setValue("drawaxis", m_drawAxis);
-  cfg.setValue("backgroundcolor", QVecEdit::toString(m_backgroundColor));
+  cfg.setValue("backgroundcolor", m_backgroundColor);
   cfg.setValue("backgroundimage", m_backgroundImageFile);
-  cfg.setValue("position",  QVecEdit::toString(m_position) );
-  cfg.setValue("rotation_axis",  QVecEdit::toString(m_rotation.axis()));
-  cfg.setValue("rotation_angle",  m_rotation.angle());
+  cfg.setValue("position",  m_position);
+  cfg.setValue("rotation",  m_rotation);
   cfg.setValue("focusdistance", m_focusDistance);
   cfg.setValue("image", m_image);
   cfg.setValue("renderquality",  m_renderQuality);
-  cfg.setValue("volmin ", QVecEdit::toString(m_volMin));
-  cfg.setValue("volmax ", QVecEdit::toString(m_volMax));
+  cfg.setValue("volmin ", m_volMin);
+  cfg.setValue("volmax ", m_volMax);
   cfg.setValue("ticksize", m_tickSize);
   cfg.setValue("tickstep", m_tickStep);
   cfg.setValue("labelX", m_labelX);
   cfg.setValue("labelY", m_labelY);
   cfg.setValue("labelZ", m_labelZ);
-  cfg.setValue("tagcolors", QByteArray(m_tagColors, 1024));
+  cfg.setValue("tagcolors", m_tagColors);
 
   m_lightInfo.save(cfg);
   m_clipInfo.save(cfg);
 
-
-  QSettingsSetValArray(cfg, "Points",  m_points);
-  QSettingsSaveArray(cfg, "BrickInformation", m_brickInfo);
-  QSettingsSaveArray(cfg, "SplineInformation", m_splineInfo);
-  QSettingsSaveArray(cfg, "CaptionObject",  m_captions);
-  QSettingsSaveArray(cfg, "PathObject", m_paths);
-  QSettingsSaveArray(cfg, "PathGroupObject", m_pathgroups);
-  QSettingsSaveArray(cfg, "TrisetInformation", m_trisets);
-  QSettingsSaveArray(cfg, "NetworkInformation", m_networks);
+  cfg.setArrayValue("Points",  m_points);
+  cfg.setClassArray("BrickInformation", m_brickInfo);
+  cfg.setClassArray("SplineInformation", m_splineInfo);
+  cfg.setClassArray("CaptionObject",  m_captions);
+  cfg.setClassArray("PathObject", m_paths);
+  cfg.setClassArray("PathGroupObject", m_pathgroups);
+  cfg.setClassArray("TrisetInformation", m_trisets);
+  cfg.setClassArray("NetworkInformation", m_networks);
 
   cfg.endGroup();
 

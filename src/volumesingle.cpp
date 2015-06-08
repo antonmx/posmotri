@@ -12,6 +12,9 @@
 #include <QLineEdit>
 #include <QStack>
 
+using namespace qglviewer;
+
+
 VolumeFileManager* VolumeSingle::pvlFileManager() { return &m_pvlFileManager; }
 VolumeFileManager* VolumeSingle::gradFileManager() { return &m_gradFileManager; }
 VolumeFileManager* VolumeSingle::lodFileManager() { return &m_lodFileManager; }

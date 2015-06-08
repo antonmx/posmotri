@@ -1,5 +1,7 @@
 #include "mymanipulatedframe.h"
 
+using namespace qglviewer;
+
 MyManipulatedFrame::MyManipulatedFrame()
 {
   m_threshold = 20;

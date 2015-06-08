@@ -20,10 +20,10 @@ class ClipPlanes : public QObject
   QList<float> viewportScale();
   QList<int> thickness();
   QList<bool> applyClip();
-  QList<Vec> positions();
-  QList<Vec> normals();
-  QList<Vec> xaxis();
-  QList<Vec> yaxis();
+  QList<qglviewer::Vec> positions();
+  QList<qglviewer::Vec> normals();
+  QList<qglviewer::Vec> xaxis();
+  QList<qglviewer::Vec> yaxis();
   QList<bool> showSlice();
   QList<bool> showOtherSlice();
 
@@ -34,7 +34,7 @@ class ClipPlanes : public QObject
   bool viewportKeypressEvent(int, QKeyEvent*);
 
   void reset();
-  void setBounds(Vec, Vec);
+  void setBounds(qglviewer::Vec, qglviewer::Vec);
 
   int inViewport(int, int, int, int);
 
@@ -55,7 +55,7 @@ class ClipPlanes : public QObject
 
   int count();
   void addClip();
-  void addClip(Vec, Vec, Vec);
+  void addClip(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
 
   void draw(QGLViewer*, bool);
   void postdraw(QGLViewer*);
@@ -64,21 +64,21 @@ class ClipPlanes : public QObject
 
   void updateScaling();
 
-  void translate(int, Vec);
+  void translate(int, qglviewer::Vec);
   void rotate(int, int, float);
   void modViewportScale(int, float);
   void modThickness(int, int);
 
   void drawViewportBorders(QGLViewer*);
   void drawOtherSlicesInViewport(QGLViewer*, int);
-  void drawPoints(int, QList<Vec>);
+  void drawPoints(int, QList<qglviewer::Vec>);
 
  signals :
   void showMessage(QString, bool);
   void addClipper();
   void removeClipper(int);
   void updateGL();
-  void mopClip(Vec, Vec);
+  void mopClip(qglviewer::Vec, qglviewer::Vec);
   void reorientCameraUsingClipPlane(int);
   void saveSliceImage(int, int);
   void extractClip(int, int, int);
@@ -91,13 +91,13 @@ class ClipPlanes : public QObject
   void deselectForEditing();
 
  private :
-  Vec m_dataMin, m_dataMax;
+  qglviewer::Vec m_dataMin, m_dataMax;
 
   QList<ClipGrabber*> m_clips;
 
   void makeClipConnections();
   void processCommand(int, QString);
-  void drawViewportIntersections(Vec, Vec, Vec*);
+  void drawViewportIntersections(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec*);
 };
 
 

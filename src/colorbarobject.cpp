@@ -62,95 +62,33 @@ int ColorBarObject::type() { return m_type; }
 float ColorBarObject::tfset() { return m_tfset; }
 bool ColorBarObject::onlyColor() { return m_onlyColor; }
 
-void
-ColorBarObject::scale(int dx, int dy)
-{
+void ColorBarObject::scale(int dx, int dy) {
   if (m_width + dx > 10)
     m_width += dx;
-
   if (m_height + dy > 10)
     m_height += dy;
 }
 
-void
-ColorBarObject::load(fstream& fin)
-{
+void ColorBarObject::load ( const QConfigMe & cfg ) {
   clear();
-
-  int len;
-  bool done = false;
-  char keyword[100];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "colorbarobjectend") == 0)
-	done = true;
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  float x, y;
-	  fin.read((char*)&x, sizeof(float));
-	  fin.read((char*)&y, sizeof(float));
-	  m_pos = QPointF(x,y);
-	}
-      else if (strcmp(keyword, "type") == 0)
-	fin.read((char*)&m_type, sizeof(int));
-      else if (strcmp(keyword, "tfset") == 0)
-	fin.read((char*)&m_tfset, sizeof(float));
-      else if (strcmp(keyword, "width") == 0)
-	fin.read((char*)&m_width, sizeof(int));
-      else if (strcmp(keyword, "height") == 0)
-	fin.read((char*)&m_height, sizeof(int));
-      else if (strcmp(keyword, "onlycolor") == 0)
-	fin.read((char*)&m_onlyColor, sizeof(bool));
-    }
+  cfg.beginGroup("ColorBarObject");
+  cfg.getValue("position", m_pos);
+  cfg.getValue("type", m_type);
+  cfg.getValue("tfset", m_tfset);
+  cfg.getValue("width", m_width);
+  cfg.getValue("height", m_height);
+  cfg.getValue("onlycolor", m_onlyColor);
+  cfg.endGroup();
 }
 
-void
-ColorBarObject::save(fstream& fout)
-{
-  char keyword[100];
-  int len;
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "colorbarobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  float x = m_pos.x();
-  float y = m_pos.y();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "position");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&x, sizeof(float));
-  fout.write((char*)&y, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "type");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_type, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tfset");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_tfset, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "width");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_width, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "height");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_height, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "onlycolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_onlyColor, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "colorbarobjectend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void ColorBarObject::save(QConfigMe & cfg) const {  
+  cfg.beginGroup("ColorBarObject");
+  cfg.setValue("position", m_pos);
+  cfg.setValue("type", m_type);
+  cfg.setValue("tfset", m_tfset);
+  cfg.setValue("width", m_width);
+  cfg.setValue("height", m_height);
+  cfg.setValue("onlycolor", m_onlyColor);
+  cfg.endGroup();
 }
 

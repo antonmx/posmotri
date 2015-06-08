@@ -588,7 +588,7 @@ TransferFunctionManager::load(QList<SplineInformation> splineInfo)
 
 
 void
-TransferFunctionManager::save(const char *flnm)
+TransferFunctionManager::save(const QString & flnm)
 {
   QDomDocument document;
   QFile f(flnm);

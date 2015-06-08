@@ -28,21 +28,21 @@ class Bricks : public QObject
 
   double* getMatrix();
   double* getMatrixInv();
-  Vec getTranslation();
-  Vec getPivot();
-  Vec getAxis();
+  qglviewer::Vec getTranslation();
+  qglviewer::Vec getPivot();
+  qglviewer::Vec getAxis();
   float getAngle();
-  Vec getScalePivot();
-  Vec getScale();
+  qglviewer::Vec getScalePivot();
+  qglviewer::Vec getScale();
 
   double* getMatrix(int);
   double* getMatrixInv(int);
-  Vec getTranslation(int);
-  Vec getPivot(int);
-  Vec getAxis(int);
+  qglviewer::Vec getTranslation(int);
+  qglviewer::Vec getPivot(int);
+  qglviewer::Vec getAxis(int);
   float getAngle(int);
-  Vec getScalePivot(int);
-  Vec getScale(int);
+  qglviewer::Vec getScalePivot(int);
+  qglviewer::Vec getScale(int);
 
   void activateBounds(int);
   void activateBounds();
@@ -60,7 +60,7 @@ class Bricks : public QObject
   void addBrick(BrickInformation);
   void addBrick();
   void updateScaling();
-  void setBounds(Vec, Vec);
+  void setBounds(qglviewer::Vec, qglviewer::Vec);
   void setBricks(QList<BrickInformation>);
   void setBrick(int, BrickInformation);
   void update();
@@ -71,7 +71,7 @@ class Bricks : public QObject
   bool m_showAxis;
   int m_selected;
 
-  Vec m_dataMin, m_dataMax, m_dataSize;
+  qglviewer::Vec m_dataMin, m_dataMax, m_dataSize;
 
   QList<BrickInformation> m_bricks;
   QList<BoundingBox*> m_brickBox;

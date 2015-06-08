@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QDomDocument>
 
+using namespace qglviewer;
 
 Networks::Networks()
 {

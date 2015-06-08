@@ -3,6 +3,8 @@
 #include <QKeyEvent>
 #include <QGLViewer/manipulatedFrame.h>
 
+using namespace qglviewer;
+
 CameraPathNode::CameraPathNode(Vec pos, Quaternion rot)
 {
   m_mf = new ManipulatedFrame();

@@ -6,14 +6,14 @@
 #include <QGLViewer/qglviewer.h>
 #include <QGLViewer/mouseGrabber.h>
 
-using namespace qglviewer;
 
-class HitPointGrabber : public QObject, public MouseGrabber
+
+class HitPointGrabber : public QObject, public qglviewer::MouseGrabber
 {
  Q_OBJECT
 
  public :
-  HitPointGrabber(Vec);
+  HitPointGrabber(qglviewer::Vec);
   ~HitPointGrabber();
 
   enum MoveAxis
@@ -28,16 +28,16 @@ class HitPointGrabber : public QObject, public MouseGrabber
   bool active();
   void resetActive();
 
-  void setPoint(Vec);
-  Vec point();
+  void setPoint(qglviewer::Vec);
+  qglviewer::Vec point();
 
   int moveAxis();
   void setMoveAxis(int);
 
-  void checkIfGrabsMouse(int, int, const Camera* const);
-  void mousePressEvent(QMouseEvent* const, Camera* const);
-  void mouseMoveEvent(QMouseEvent* const, Camera* const);
-  void mouseReleaseEvent(QMouseEvent* const, Camera* const);
+  void checkIfGrabsMouse(int, int, const qglviewer::Camera* const);
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseMoveEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseReleaseEvent(QMouseEvent* const, qglviewer::Camera* const);
 
   bool isInActivePool();
   void addToActivePool();
@@ -50,7 +50,7 @@ class HitPointGrabber : public QObject, public MouseGrabber
   void updatePoint();
 
  private :
-  Vec m_point;
+  qglviewer::Vec m_point;
   bool m_active;
   int m_moveAxis;
   bool m_pressed;

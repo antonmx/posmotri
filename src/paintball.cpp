@@ -9,9 +9,8 @@
 #include <QInputDialog>
 #include <QLineEdit>
 #include <QMessageBox>
-//#include <QtGui>
 
-
+using namespace qglviewer;
 
 bool PaintBall::grabsMouse() { return m_frame.grabsMouse(); }
 

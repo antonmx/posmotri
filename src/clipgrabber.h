@@ -6,7 +6,7 @@
 #include <QGLViewer/mouseGrabber.h>
 
 
-class ClipGrabber : public QObject, public MouseGrabber, public ClipObject
+class ClipGrabber : public QObject, public qglviewer::MouseGrabber, public ClipObject
 {
  Q_OBJECT
 
@@ -17,13 +17,13 @@ class ClipGrabber : public QObject, public MouseGrabber, public ClipObject
   int pointPressed();
 
   void mousePosition(int&, int&);
-  void checkIfGrabsMouse(int, int, const Camera* const);
+  void checkIfGrabsMouse(int, int, const qglviewer::Camera* const);
 
-  void mousePressEvent(QMouseEvent* const, Camera* const);
-  void mouseMoveEvent(QMouseEvent* const, Camera* const);
-  void mouseReleaseEvent(QMouseEvent* const, Camera* const);
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseMoveEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseReleaseEvent(QMouseEvent* const, qglviewer::Camera* const);
 
-  void wheelEvent(QWheelEvent* const, Camera* const);
+  void wheelEvent(QWheelEvent* const, qglviewer::Camera* const);
 
  signals :
   void selectForEditing();
@@ -35,9 +35,9 @@ class ClipGrabber : public QObject, public MouseGrabber, public ClipObject
   bool m_pressed;
   QPoint m_prevPos;
 
-  bool xActive(const Camera* const, Vec, Vec, bool&);
-  bool yActive(const Camera* const, Vec, Vec, bool&);
-  bool zActive(const Camera* const, Vec, Vec);
+  bool xActive(const qglviewer::Camera* const, qglviewer::Vec, qglviewer::Vec, bool&);
+  bool yActive(const qglviewer::Camera* const, qglviewer::Vec, qglviewer::Vec, bool&);
+  bool zActive(const qglviewer::Camera* const, qglviewer::Vec, qglviewer::Vec);
 };
 
 #endif

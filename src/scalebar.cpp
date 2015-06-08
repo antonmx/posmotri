@@ -2,7 +2,8 @@
 #include "scalebar.h"
 #include "global.h"
 #include "volumeinformation.h"
-//#include <QtGui>
+
+using namespace qglviewer;
 
 ScaleBars::ScaleBars()
 {

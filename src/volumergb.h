@@ -24,14 +24,14 @@ class VolumeRGB : public VolumeRGBBase
   uchar* getDragTexture();
   void deleteDragTexture();
 
-  Vec getDragTextureInfo();
+  qglviewer::Vec getDragTextureInfo();
   void getDragTextureSize(int&, int&);
 
-  QList<Vec> getSliceTextureSizeSlabs();
+  QList<qglviewer::Vec> getSliceTextureSizeSlabs();
   uchar* getSliceTextureSlab(int, int);
   void deleteTextureSlab();
 
-  bool setSubvolume(Vec, Vec,
+  bool setSubvolume(qglviewer::Vec, qglviewer::Vec,
 		    int volnum = 0,
 		    bool force=false);
 
@@ -40,10 +40,10 @@ class VolumeRGB : public VolumeRGBBase
   QList<QString> volumeFiles();
   void setVolumeFiles(QList<QString>);
 
-  Vec getSubvolumeMin();
-  Vec getSubvolumeMax();
-  Vec getSubvolumeSize();
-  Vec getSubvolumeTextureSize();
+  qglviewer::Vec getSubvolumeMin();
+  qglviewer::Vec getSubvolumeMax();
+  qglviewer::Vec getSubvolumeSize();
+  qglviewer::Vec getSubvolumeTextureSize();
   int getSubvolumeSubsamplingLevel();
 
   int* getSubvolume1dHistogram(int);
@@ -56,12 +56,12 @@ class VolumeRGB : public VolumeRGBBase
   VolumeInformation volInfo(int vnum=0);
 
   void maskRawVolume(unsigned char*,
-		     QList<Vec>,
-		     QList<Vec>,
+		     QList<qglviewer::Vec>,
+		     QList<qglviewer::Vec>,
 		     QList<CropObject>);
   void saveOpacityVolume(unsigned char*,
-			 QList<Vec>,
-			 QList<Vec>,
+			 QList<qglviewer::Vec>,
+			 QList<qglviewer::Vec>,
 			 QList<CropObject>);
 
  private :
@@ -74,14 +74,14 @@ class VolumeRGB : public VolumeRGBBase
   int *m_subvolume1dHistogram, *m_subvolume2dHistogram;
   int *m_drag1dHistogram, *m_drag2dHistogram;
 
-  Vec m_dataMin, m_dataMax;
-  Vec m_subvolumeSize, m_subvolumeTextureSize;
+  qglviewer::Vec m_dataMin, m_dataMax;
+  qglviewer::Vec m_subvolumeSize, m_subvolumeTextureSize;
   int m_subvolumeSubsamplingLevel;
   unsigned char* m_subvolumeTexture;
 
   int m_texColumns, m_texRows;
   int m_texWidth, m_texHeight;
-  Vec m_dragTextureInfo;
+  qglviewer::Vec m_dragTextureInfo;
   int m_dragTexWidth, m_dragTexHeight;
   unsigned char* m_dragTexture;
   unsigned char* m_sliceTexture;

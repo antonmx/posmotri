@@ -5,6 +5,8 @@
 #include "xmlheaderfunctions.h"
 #include <QApplication>
 
+using namespace qglviewer;
+
 
 QString RawVolume::m_rawFileName = "";
 int RawVolume::m_depth=0;

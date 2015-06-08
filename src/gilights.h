@@ -36,8 +36,8 @@ class GiLights : public QObject
   QList<GiLightObjectInfo> giLightObjectInfo();
 
   int count();
-  void addGiDirectionLight(QList<Vec>);
-  void addGiPointLight(QList<Vec>);
+  void addGiDirectionLight(QList<qglviewer::Vec>);
+  void addGiPointLight(QList<qglviewer::Vec>);
   void addGiLight(GiLightObject);
   void addGiLight(QString);
 
@@ -48,10 +48,10 @@ class GiLights : public QObject
 
   void updateScaling();
 
-  GiLightGrabber* checkIfGrabsMouse(int, int, Camera*);
-  void mousePressEvent(QMouseEvent*, Camera*);
-  void mouseMoveEvent(QMouseEvent*, Camera*);
-  void mouseReleaseEvent(QMouseEvent*, Camera*);
+  GiLightGrabber* checkIfGrabsMouse(int, int, qglviewer::Camera*);
+  void mousePressEvent(QMouseEvent*, qglviewer::Camera*);
+  void mouseMoveEvent(QMouseEvent*, qglviewer::Camera*);
+  void mouseReleaseEvent(QMouseEvent*, qglviewer::Camera*);
 
  signals :
   void updateLightBuffers();

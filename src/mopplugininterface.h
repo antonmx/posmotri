@@ -3,7 +3,7 @@
 
 //#include <QtGui>
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 class MopPluginInterface
 {
@@ -13,7 +13,7 @@ class MopPluginInterface
   // register plugin with the main program
   virtual QStringList registerPlugin() = 0;
 
-  virtual void setData(int, int, int, uchar*, QList<Vec>)=0;
+  virtual void setData(int, int, int, uchar*, QList<qglviewer::Vec>)=0;
 
   virtual void init() = 0;
   virtual bool start() = 0;

@@ -3,7 +3,7 @@
 
 #include <QVector4D>
 # include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 #include <fstream>
 using namespace std;
@@ -15,18 +15,18 @@ class ClipObjectUndo
   ~ClipObjectUndo();
 
   void clear();
-  void append(Vec, Quaternion);
+  void append(qglviewer::Vec, qglviewer::Quaternion);
 
   void undo();
   void redo();
 
-  Vec pos();
-  Quaternion rot();
+  qglviewer::Vec pos();
+  qglviewer::Quaternion rot();
 
  private :
   int m_index;
-  QList<Vec> m_pos;
-  QList<Quaternion> m_rot;
+  QList<qglviewer::Vec> m_pos;
+  QList<qglviewer::Quaternion> m_rot;
 
   void clearTop();
 };
@@ -43,14 +43,14 @@ class ClipObject
   float size();
   void setActive(bool);
 
-  Vec position();
-  void setPosition(Vec);
+  qglviewer::Vec position();
+  void setPosition(qglviewer::Vec);
 
-  Quaternion orientation();
-  void setOrientation(Quaternion);
+  qglviewer::Quaternion orientation();
+  void setOrientation(qglviewer::Quaternion);
 
-  Vec color();
-  void setColor(Vec);
+  qglviewer::Vec color();
+  void setColor(qglviewer::Vec);
 
   bool solidColor();
   void setSolidColor(bool);
@@ -91,10 +91,10 @@ class ClipObject
   bool apply();
   void setApply(bool);
 
-  Vec m_tang, m_xaxis, m_yaxis;
+  qglviewer::Vec m_tang, m_xaxis, m_yaxis;
 
-  void translate(Vec);
-  void rotate(Vec, float);
+  void translate(qglviewer::Vec);
+  void rotate(qglviewer::Vec, float);
 
   void normalize();
 
@@ -160,10 +160,10 @@ class ClipObject
 
   bool m_solidColor;
   bool m_show;
-  Vec m_color;
+  qglviewer::Vec m_color;
   float m_opacity;
   float m_stereo;
-  Vec m_position;
+  qglviewer::Vec m_position;
   float m_angle;
   int m_tfset;
   QVector4D m_viewport;
@@ -176,7 +176,7 @@ class ClipObject
   bool m_showOtherSlice;
   bool m_apply;
 
-  Quaternion m_quaternion;
+  qglviewer::Quaternion m_quaternion;
 
   int m_moveAxis;
 
@@ -205,7 +205,7 @@ class ClipObject
   int m_textureWidth;
 
   void drawLines(QGLViewer*, bool);
-  void computeTangents(Vec);
+  void computeTangents(qglviewer::Vec);
 
   void clearCaption();
   void loadCaption();

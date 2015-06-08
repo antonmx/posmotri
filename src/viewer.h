@@ -12,7 +12,7 @@
 
 
 
-using namespace qglviewer;
+
 
 #include "drawhiresvolume.h"
 #include "drawlowresvolume.h"
@@ -30,18 +30,18 @@ class ViewerUndo
   ~ViewerUndo();
 
   void clear();
-  void append(Vec, Quaternion);
+  void append(qglviewer::Vec, qglviewer::Quaternion);
 
   void undo();
   void redo();
 
-  Vec pos();
-  Quaternion rot();
+  qglviewer::Vec pos();
+  qglviewer::Quaternion rot();
 
  private :
   int m_index;
-  QList<Vec> m_pos;
-  QList<Quaternion> m_rot;
+  QList<qglviewer::Vec> m_pos;
+  QList<qglviewer::Quaternion> m_rot;
 
   void clearTop();
 };
@@ -98,7 +98,7 @@ class Viewer : public QGLViewer
   virtual void mouseMoveEvent(QMouseEvent*);
   virtual void closeEvent(QCloseEvent*);
 
-  void updateLookFrom(Vec, Quaternion, float, float);
+  void updateLookFrom(qglviewer::Vec, qglviewer::Quaternion, float, float = 1);
 
   void resetLookupTable();
   void loadLookupTable(QList<QImage>);
@@ -138,9 +138,9 @@ class Viewer : public QGLViewer
   void stereoSettings(float, float, float);
   void histogramUpdated(QImage, QImage);
   void setHiresMode(bool);
-  void setView(Vec, Quaternion,
+  void setView(qglviewer::Vec, qglviewer::Quaternion,
 	       QImage, float);
-  void setKeyFrame(Vec, Quaternion,
+  void setKeyFrame(qglviewer::Vec, qglviewer::Quaternion,
 		   int, float, float,
 		   unsigned char*,
 		   QImage);
@@ -272,9 +272,9 @@ class Viewer : public QGLViewer
   void handleMorphologicalOperations(QStringList);
   void drawCarveCircle();
 
-  Vec checkPointSelectedInViewport(int, QPoint);
+  qglviewer::Vec checkPointSelectedInViewport(int, QPoint);
 
-  Vec setViewportCamera(int, Camera&);
+  qglviewer::Vec setViewportCamera(int, qglviewer::Camera&);
   bool mousePressEventInViewport(int, QMouseEvent*);
   bool mouseMoveEventInViewport(int, QMouseEvent*);
 

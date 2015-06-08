@@ -6,8 +6,8 @@
 #include <QColorDialog>
 #include <QUrl>
 
-#include <fstream>
 using namespace std;
+using namespace qglviewer;
 
 
 Vec

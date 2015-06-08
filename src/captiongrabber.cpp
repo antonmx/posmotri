@@ -1,6 +1,8 @@
 #include "captiongrabber.h"
 #include <QMouseEvent>
 
+using namespace qglviewer;
+
 CaptionGrabber::CaptionGrabber() { m_dragging = false; }
 CaptionGrabber::~CaptionGrabber() { removeFromMouseGrabberPool(); }
 

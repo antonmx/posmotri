@@ -12,6 +12,8 @@
 
 #include <QMessageBox>
 
+using namespace qglviewer;
+
 //------------------------------------------------------------------
 CropObjectUndo::CropObjectUndo() { clear(); }
 CropObjectUndo::~CropObjectUndo() { clear(); }
@@ -1524,188 +1526,46 @@ CropObject::postdraw(QGLViewer *viewer,
   viewer->stopScreenCoordinatesSystem();
 }
 
-void
-CropObject::save(fstream& fout)
-{
-  char keyword[100];
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "cropobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "show");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_show, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "croptype");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_cropType, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "clearview");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_clearView, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "magnify");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_magnify, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showpoints");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showPoints, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tube");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_tube, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "halfsection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_halfSection, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keepinside");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_keepInside, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keepends");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_keepEnds, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "color");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_color.x;
-  f[1] = m_color.y;
-  f[2] = m_color.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "opacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_opacity, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tfset");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_tfset, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "viewmix");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_viewMix, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "unionblend");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_unionBlend, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "dtranslate");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_dtranslate.x;
-  f[1] = m_dtranslate.y;
-  f[2] = m_dtranslate.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "dpivot");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_dpivot.x;
-  f[1] = m_dpivot.y;
-  f[2] = m_dpivot.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "drotaxis");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_drotaxis.x;
-  f[1] = m_drotaxis.y;
-  f[2] = m_drotaxis.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "drotangle");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_drotangle, sizeof(float));
-
-  int npts = m_points.count();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "points");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_points[i].x;
-      f[1] = m_points[i].y;
-      f[2] = m_points[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tang");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_tang.x;
-  f[1] = m_tang.y;
-  f[2] = m_tang.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "oxaxis");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_oxaxis.x;
-  f[1] = m_oxaxis.y;
-  f[2] = m_oxaxis.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "crosssection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_pointRadX[i];
-      f[1] = m_pointRadY[i];
-      f[2] = m_pointAngle;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  int nlfts = m_lift.count();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "lift");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&nlfts, sizeof(int));
-  for(int i=0; i<nlfts; i++)
-    fout.write((char*)&m_lift[i], sizeof(int));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "hatch");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_hatch, sizeof(bool));
-  fout.write((char*)&m_hatchGrid, sizeof(bool));
-  fout.write((char*)&m_hxn, sizeof(int));
-  fout.write((char*)&m_hxd, sizeof(int));
-  fout.write((char*)&m_hyn, sizeof(int));
-  fout.write((char*)&m_hyd, sizeof(int));
-  fout.write((char*)&m_hzn, sizeof(int));
-  fout.write((char*)&m_hzd, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "cropobjectend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void CropObject::save ( QConfigMe & cfg ) const {
+  cfg.beginGroup("CropObject");
+  cfg.setValue("show", m_show);
+  cfg.setValue("croptype", m_cropType);
+  cfg.setValue("clearview", m_clearView);
+  cfg.setValue("magnify", m_magnify);
+  cfg.setValue("showpoints", m_showPoints);
+  cfg.setValue("tube", m_tube);
+  cfg.setValue("halfsection", m_halfSection);
+  cfg.setValue("keepinside", m_keepInside);
+  cfg.setValue("keepends", m_keepEnds);
+  cfg.setValue("color", m_color);
+  cfg.setValue("opacity", m_opacity);
+  cfg.setValue("tfset", m_tfset);
+  cfg.setValue("viewmix", m_viewMix);
+  cfg.setValue("unionblend", m_unionBlend);
+  cfg.setValue("dtranslate", m_dtranslate);
+  cfg.setValue("dpivot", m_dpivot);
+  cfg.setValue("drotaxis", m_drotaxis);
+  cfg.setValue("drotangle", m_drotangle);
+  cfg.setArrayValue("Points", m_points);
+  cfg.setValue("tang", m_tang);
+  cfg.setValue("oxaxis", m_oxaxis);
+  cfg.setValue("pointangle", m_pointAngle);
+  cfg.setArrayValue("PointRadX", m_pointRadX);
+  cfg.setArrayValue("PointRadY", m_pointRadY);
+  cfg.setArrayValue("lift", m_lift);
+  cfg.setValue("hatch", m_hatch);
+  cfg.setValue("hatchgrid", m_hatchGrid);
+  cfg.setValue("hatchxn", m_hxn);
+  cfg.setValue("hatchxd", m_hxd);
+  cfg.setValue("hatchyn", m_hyn);
+  cfg.setValue("hatchyd", m_hyd);
+  cfg.setValue("hatchzn", m_hzn);
+  cfg.setValue("hatchzd", m_hzd);
+  cfg.endGroup();
 }
 
-void
-CropObject::load(fstream &fin)
-{
+void CropObject::load ( const QConfigMe & cfg) {
+
   m_show = true;
   m_clearView = false;
   m_magnify = 1.0;
@@ -1740,125 +1600,48 @@ CropObject::load(fstream &fin)
   m_hyd = 1;
   m_hzd = 1;
 
-  bool done = false;
-  char keyword[100];
-  float f[3];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "cropobjectend") == 0)
-	done = true;
-      else if (strcmp(keyword, "show") == 0)
-	fin.read((char*)&m_show, sizeof(bool));
-      else if (strcmp(keyword, "croptype") == 0)
-	fin.read((char*)&m_cropType, sizeof(int));
-      else if (strcmp(keyword, "clearview") == 0)
-	fin.read((char*)&m_clearView, sizeof(bool));
-      else if (strcmp(keyword, "magnify") == 0)
-	fin.read((char*)&m_magnify, sizeof(float));
-      else if (strcmp(keyword, "showpoints") == 0)
-	fin.read((char*)&m_showPoints, sizeof(bool));
-      else if (strcmp(keyword, "tube") == 0)
-	fin.read((char*)&m_tube, sizeof(bool));
-      else if (strcmp(keyword, "halfsection") == 0)
-	fin.read((char*)&m_halfSection, sizeof(bool));
-      else if (strcmp(keyword, "keepinside") == 0)
-	fin.read((char*)&m_keepInside, sizeof(bool));
-      else if (strcmp(keyword, "keepends") == 0)
-	fin.read((char*)&m_keepEnds, sizeof(bool));
-      else if (strcmp(keyword, "color") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_color = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "opacity") == 0)
-	fin.read((char*)&m_opacity, sizeof(float));
-      else if (strcmp(keyword, "tfset") == 0)
-	fin.read((char*)&m_tfset, sizeof(int));
-      else if (strcmp(keyword, "viewmix") == 0)
-	fin.read((char*)&m_viewMix, sizeof(float));
-      else if (strcmp(keyword, "unionblend") == 0)
-	fin.read((char*)&m_unionBlend, sizeof(bool));
-      else if (strcmp(keyword, "dtranslate") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_dtranslate = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "dpivot") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_dpivot = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "drotaxis") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_drotaxis = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "drotangle") == 0)
-	fin.read((char*)&m_drotangle, sizeof(float));
-      else if (strcmp(keyword, "points") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_points.append(Vec(f[0], f[1], f[2]));
-	    }
-	}
-      else if (strcmp(keyword, "tang") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_tang = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "oxaxis") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_oxaxis = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "crosssection") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_pointRadX.append(f[0]);
-	      m_pointRadY.append(f[1]);
-	      m_pointAngle = f[2];
-	    }
-	}
-      else if (strcmp(keyword, "lift") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      int l;
-	      fin.read((char*)&l, sizeof(int));
-	      m_lift.append(l);
-	    }
-	}
-      else if (strcmp(keyword, "hatch") == 0)
-	{
-	  fin.read((char*)&m_hatch, sizeof(bool));
-	  fin.read((char*)&m_hatchGrid, sizeof(bool));
-	  fin.read((char*)&m_hxn, sizeof(int));
-	  fin.read((char*)&m_hxd, sizeof(int));
-	  fin.read((char*)&m_hyn, sizeof(int));
-	  fin.read((char*)&m_hyd, sizeof(int));
-	  fin.read((char*)&m_hzn, sizeof(int));
-	  fin.read((char*)&m_hzd, sizeof(int));
-	}
-    }
-
-  if (m_lift.count() != m_points.count())
-    {
-      m_lift.clear();
-      for(int i=0; i<m_points.count(); i++)
-	m_lift.append(0);
-    }
+  cfg.beginGroup("CropObject");
+  cfg.getValue("show", m_show);
+  cfg.getValue("croptype", m_cropType);
+  cfg.getValue("clearview", m_clearView);
+  cfg.getValue("magnify", m_magnify);
+  cfg.getValue("showpoints", m_showPoints);
+  cfg.getValue("tube", m_tube);
+  cfg.getValue("halfsection", m_halfSection);
+  cfg.getValue("keepinside", m_keepInside);
+  cfg.getValue("keepends", m_keepEnds);
+  cfg.getValue("color", m_color);
+  cfg.getValue("opacity", m_opacity);
+  cfg.getValue("tfset", m_tfset);
+  cfg.getValue("viewmix", m_viewMix);
+  cfg.getValue("unionblend", m_unionBlend);
+  cfg.getValue("dtranslate", m_dtranslate);
+  cfg.getValue("dpivot", m_dpivot);
+  cfg.getValue("drotaxis", m_drotaxis);
+  cfg.getValue("drotangle", m_drotangle);
+  cfg.getArrayValue("Points", m_points);
+  cfg.getValue("tang", m_tang);
+  cfg.getValue("oxaxis", m_oxaxis);
+  cfg.getValue("pointangle", m_pointAngle);
+  cfg.getArrayValue("PointRadX", m_pointRadX);
+  cfg.getArrayValue("PointRadY", m_pointRadY);
+  cfg.getArrayValue("lift", m_lift);
+  cfg.getValue("hatch", m_hatch);
+  cfg.getValue("hatchgrid", m_hatchGrid);
+  cfg.getValue("hatchxn", m_hxn);
+  cfg.getValue("hatchxd", m_hxd);
+  cfg.getValue("hatchyn", m_hyn);
+  cfg.getValue("hatchyd", m_hyd);
+  cfg.getValue("hatchzn", m_hzn);
+  cfg.getValue("hatchzd", m_hzd);
+  cfg.endGroup();
+  
+  if (m_lift.count() != m_points.count()) {
+    m_lift.clear();
+    for(int i=0; i<m_points.count(); i++)
+      m_lift.append(0);
+  }
+  
 }
 
 float

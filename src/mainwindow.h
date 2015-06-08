@@ -33,14 +33,14 @@ class MainWindow : public QMainWindow
    void addView(float,
 		float,
 		bool, bool,
-		Vec,
-		Vec, Quaternion,
+		qglviewer::Vec,
+		qglviewer::Vec, qglviewer::Quaternion,
 		float,
 		QImage,
 		int,
 		LightingInformation,
 		QList<BrickInformation>,
-		Vec, Vec,
+		qglviewer::Vec, qglviewer::Vec,
 		QList<SplineInformation>,
 		int, int, QString, QString, QString);
    void histogramUpdated(QImage, QImage);
@@ -123,10 +123,10 @@ class MainWindow : public QMainWindow
    void openRecentFile();
    void loadProject(const char*);
    void loadTransferFunctionsOnly(const char*);
-   void saveProject(const char*);
+   void saveProject(const QString &);
    void GlewInit();
    void loadLookupTable();
-   void lightDirectionChanged(Vec);
+   void lightDirectionChanged(qglviewer::Vec);
    void applyLighting(bool);
    void applyEmissive(bool);
    void highlights(Highlights);
@@ -149,9 +149,9 @@ class MainWindow : public QMainWindow
    void setVolumeNumber(int, int);
    void setRepeatType(int, bool);
    void updateScaling();
-   void setView(Vec, Quaternion,
+   void setView(qglviewer::Vec, qglviewer::Quaternion,
 		QImage, float);
-   void setKeyFrame(Vec, Quaternion,
+   void setKeyFrame(qglviewer::Vec, qglviewer::Quaternion,
 		    int, float, float,
 		   unsigned char*,
 		   QImage);
@@ -159,10 +159,10 @@ class MainWindow : public QMainWindow
    void updateTransferFunctionManager(QList<SplineInformation>);
    void updateMorph(bool);
    void updateFocus(float, float);
-   void updateParameters(float, float, int, bool, bool, Vec,
+   void updateParameters(float, float, int, bool, bool, qglviewer::Vec,
 			 QString,
 			 int, int, QString, QString, QString);
-   void updateParameters(bool, bool, Vec, QString,
+   void updateParameters(bool, bool, qglviewer::Vec, QString,
 			 int, int, QString, QString, QString,
 			 int, bool, bool, float, bool, bool);
    void changeHistogram(int);
@@ -171,12 +171,12 @@ class MainWindow : public QMainWindow
    void switchAxis();
    void searchCaption(QStringList);
 
-   void sculpt(int, QList<Vec>, float, float, int);
-   void fillPathPatch(QList<Vec>, int, int);
-   void paintPathPatch(QList<Vec>, int, int);
-   void addToCameraPath(QList<Vec>,QList<Vec>,QList<Vec>,QList<Vec>);
+   void sculpt(int, QList<qglviewer::Vec>, float, float, int);
+   void fillPathPatch(QList<qglviewer::Vec>, int, int);
+   void paintPathPatch(QList<qglviewer::Vec>, int, int);
+   void addToCameraPath(QList<qglviewer::Vec>,QList<qglviewer::Vec>,QList<qglviewer::Vec>,QList<qglviewer::Vec>);
 
-   void mopClip(Vec, Vec);
+   void mopClip(qglviewer::Vec, qglviewer::Vec);
    void mopCrop(int);
    void reorientCameraUsingClipPlane(int);
    void saveSliceImage(int, int);
@@ -186,15 +186,15 @@ class MainWindow : public QMainWindow
    void getSurfaceArea();
    void getSurfaceArea(unsigned char);
 
-   void viewProfile(int, int, QList<Vec>);
-   void viewThicknessProfile(int, int, QList< QPair<Vec, Vec> >);
+   void viewProfile(int, int, QList<qglviewer::Vec>);
+   void viewThicknessProfile(int, int, QList< QPair<qglviewer::Vec, qglviewer::Vec> >);
 
    void extractClip(int, int, int);
    void extractPath(int, bool, int, int);
 
    void addRotationAnimation(int, float, int);
 
-   void gridStickToSurface(int, int, QList< QPair<Vec, Vec> >);
+   void gridStickToSurface(int, int, QList< QPair<qglviewer::Vec, qglviewer::Vec> >);
 
    void applyTFUndo(bool);
    void transferFunctionUpdated();
@@ -239,13 +239,13 @@ class MainWindow : public QMainWindow
    float m_sraAngle;
 
    int m_savePathAnimation;
-   Vec m_pathAnimationPrevTang;
-   Vec m_pathAnimationPrevSaxis;
-   Vec m_pathAnimationPrevTaxis;
-   QList<Vec> m_pathAnimationPoints;
-   QList<Vec> m_pathAnimationTang;
-   QList<Vec> m_pathAnimationSaxis;
-   QList<Vec> m_pathAnimationTaxis;
+   qglviewer::Vec m_pathAnimationPrevTang;
+   qglviewer::Vec m_pathAnimationPrevSaxis;
+   qglviewer::Vec m_pathAnimationPrevTaxis;
+   QList<qglviewer::Vec> m_pathAnimationPoints;
+   QList<qglviewer::Vec> m_pathAnimationTang;
+   QList<qglviewer::Vec> m_pathAnimationSaxis;
+   QList<qglviewer::Vec> m_pathAnimationTaxis;
 
 
    QList<QStringList> m_pluginList;
@@ -262,8 +262,8 @@ class MainWindow : public QMainWindow
    void loadVolumeFromUrls(QList<QUrl>);
    void loadVolumeRGBFromUrls(QList<QUrl>);
 
-   void loadViewsAndKeyFrames(const char*);
-   void saveViewsAndKeyFrames(const char*);
+   void loadViewsAndKeyFrames(const QString &);
+   void saveViewsAndKeyFrames(const QString &) const;
 
    void loadVolumeList(QList<QString>, bool);
    void loadVolume(QList<QString>);
@@ -282,8 +282,8 @@ class MainWindow : public QMainWindow
    bool loadVolume4(QList<QString>, QList<QString>,
 		    QList<QString>, QList<QString>);
 
-   void saveVolumeIntoProject(const char*);
-   int loadVolumeFromProject(const char*);
+   void saveVolumeIntoProject(const QString &);
+   int loadVolumeFromProject(const QString &);
 
    void setTextureMemory();
    void loadSettings();

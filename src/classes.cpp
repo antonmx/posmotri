@@ -1,4 +1,5 @@
 #include "classes.h"
+using namespace qglviewer;
 
 //------------------------------------------------
 ViewAlignedPolygon::ViewAlignedPolygon()

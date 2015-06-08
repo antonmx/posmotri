@@ -3,6 +3,8 @@
 #include "mopplugininterface.h"
 #include <QApplication>
 
+using namespace qglviewer;
+
 
 
 bool

@@ -4,7 +4,7 @@
 
 
 #include <QGLViewer/vec.h>
-using namespace qglviewer;
+
 
 class VolumeRGBBase : public QObject
 {
@@ -16,9 +16,9 @@ class VolumeRGBBase : public QObject
 
   bool loadVolume(const char*, bool);
 
-  Vec getFullVolumeSize();
-  Vec getLowresVolumeSize();
-  Vec getLowresTextureVolumeSize();
+  qglviewer::Vec getFullVolumeSize();
+  qglviewer::Vec getLowresVolumeSize();
+  qglviewer::Vec getLowresTextureVolumeSize();
   int getLowresSubsamplingLevel();
   int* getLowres1dHistogram(int);
   int* getLowres2dHistogram(int);
@@ -34,9 +34,9 @@ class VolumeRGBBase : public QObject
   int *m_1dHistogramG, *m_2dHistogramG;
   int *m_1dHistogramB, *m_2dHistogramB;
   int *m_1dHistogramA, *m_2dHistogramA;
-  Vec m_fullVolumeSize;
-  Vec m_lowresVolumeSize;
-  Vec m_lowresTextureVolumeSize;
+  qglviewer::Vec m_fullVolumeSize;
+  qglviewer::Vec m_lowresVolumeSize;
+  qglviewer::Vec m_lowresTextureVolumeSize;
   int m_subSamplingLevel;
   unsigned char *m_lowresVolume;
   unsigned char *m_lowresTextureVolume;

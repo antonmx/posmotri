@@ -8,8 +8,8 @@
 #include "PromotedWidgets.h"
 #include <QDebug>
 
-#include <fstream>
 using namespace std;
+using namespace qglviewer;
 
 int HitPoints::bareCount() { return m_barePoints.count(); }
 QList<Vec> HitPoints::barePoints() { return m_barePoints; }
@@ -251,26 +251,12 @@ void HitPoints::savePoints(QString flnm) {
 
 
 QList<Vec> pointsFromFile(const QString & flnm) {
-
   QList<Vec> pts;
-
-  fstream fp(flnm.toLatin1().data(), ios::in);
-
-  bool done = false;
-  QString keyword;
-
-  while ( !fp.eof()  &&  ! (keyword = nextString(fp,  ' ')).isEmpty() ) {
-    if (keyword == "point")
-      pts.append( QVecEdit::toVec(nextString(fp)) );
-    else if ( ! keyword.isEmpty() ) {
-      qDebug() <<  "Unrecognized or empty keyword for HitPoints " << keyword << ".";
-      keyword.clear();
-    }
-  }
-  fp.close();
-
+  QConfigMe cfg; 
+  cfg.read(flnm);
+  if (!cfg.getArrayValue("Points", pts))
+    qDebug() << "No input points in file" << flnm << ".";
   return pts;
-
 }
 
 void HitPoints::addBarePoints(QString flnm) {

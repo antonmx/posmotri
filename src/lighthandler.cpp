@@ -11,9 +11,7 @@
 #include "cropshaderfactory.h"
 #include <QMessageBox>
 
-
-
-#define vDv(a, b) Vec(a.x/b.x, a.y/b.y, a.z/b.z)
+using namespace qglviewer;
 
 QGLFramebufferObject *LightHandler::m_opacityBuffer=0;
 QGLFramebufferObject *LightHandler::m_finalLightBuffer=0;

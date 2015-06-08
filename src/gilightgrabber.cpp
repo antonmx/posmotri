@@ -1,8 +1,9 @@
 #include "global.h"
 #include "gilightgrabber.h"
 #include "staticfunctions.h"
-//#include <QtGui>
 #include <QGLViewer/manipulatedCameraFrame.h>
+
+using namespace qglviewer;
 
 
 GiLightGrabber::GiLightGrabber()

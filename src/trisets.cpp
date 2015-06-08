@@ -8,7 +8,7 @@
 #include <QMessageBox>
 #include <QDomDocument>
 
-
+using namespace qglviewer;
 
 
 Trisets::Trisets()

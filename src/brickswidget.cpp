@@ -6,6 +6,8 @@
 
 #include <QDebug>
 
+using namespace qglviewer;
+
 BricksWidget::BricksWidget(QWidget *parent, Bricks *bricks)
   : QWidget(parent)
   , ui(new Ui::BricksWidget)

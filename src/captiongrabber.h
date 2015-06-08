@@ -3,11 +3,11 @@
 
 #include <QGLViewer/qglviewer.h>
 #include <QGLViewer/mouseGrabber.h>
-using namespace qglviewer;
+
 
 #include "captionobject.h"
 
-class CaptionGrabber : public MouseGrabber, public CaptionObject
+class CaptionGrabber : public qglviewer::MouseGrabber, public CaptionObject
 {
  public :
   CaptionGrabber();
@@ -15,10 +15,10 @@ class CaptionGrabber : public MouseGrabber, public CaptionObject
 
   CaptionObject caption();
 
-  void checkIfGrabsMouse(int, int, const Camera* const);
-  void mousePressEvent(QMouseEvent* const, Camera* const);
-  void mouseReleaseEvent(QMouseEvent* const, Camera* const);
-  void mouseMoveEvent(QMouseEvent* const, Camera* const);
+  void checkIfGrabsMouse(int, int, const qglviewer::Camera* const);
+  void mousePressEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseReleaseEvent(QMouseEvent* const, qglviewer::Camera* const);
+  void mouseMoveEvent(QMouseEvent* const, qglviewer::Camera* const);
 
  private :
   bool m_dragging;

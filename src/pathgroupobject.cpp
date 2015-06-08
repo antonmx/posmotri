@@ -6,6 +6,8 @@
 #include <QBitArray>
 #include <QMessageBox>
 
+using namespace qglviewer;
+
 //------------------------------------------------------------------
 PathGroupObjectUndo::PathGroupObjectUndo() { clear(); }
 PathGroupObjectUndo::~PathGroupObjectUndo() { clear(); }
@@ -579,7 +581,7 @@ float PathGroupObject::length()
 }
 
 void
-PathGroupObject::setStops(QGradientStops stops)
+PathGroupObject::setStops(const QGradientStops & stops)
 {
   m_stops = stops;
   m_resampledStops = StaticFunctions::resampleGradientStops(stops);
@@ -2729,226 +2731,50 @@ PathGroupObject::generateImages()
     }
 }
 
-void
-PathGroupObject::save(fstream& fout)
-{
-  char keyword[100];
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pathgroupobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "allowinterpolate");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_allowInterpolate, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "blendmode");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_blendMode, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "clip");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_clip, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "minscale");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_minScale, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "maxscale");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_maxScale, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scaletype");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_scaleType, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "filterpathlen");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_filterPathLen, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showpoints");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showPoints, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showlength");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showLength, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "depthcue");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_depthcue, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tube");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_tube, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "closed");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_closed, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captype");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_capType, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "arrowdirection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_arrowDirection, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "arrowforall");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_arrowForAll, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "sections");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_sections, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "segments");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_segments, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "sparseness");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_sparseness, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "separation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_separation, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "animate");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_animate, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "animatespeed");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_animateSpeed, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "stops");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int nstops = m_stops.count();
-  fout.write((char*)&nstops, sizeof(int));
-  for(int ni=0; ni<nstops; ni++)
-    {
-      float st[5];
-      qreal r,g,b,a;
-      QColor col;
-      st[0] = m_stops[ni].first;
-      col = m_stops[ni].second;
-      col.getRgbF(&r,&g,&b,&a);
-      st[1] = r;
-      st[2] = g;
-      st[3] = b;
-      st[4] = a;
-      fout.write((char*)st, 5*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "opacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_opacity, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "userpathlenminmax");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_minUserPathLen, sizeof(float));
-  fout.write((char*)&m_maxUserPathLen, sizeof(float));
-
-  int nidx = m_index.count();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "index");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&nidx, sizeof(int));
-  for(int i=0; i<nidx; i++)
-    fout.write((char*)&m_index[i], sizeof(int));
-
-  int npts = m_points.count();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "points");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_points[i].x;
-      f[1] = m_points[i].y;
-      f[2] = m_points[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "crosssection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_pointRadX[i];
-      f[1] = m_pointRadY[i];
-      f[2] = m_pointAngle[i];
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionfont");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  QString fontStr = m_captionFont.toString();
-  int len = fontStr.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  if (len > 0)
-    fout.write((char*)fontStr.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captioncolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  unsigned char r = m_captionColor.red();
-  unsigned char g = m_captionColor.green();
-  unsigned char b = m_captionColor.blue();
-  unsigned char a = m_captionColor.alpha();
-  fout.write((char*)&r, sizeof(unsigned char));
-  fout.write((char*)&g, sizeof(unsigned char));
-  fout.write((char*)&b, sizeof(unsigned char));
-  fout.write((char*)&a, sizeof(unsigned char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionhalocolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  r = m_captionHaloColor.red();
-  g = m_captionHaloColor.green();
-  b = m_captionHaloColor.blue();
-  a = m_captionHaloColor.alpha();
-  fout.write((char*)&r, sizeof(unsigned char));
-  fout.write((char*)&g, sizeof(unsigned char));
-  fout.write((char*)&b, sizeof(unsigned char));
-  fout.write((char*)&a, sizeof(unsigned char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "end");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void PathGroupObject::save ( QConfigMe & cfg) const {
+  cfg.beginGroup("PathGroupObject");
+  cfg.setValue("allowinterpolate", m_allowInterpolate);
+  cfg.setValue("blendmode", m_blendMode);
+  cfg.setValue("clip", m_clip);
+  cfg.setValue("minscale", m_minScale);
+  cfg.setValue("maxscale", m_maxScale);
+  cfg.setValue("scaletype", m_scaleType);
+  cfg.setValue("filterpathlen", m_filterPathLen);
+  cfg.setValue("showpoints", m_showPoints);
+  cfg.setValue("showlength", m_showLength);
+  cfg.setValue("depthcue", m_depthcue);
+  cfg.setValue("tube", m_tube);
+  cfg.setValue("closed", m_closed);
+  cfg.setValue("captype", m_capType);
+  cfg.setValue("arrowdirection", m_arrowDirection);
+  cfg.setValue("arrowforall", m_arrowForAll);
+  cfg.setValue("sections", m_sections);
+  cfg.setValue("segments", m_segments);
+  cfg.setValue("sparseness", m_sparseness);
+  cfg.setValue("separation", m_separation);
+  cfg.setValue("animate", m_animate);
+  cfg.setValue("animatespeed", m_animateSpeed);
+  cfg.beginArray("Stops");
+  foreach(QGradientStop st, m_stops) {
+    cfg.setValue("pos", st.first);
+    cfg.setValue("col", st.second);
+  }
+  cfg.setValue("opacity", m_opacity);
+  cfg.setValue("userpathlenmin", m_minUserPathLen);
+  cfg.setValue("userpathlenmax", m_maxUserPathLen);
+  cfg.setArrayValue("Index", m_index);
+  cfg.setArrayValue("Point", m_points);
+  cfg.setArrayValue("PointRadX", m_pointRadX);
+  cfg.setArrayValue("PointRadY", m_pointRadY);
+  cfg.setArrayValue("PointAngle", m_pointAngle);
+  cfg.setValue("captionfont", m_captionFont);
+  cfg.setValue("captioncolor", m_captionColor);
+  cfg.setValue("captionhalocolor", m_captionHaloColor);
+  cfg.endGroup();
 }
 
-void
-PathGroupObject::load(fstream &fin)
-{
+void PathGroupObject::load ( const QConfigMe & cfg) {
+
   m_index.clear();
   m_points.clear();
   m_pointRadX.clear();
@@ -2964,149 +2790,52 @@ PathGroupObject::load(fstream &fin)
   m_captionHaloColor = Qt::black;
   m_minScale = m_maxScale = 1;
   m_scaleType = true;
-
   if (m_spriteTexture)
     glDeleteTextures( 1, &m_spriteTexture );
   m_spriteTexture = 0;
 
-  bool done = false;
-  char keyword[100];
-  float f[3];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "end") == 0)
-	done = true;
-      else if (strcmp(keyword, "allowinterpolate") == 0)
-	fin.read((char*)&m_allowInterpolate, sizeof(bool));
-      else if (strcmp(keyword, "blendmode") == 0)
-	fin.read((char*)&m_blendMode, sizeof(bool));
-      else if (strcmp(keyword, "clip") == 0)
-	fin.read((char*)&m_clip, sizeof(bool));
-      else if (strcmp(keyword, "minscale") == 0)
-	fin.read((char*)&m_minScale, sizeof(float));
-      else if (strcmp(keyword, "maxscale") == 0)
-	fin.read((char*)&m_maxScale, sizeof(float));
-      else if (strcmp(keyword, "scaletype") == 0)
-	fin.read((char*)&m_scaleType, sizeof(bool));
-      else if (strcmp(keyword, "filterpathlen") == 0)
-	fin.read((char*)&m_filterPathLen, sizeof(bool));
-      else if (strcmp(keyword, "showpoints") == 0)
-	fin.read((char*)&m_showPoints, sizeof(bool));
-      else if (strcmp(keyword, "showlength") == 0)
-	fin.read((char*)&m_showLength, sizeof(bool));
-      else if (strcmp(keyword, "depthcue") == 0)
-	fin.read((char*)&m_depthcue, sizeof(bool));
-      else if (strcmp(keyword, "tube") == 0)
-	fin.read((char*)&m_tube, sizeof(bool));
-      else if (strcmp(keyword, "closed") == 0)
-	fin.read((char*)&m_closed, sizeof(bool));
-      else if (strcmp(keyword, "captype") == 0)
-	fin.read((char*)&m_capType, sizeof(int));
-      else if (strcmp(keyword, "arrowdirection") == 0)
-	fin.read((char*)&m_arrowDirection, sizeof(bool));
-      else if (strcmp(keyword, "arrowforall") == 0)
-	fin.read((char*)&m_arrowForAll, sizeof(bool));
-      else if (strcmp(keyword, "sections") == 0)
-	fin.read((char*)&m_sections, sizeof(int));
-      else if (strcmp(keyword, "segments") == 0)
-	fin.read((char*)&m_segments, sizeof(int));
-      else if (strcmp(keyword, "sparseness") == 0)
-	fin.read((char*)&m_sparseness, sizeof(int));
-      else if (strcmp(keyword, "separation") == 0)
-	fin.read((char*)&m_separation, sizeof(int));
-      else if (strcmp(keyword, "animate") == 0)
-	fin.read((char*)&m_animate, sizeof(bool));
-      else if (strcmp(keyword, "animateSpeed") == 0)
-	fin.read((char*)&m_animateSpeed, sizeof(int));
-      else if (strcmp(keyword, "stops") == 0)
-	{
-	  m_stops.clear();
-	  int nstops;
-	  fin.read((char*)&nstops, sizeof(int));
-	  for(int ni=0; ni<nstops; ni++)
-	    {
-	      float st[5];
-	      QColor col;
-	      fin.read((char*)st, 5*sizeof(float));
-	      m_stops << QGradientStop(st[0],
-				       QColor::fromRgbF(st[1],st[2],st[3],st[4]));
-	    }
-	}
-      else if (strcmp(keyword, "opacity") == 0)
-	fin.read((char*)&m_opacity, sizeof(float));
-      else if (strcmp(keyword, "index") == 0)
-	{
-	  int nidx;
-	  fin.read((char*)&nidx, sizeof(int));
-	  for(int i=0; i<nidx; i++)
-	    {
-	      int id;
-	      fin.read((char*)&id, sizeof(int));
-	      m_index.append(id);
-	    }
-	}
-      else if (strcmp(keyword, "userpathlenminmax") == 0)
-	{
-	  fin.read((char*)&m_minUserPathLen, sizeof(float));
-	  fin.read((char*)&m_maxUserPathLen, sizeof(float));
-	}
-      else if (strcmp(keyword, "points") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_points.append(Vec(f[0], f[1], f[2]));
-	    }
-	}
-      else if (strcmp(keyword, "crosssection") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_pointRadX.append(f[0]);
-	      m_pointRadY.append(f[1]);
-	      m_pointAngle.append(f[2]);
-	    }
-	}
-      else if (strcmp(keyword, "captionfont") == 0)
-	{
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  if (len > 0)
-	    {
-	      char *str = new char[len];
-	      fin.read((char*)str, len*sizeof(char));
-	      QString fontStr = QString(str);
-	      m_captionFont.fromString(fontStr);
-	      delete [] str;
-	    }
-	}
-      else if (strcmp(keyword, "captioncolor") == 0)
-	{
-	  unsigned char r, g, b, a;
-	  fin.read((char*)&r, sizeof(unsigned char));
-	  fin.read((char*)&g, sizeof(unsigned char));
-	  fin.read((char*)&b, sizeof(unsigned char));
-	  fin.read((char*)&a, sizeof(unsigned char));
-	  m_captionColor = QColor(r,g,b,a);
-	}
-      else if (strcmp(keyword, "captionhalocolor") == 0)
-	{
-	  unsigned char r, g, b, a;
-	  fin.read((char*)&r, sizeof(unsigned char));
-	  fin.read((char*)&g, sizeof(unsigned char));
-	  fin.read((char*)&b, sizeof(unsigned char));
-	  fin.read((char*)&a, sizeof(unsigned char));
-	  m_captionHaloColor = QColor(r,g,b,a);
-	}
-    }
-
+  cfg.beginGroup("PathGroupObject");
+  cfg.getValue("allowinterpolate", m_allowInterpolate);
+  cfg.getValue("blendmode", m_blendMode);
+  cfg.getValue("clip", m_clip);
+  cfg.getValue("minscale", m_minScale);
+  cfg.getValue("maxscale", m_maxScale);
+  cfg.getValue("scaletype", m_scaleType);
+  cfg.getValue("filterpathlen", m_filterPathLen);
+  cfg.getValue("showpoints", m_showPoints);
+  cfg.getValue("showlength", m_showLength);
+  cfg.getValue("depthcue", m_depthcue);
+  cfg.getValue("tube", m_tube);
+  cfg.getValue("closed", m_closed);
+  cfg.getValue("captype", m_capType);
+  cfg.getValue("arrowdirection", m_arrowDirection);
+  cfg.getValue("arrowforall", m_arrowForAll);
+  cfg.getValue("sections", m_sections);
+  cfg.getValue("segments", m_segments);
+  cfg.getValue("sparseness", m_sparseness);
+  cfg.getValue("separation", m_separation);
+  cfg.getValue("animate", m_animate);
+  cfg.getValue("animatespeed", m_animateSpeed);
+  int sz = cfg.beginArray("Stops");
+  for (int i=0; i<sz; i++) {
+    QGradientStop st;    
+    cfg.getValue("pos", st.first);
+    cfg.getValue("col", st.second);
+    m_stops.append(st);
+  }
+  cfg.getValue("opacity", m_opacity);
+  cfg.getValue("userpathlenmin", m_minUserPathLen);
+  cfg.getValue("userpathlenmax", m_maxUserPathLen);
+  cfg.getArrayValue("Index", m_index);
+  cfg.getArrayValue("Point", m_points);
+  cfg.getArrayValue("PointRadX", m_pointRadX);
+  cfg.getArrayValue("PointRadY", m_pointRadY);
+  cfg.getArrayValue("PointAngle", m_pointAngle);
+  cfg.getValue("captionfont", m_captionFont);
+  cfg.getValue("captioncolor", m_captionColor);
+  cfg.getValue("captionhalocolor", m_captionHaloColor);
+  cfg.endGroup();
+  
   m_undo.clear();
   m_undo.append(m_index, m_points, m_pointRadX, m_pointRadY, m_pointAngle);
 }

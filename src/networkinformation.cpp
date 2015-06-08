@@ -37,9 +37,9 @@ NetworkInformation::operator=(const NetworkInformation& ti)
 }
 
 NetworkInformation
-NetworkInformation::interpolate(const NetworkInformation tinfo1,
-				const NetworkInformation tinfo2,
-				float frc)
+NetworkInformation::interpolate(const NetworkInformation & tinfo1,
+                                const NetworkInformation & tinfo2,
+                                float frc)
 {
   NetworkInformation tinfo;
   tinfo.filename = tinfo1.filename;
@@ -122,10 +122,10 @@ NetworkInformation::interpolate(const NetworkInformation tinfo1,
   return tinfo;
 }
 
-QList<NetworkInformation>
-NetworkInformation::interpolate(const QList<NetworkInformation> tinfo1,
-				const QList<NetworkInformation> tinfo2,
-				float frc)
+QList<NetworkInformation> NetworkInformation::interpolate(
+  const QList<NetworkInformation> & tinfo1,
+  const QList<NetworkInformation> & tinfo2,
+  float frc)
 {
   QVector<int> present;
   present.resize(tinfo1.count());
@@ -158,197 +158,63 @@ NetworkInformation::interpolate(const QList<NetworkInformation> tinfo1,
   return tinfo;
 }
 
-void
-NetworkInformation::save(fstream &fout)
-{
-  char keyword[100];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "networkinformation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "filename");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int len = filename.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  if (len > 0)
-    fout.write((char*)filename.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "vopacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&Vopacity, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "eopacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&Eopacity, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scalee");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&scalee, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scalev");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&scalev, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "vstops");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int nstops = Vstops.count();
-  fout.write((char*)&nstops, sizeof(int));
-  for(int s=0; s<nstops; s++)
-    {
-      float pos = Vstops[s].first;
-      QColor color = Vstops[s].second;
-      int r = color.red();
-      int g = color.green();
-      int b = color.blue();
-      int a = color.alpha();
-      fout.write((char*)&pos, sizeof(float));
-      fout.write((char*)&r, sizeof(int));
-      fout.write((char*)&g, sizeof(int));
-      fout.write((char*)&b, sizeof(int));
-      fout.write((char*)&a, sizeof(int));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "estops");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  nstops = Estops.count();
-  fout.write((char*)&nstops, sizeof(int));
-  for(int s=0; s<nstops; s++)
-    {
-      float pos = Estops[s].first;
-      QColor color = Estops[s].second;
-      int r = color.red();
-      int g = color.green();
-      int b = color.blue();
-      int a = color.alpha();
-      fout.write((char*)&pos, sizeof(float));
-      fout.write((char*)&r, sizeof(int));
-      fout.write((char*)&g, sizeof(int));
-      fout.write((char*)&b, sizeof(int));
-      fout.write((char*)&a, sizeof(int));
-    }
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "vatt");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&Vatt, sizeof(int));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "uservmin");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&userVmin, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "uservmax");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&userVmax, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "eatt");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&Eatt, sizeof(int));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "useremin");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&userEmin, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "useremax");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&userEmax, sizeof(float));
-  
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "end");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void NetworkInformation::save(QConfigMe & cfg) const {
+  cfg.beginGroup("NetworkInformation");
+  cfg.setValue("filename", filename);
+  cfg.setValue("vopacity", Vopacity);  
+  cfg.setValue("eopacity", Eopacity);  
+  cfg.setValue("scalee", scalee);  
+  cfg.setValue("scalev", scalev);
+  cfg.beginArray("Vstops");
+  foreach(QGradientStop st, Vstops) {
+    cfg.setValue("pos", st.first);
+    cfg.setValue("col", st.second);
+  }
+  cfg.endArray();
+  cfg.beginArray("Estops");
+  foreach(QGradientStop st, Estops) {
+    cfg.setValue("pos", st.first);
+    cfg.setValue("col", st.second);
+  }
+  cfg.endArray();
+  cfg.setValue("vatt", Vatt);  
+  cfg.setValue("uservmin", userVmin);  
+  cfg.setValue("uservmax", userVmax);  
+  cfg.setValue("eatt", Eatt);  
+  cfg.setValue("useremin", userEmin);  
+  cfg.setValue("useremax", userEmax);
+  cfg.endGroup();
 }
 
-void
-NetworkInformation::load(fstream &fin)
-{
+void NetworkInformation::load(const QConfigMe & cfg) {
   clear();
-
-  bool done = false;
-  char keyword[100];
-  
-
-  while(!done)
-    { 
-      fin.getline(keyword, 100, 0);
-      if (strcmp(keyword, "end") == 0)
-	done = true;
-      else if (strcmp(keyword, "filename") == 0)
-	{
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  if (len > 0)
-	    {
-	      char *str = new char[len];
-	      fin.read((char*)str, len*sizeof(char));
-	      filename = QString(str);
-	      delete [] str;
-	    }
-	}
-      else if (strcmp(keyword, "vopacity") == 0)
-	fin.read((char*)&Vopacity, sizeof(float));
-      else if (strcmp(keyword, "eopacity") == 0)
-	fin.read((char*)&Eopacity, sizeof(float));
-      else if (strcmp(keyword, "scalee") == 0)
-	fin.read((char*)&scalee, sizeof(float));
-      else if (strcmp(keyword, "scalev") == 0)
-	fin.read((char*)&scalev, sizeof(float));
-      else if (strcmp(keyword, "vstops") == 0)
-	{
-	  int nstops;
-	  fin.read((char*)&nstops, sizeof(int));
-	  for(int s=0; s<nstops; s++)
-	    {
-	      float pos;
-	      int r,g,b,a;
-	      fin.read((char*)&pos, sizeof(float));
-	      fin.read((char*)&r, sizeof(int));
-	      fin.read((char*)&g, sizeof(int));
-	      fin.read((char*)&b, sizeof(int));
-	      fin.read((char*)&a, sizeof(int));
-	      Vstops << QGradientStop(pos, QColor(r,g,b,a));
-	    }
-	}
-      else if (strcmp(keyword, "estops") == 0)
-	{
-	  int nstops;
-	  fin.read((char*)&nstops, sizeof(int));
-	  for(int s=0; s<nstops; s++)
-	    {
-	      float pos;
-	      int r,g,b,a;
-	      fin.read((char*)&pos, sizeof(float));
-	      fin.read((char*)&r, sizeof(int));
-	      fin.read((char*)&g, sizeof(int));
-	      fin.read((char*)&b, sizeof(int));
-	      fin.read((char*)&a, sizeof(int));
-	      Estops << QGradientStop(pos, QColor(r,g,b,a));
-	    }
-	}
-      else if (strcmp(keyword, "vatt") == 0)
-	fin.read((char*)&Vatt, sizeof(int));
-      else if (strcmp(keyword, "uservmin") == 0)
-	fin.read((char*)&userVmin, sizeof(float));
-      else if (strcmp(keyword, "uservmax") == 0)
-	fin.read((char*)&userVmax, sizeof(float));
-      else if (strcmp(keyword, "eatt") == 0)
-	fin.read((char*)&Eatt, sizeof(int));
-      else if (strcmp(keyword, "useremin") == 0)
-	fin.read((char*)&userEmin, sizeof(float));
-      else if (strcmp(keyword, "useremax") == 0)
-	fin.read((char*)&userEmax, sizeof(float));
-    }
+  cfg.beginGroup("NetworkInformation");
+  cfg.getValue("filename", filename);
+  cfg.getValue("vopacity", Vopacity);  
+  cfg.getValue("eopacity", Eopacity);  
+  cfg.getValue("scalee", scalee);  
+  cfg.getValue("scalev", scalev);
+  int sz = cfg.beginArray("Vstops");
+  for (int i=0; i<sz; i++) {
+    QGradientStop st;    
+    cfg.getValue("pos", st.first);
+    cfg.getValue("col", st.second);
+    Vstops.append(st);
+  }
+  cfg.endArray();
+  cfg.beginArray("Estops");
+  for (int i=0; i<sz; i++) {
+    QGradientStop st;    
+    cfg.getValue("pos", st.first);
+    cfg.getValue("col", st.second);
+    Estops.append(st);
+  }
+  cfg.endArray();
+  cfg.getValue("vatt", Vatt);  
+  cfg.getValue("uservmin", userVmin);  
+  cfg.getValue("uservmax", userVmax);  
+  cfg.getValue("eatt", Eatt);  
+  cfg.getValue("useremin", userEmin);  
+  cfg.getValue("useremax", userEmax);
+  cfg.endGroup();
 }

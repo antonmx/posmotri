@@ -29,6 +29,7 @@
 #endif
 
 
+using namespace qglviewer;
 
 
 using namespace std;

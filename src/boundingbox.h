@@ -15,9 +15,9 @@ class BoundingBox : public QObject {
   void activateBounds();
   void deactivateBounds();
 
-  void setPositions(Vec, Vec);
-  void setBounds(Vec, Vec);
-  void bounds(Vec&, Vec&);
+  void setPositions(qglviewer::Vec, qglviewer::Vec);
+  void setBounds(qglviewer::Vec, qglviewer::Vec);
+  void bounds(qglviewer::Vec&, qglviewer::Vec&);
   void draw();
   bool keyPressEvent(QKeyEvent*);
 
@@ -29,12 +29,12 @@ class BoundingBox : public QObject {
 
  private :
   MyManipulatedFrame m_bounds[6];
-  Vec m_dataMin, m_dataMax;
-  Vec boxColor, defaultColor, selectColor;
+  qglviewer::Vec m_dataMin, m_dataMax;
+  qglviewer::Vec boxColor, defaultColor, selectColor;
 
-  void drawX(float, Vec, Vec, Vec);
-  void drawY(float, Vec, Vec, Vec);
-  void drawZ(float, Vec, Vec, Vec);
+  void drawX(float, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
+  void drawY(float, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
+  void drawZ(float, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
 
   void updateMidPoints();
 };

@@ -90,7 +90,7 @@ class SplineTransferFunction : public QObject
   QPolygonF m_normalWidths;
   QPolygonF m_leftNormals;
   QPolygonF m_rightNormals;
-  QVector<float> m_normalRotations;
+  QList<float> m_normalRotations;
   QGradientStops m_gradientStops;
   int m_gbot, m_gtop;
   float m_gbotop, m_gtopop;

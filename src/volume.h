@@ -47,17 +47,17 @@ class Volume : public QObject
 
   QList<QString> volumeFiles(int vol=0);
 
-  bool setSubvolume(Vec, Vec,
+  bool setSubvolume(qglviewer::Vec, qglviewer::Vec,
 		    int volnum = 0,
 		    bool force=false);
-  bool setSubvolume(Vec, Vec,
+  bool setSubvolume(qglviewer::Vec, qglviewer::Vec,
 		    int volnum0 = 0, int volnum1 = 0,
 		    bool force=false);
-  bool setSubvolume(Vec, Vec,
+  bool setSubvolume(qglviewer::Vec, qglviewer::Vec,
 		    int volnum0 = 0, int volnum1 = 0,
 		    int volnum2 = 0,
 		    bool force=false);
-  bool setSubvolume(Vec, Vec,
+  bool setSubvolume(qglviewer::Vec, qglviewer::Vec,
 		    int volnum0 = 0, int volnum1 = 0,
 		    int volnum2 = 0, int volnum3 = 0,
 		    bool force=false);
@@ -65,8 +65,8 @@ class Volume : public QObject
   void setRepeatType(int, bool);
   void setRepeatType(QList<bool>);
 
-  Vec getSubvolumeSize();
-  Vec getSubvolumeTextureSize();
+  qglviewer::Vec getSubvolumeSize();
+  qglviewer::Vec getSubvolumeTextureSize();
   int getSubvolumeSubsamplingLevel();
 
   int* getLowres1dHistogram(int vol=0);
@@ -82,37 +82,37 @@ class Volume : public QObject
 
   VolumeInformation volInfo(int vnum=0, int vol=0);
 
-  Vec getFullVolumeSize();
-  Vec getLowresVolumeSize();
-  Vec getLowresTextureVolumeSize();
+  qglviewer::Vec getFullVolumeSize();
+  qglviewer::Vec getLowresVolumeSize();
+  qglviewer::Vec getLowresTextureVolumeSize();
   int* getLowres1dHistogram();
   int* getLowres2dHistogram();
   unsigned char* getLowresTextureVolume();
 
   void getSurfaceArea(unsigned char*,
-		      QList<Vec>,
-		      QList<Vec>,
+		      QList<qglviewer::Vec>,
+		      QList<qglviewer::Vec>,
 		      QList<CropObject>,
 		      QList<PathObject>);
 
-  void saveSliceImage(Vec, Vec, Vec, Vec, float, float, int);
-  void resliceVolume(Vec, Vec, Vec, Vec, float, float, int, int);
+  void saveSliceImage(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, float, float, int);
+  void resliceVolume(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, float, float, int, int);
 
   void saveVolume(unsigned char*,
-		  QList<Vec>,
-		  QList<Vec>,
+		  QList<qglviewer::Vec>,
+		  QList<qglviewer::Vec>,
 		  QList<CropObject>,
 		  QList<PathObject>);
 
   void maskRawVolume(unsigned char*,
-		     QList<Vec>,
-		     QList<Vec>,
+		     QList<qglviewer::Vec>,
+		     QList<qglviewer::Vec>,
 		     QList<CropObject>,
 		     QList<PathObject>);
 
   QBitArray getBitmask(unsigned char*,
-		       QList<Vec>,
-		       QList<Vec>,
+		       QList<qglviewer::Vec>,
+		       QList<qglviewer::Vec>,
 		       QList<CropObject>,
 		       QList<PathObject>);
 
@@ -122,23 +122,23 @@ class Volume : public QObject
 
   uchar* getSlabTexture(int);
 
-  QList<Vec> getSliceTextureSizeSlabs();
+  QList<qglviewer::Vec> getSliceTextureSizeSlabs();
   uchar* getSliceTextureSlab(int, int);
   void deleteTextureSlab();
 
   uchar* getDragTexture();
-  Vec getDragTextureInfo();
+  qglviewer::Vec getDragTextureInfo();
   void getDragTextureSize(int&, int&);
 
-  QList<QVariant> rawValues(QList<Vec>);
-  QMap<QString, QList<QVariant> > rawValues(int, QList<Vec>);
-  QList<float> getThicknessProfile(int, uchar*, QList<Vec>, QList<Vec>);
+  QList<QVariant> rawValues(QList<qglviewer::Vec>);
+  QMap<QString, QList<QVariant> > rawValues(int, QList<qglviewer::Vec>);
+  QList<float> getThicknessProfile(int, uchar*, QList<qglviewer::Vec>, QList<qglviewer::Vec>);
 
-  QList<Vec> stickToSurface(uchar*, int, QList< QPair<Vec,Vec> >);
+  QList<qglviewer::Vec> stickToSurface(uchar*, int, QList< QPair<qglviewer::Vec,qglviewer::Vec> >);
 
   void countIsolatedRegions(uchar*,
-			    QList<Vec>,
-			    QList<Vec>,
+			    QList<qglviewer::Vec>,
+			    QList<qglviewer::Vec>,
 			    QList<CropObject>,
 			    QList<PathObject>);
 

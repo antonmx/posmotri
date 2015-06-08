@@ -22,7 +22,7 @@
 #include "prunehandler.h"
 #include "mainwindowui.h"
 
-
+using namespace qglviewer;
 
 
 void DrawHiresVolume::disableSubvolumeUpdates() { m_updateSubvolume = false; }

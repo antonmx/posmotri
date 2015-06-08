@@ -4,7 +4,7 @@
 #include <QVector4D>
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 #include <fstream>
 using namespace std;
@@ -18,16 +18,16 @@ class GiLightObjectUndo
   ~GiLightObjectUndo();
   
   void clear();
-  void append(QList<Vec>);
+  void append(QList<qglviewer::Vec>);
 
   void undo();
   void redo();
 
-  QList<Vec> points();
+  QList<qglviewer::Vec> points();
 
  private :
   int m_index;
-  QList< QList<Vec> > m_points;
+  QList< QList<qglviewer::Vec> > m_points;
 
   void clearTop();
 };
@@ -70,25 +70,25 @@ class GiLightObject
 
   bool showPointNumbers();
   bool showPoints();
-  Vec color();
+  qglviewer::Vec color();
   float opacity();
   int lod();
   int smooth();
-  QList<Vec> points();
-  QList<Vec> tangents();
-  QList<Vec> saxis();
-  QList<Vec> taxis();
-  QList<Vec> pathPoints();
-  QList<Vec> pathT();
-  QList<Vec> pathX();
-  QList<Vec> pathY();
+  QList<qglviewer::Vec> points();
+  QList<qglviewer::Vec> tangents();
+  QList<qglviewer::Vec> saxis();
+  QList<qglviewer::Vec> taxis();
+  QList<qglviewer::Vec> pathPoints();
+  QList<qglviewer::Vec> pathT();
+  QList<qglviewer::Vec> pathX();
+  QList<qglviewer::Vec> pathY();
   int segments();
 
   void translate(bool, bool);
   void translate(int, int, float);
 
-  Vec getPoint(int);
-  void setPoint(int, Vec);
+  qglviewer::Vec getPoint(int);
+  void setPoint(int, qglviewer::Vec);
 
   bool allowInterpolate();
   void setAllowInterpolate(bool);
@@ -98,7 +98,7 @@ class GiLightObject
 
   void setShowPointNumbers(bool);
   void setShowPoints(bool);
-  void setColor(Vec);
+  void setColor(qglviewer::Vec);
   void setOpacity(float);
   void setLod(int);
   void setSmooth(int);
@@ -106,15 +106,15 @@ class GiLightObject
   void makePlanar(int, int, int);
   void makePlanar();
   void makeCircle();
-  void setPoints(QList<Vec>);
+  void setPoints(QList<qglviewer::Vec>);
   void setSegments(int);
 
-  void replace(QList<Vec>);
+  void replace(QList<qglviewer::Vec>);
 
   void computePathLength();
 
-  QList<Vec> getPointPath();
-  QList< QPair<Vec, Vec> > getPointAndNormalPath();
+  QList<qglviewer::Vec> getPointPath();
+  QList< QPair<qglviewer::Vec, qglviewer::Vec> > getPointAndNormalPath();
 
   void insertPointAfter(int);
   void insertPointBefore(int);
@@ -127,7 +127,7 @@ class GiLightObject
   void draw(QGLViewer*, bool, bool);
   void postdraw(QGLViewer*, int, int, bool, float scale = 0.15);
 
-  void addPoint(Vec);
+  void addPoint(qglviewer::Vec);
 
   void setLightType(int);
   int lightType() { return m_lightType; }
@@ -158,37 +158,37 @@ class GiLightObject
   int m_rad;
   float m_decay;
   float m_angle;
-  Vec m_color;
+  qglviewer::Vec m_color;
   float m_opacity;
   int m_lod, m_smooth;
-  QList<Vec> m_points;
+  QList<qglviewer::Vec> m_points;
   int m_segments;
   float m_length;
 
   int m_pointPressed;
 
   bool m_updateFlag;
-  QList<Vec> m_tgP;
-  QList<Vec> m_xaxis;
-  QList<Vec> m_yaxis;
-  QList<Vec> m_path;
-  QList<Vec> m_pathT;
-  QList<Vec> m_pathX;
-  QList<Vec> m_pathY;
+  QList<qglviewer::Vec> m_tgP;
+  QList<qglviewer::Vec> m_xaxis;
+  QList<qglviewer::Vec> m_yaxis;
+  QList<qglviewer::Vec> m_path;
+  QList<qglviewer::Vec> m_pathT;
+  QList<qglviewer::Vec> m_pathX;
+  QList<qglviewer::Vec> m_pathY;
   
-  void computePath(QList<Vec>);
+  void computePath(QList<qglviewer::Vec>);
   void computePathVectors();
-  void computeLength(QList<Vec>);
+  void computeLength(QList<qglviewer::Vec>);
   void computeTangents();
-  Vec interpolate(int, int, float);
+  qglviewer::Vec interpolate(int, int, float);
 
   void drawLines(QGLViewer*, bool, bool);
 
-  QList<Vec> getCrossSection(float,
+  QList<qglviewer::Vec> getCrossSection(float,
 			     float, float,
 			     int,
-			     Vec, Vec, Vec);
-  QList<Vec> getNormals(QList<Vec>, Vec);
+			     qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
+  QList<qglviewer::Vec> getNormals(QList<qglviewer::Vec>, qglviewer::Vec);
 
   void postdrawPointNumbers(QGLViewer*);
   void postdrawGrab(QGLViewer*, int, int);

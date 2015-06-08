@@ -21,7 +21,7 @@ class Networks : public QObject
   void show();
   void hide();
 
-  void allEnclosingBox(Vec&, Vec&);
+  void allEnclosingBox(qglviewer::Vec&, qglviewer::Vec&);
   void allGridSize(int&, int&, int&);
 
   bool isInMouseGrabberPool(int);
@@ -38,10 +38,10 @@ class Networks : public QObject
 
   void predraw(QGLViewer*,
 	       double*,
-	       Vec,
-	       QList<Vec>, QList<Vec>,
+	       qglviewer::Vec,
+	       QList<qglviewer::Vec>, QList<qglviewer::Vec>,
 	       QList<CropObject>,
-	       Vec);
+	       qglviewer::Vec);
   void draw(QGLViewer*,
 	    float, float,
 	    bool);
@@ -50,7 +50,7 @@ class Networks : public QObject
   bool keyPressEvent(QKeyEvent*);
 
   void createSpriteShader();
-  void createShadowShader(Vec);
+  void createShadowShader(qglviewer::Vec);
 
   QList<NetworkInformation> get();
   void set(QList<NetworkInformation>);

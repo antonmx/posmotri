@@ -2,43 +2,38 @@
 #define GRIDOBJECT_H
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+#include "PromotedWidgets.h"
 
-#include <fstream>
-using namespace std;
-
-class GridObjectUndo
-{
+class GridObjectUndo {
  public :
   GridObjectUndo();
   ~GridObjectUndo();
   
   void clear();
-  void append(int, int, QList<Vec>);
+  void append(int, int, QList<qglviewer::Vec>);
 
   void undo();
   void redo();
 
   void colrow(int&, int&);
-  QList<Vec> points();
+  QList<qglviewer::Vec> points();
 
  private :
   int m_index;
-  QList< QList<Vec> > m_points;
+  QList< QList<qglviewer::Vec> > m_points;
   QList<int> m_cols;
   QList<int> m_rows;
 
   void clearTop();
 };
 
-class GridObject
-{
- public :
+class GridObject {
+public :
   GridObject();
   ~GridObject();
   
-  void load(fstream&);
-  void save(fstream&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
   void set(const GridObject&);  
   GridObject get();
@@ -51,31 +46,31 @@ class GridObject
 
   bool showPointNumbers();
   bool showPoints();
-  Vec color();
+  qglviewer::Vec color();
   float opacity();
-  QList<Vec> points();
+  QList<qglviewer::Vec> points();
   int columns();
   int rows();
 
-  Vec getPoint(int);
-  void setPoint(int, Vec);
+  qglviewer::Vec getPoint(int);
+  void setPoint(int, qglviewer::Vec);
 
   void regrid();
-  QList<Vec> gridPoints();
-  QList< QPair<Vec, Vec> > getPointsAndNormals();
+  QList<qglviewer::Vec> gridPoints();
+  QList< QPair<qglviewer::Vec, qglviewer::Vec> > getPointsAndNormals();
 
   void setShowPointNumbers(bool);
   void setShowPoints(bool);
-  void setColor(Vec);
+  void setColor(qglviewer::Vec);
   void setOpacity(float);
   void normalize();
   void setColRow(int, int);
-  void setPoints(QList<Vec>);
+  void setPoints(QList<qglviewer::Vec>);
 
   void setPointPressed(int);
   int getPointPressed();
 
-  void draw(QGLViewer*, bool, bool, Vec);
+  void draw(QGLViewer*, bool, bool, qglviewer::Vec);
   void postdraw(QGLViewer*, int, int, bool);
 
   void insertRow(int);
@@ -89,10 +84,10 @@ class GridObject
   int m_cols, m_rows;
   bool m_showPointNumbers;
   bool m_showPoints;
-  Vec m_color;
+  qglviewer::Vec m_color;
   float m_opacity;
-  QList<Vec> m_points;
-  QList<Vec> m_grid;
+  QList<qglviewer::Vec> m_points;
+  QList<qglviewer::Vec> m_grid;
   int m_pointPressed;
   bool m_updateFlag;
   

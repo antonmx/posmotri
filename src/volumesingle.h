@@ -12,7 +12,7 @@
 #include "pathobject.h"
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 class VolumeSingle : public VolumeBase
 {
@@ -25,7 +25,7 @@ class VolumeSingle : public VolumeBase
   VolumeFileManager* lodFileManager();
 
   void forMultipleVolumes(int,
-			  Vec, int, int,
+			  qglviewer::Vec, int, int,
 			  int, int,
 			  int, int);
 
@@ -36,12 +36,12 @@ class VolumeSingle : public VolumeBase
 
   void getColumnsAndRows(int&, int&);
   void getSliceTextureSize(int&, int&);
-  Vec getDragTextureInfo();
+  qglviewer::Vec getDragTextureInfo();
   void getDragTextureSize(int&, int&);
 
   uchar* getDragTexture();
 
-  QList<Vec> getSliceTextureSizeSlabs();
+  QList<qglviewer::Vec> getSliceTextureSizeSlabs();
   uchar* getSliceTextureSlab(int, int);
   void deleteTextureSlab();
 
@@ -51,7 +51,7 @@ class VolumeSingle : public VolumeBase
   void setRepeatType(bool);
   int actualVolumeNumber(int);
 
-  bool setSubvolume(Vec, Vec,
+  bool setSubvolume(qglviewer::Vec, qglviewer::Vec,
 		    int subsamplingLevel = 0,
 		    int volnum1 = 0,
 		    bool force=false);
@@ -59,58 +59,58 @@ class VolumeSingle : public VolumeBase
   QList<QString> volumeFiles();
   void setVolumeFiles(QList<QString>);
 
-  Vec getSubvolumeMin();
-  Vec getSubvolumeMax();
-  Vec getSubvolumeSize();
-  Vec getSubvolumeTextureSize();
+  qglviewer::Vec getSubvolumeMin();
+  qglviewer::Vec getSubvolumeMax();
+  qglviewer::Vec getSubvolumeSize();
+  qglviewer::Vec getSubvolumeTextureSize();
   int getSubvolumeSubsamplingLevel();
   int* getSubvolume1dHistogram();
   int* getSubvolume2dHistogram();
   int* getDrag1dHistogram();
   int* getDrag2dHistogram();
 
-  Vec getFullVolumeSize();
+  qglviewer::Vec getFullVolumeSize();
 
   unsigned char* getSubvolumeTexture();
 
   VolumeInformation volInfo(int vnum=0);
 
   void getSurfaceArea(unsigned char*,
-		      QList<Vec>,
-		      QList<Vec>,
+		      QList<qglviewer::Vec>,
+		      QList<qglviewer::Vec>,
 		      QList<CropObject>,
 		      QList<PathObject>);
 
-  void saveSliceImage(Vec, Vec, Vec, Vec, float, float, int);
-  void resliceVolume(Vec, Vec, Vec, Vec, float, float, int, int);
+  void saveSliceImage(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, float, float, int);
+  void resliceVolume(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, float, float, int, int);
 
   void saveVolume(unsigned char*,
-		  QList<Vec>,
-		  QList<Vec>,
+		  QList<qglviewer::Vec>,
+		  QList<qglviewer::Vec>,
 		  QList<CropObject>,
 		  QList<PathObject>);
 
   void maskRawVolume(unsigned char*,
-		     QList<Vec>,
-		     QList<Vec>,
+		     QList<qglviewer::Vec>,
+		     QList<qglviewer::Vec>,
 		     QList<CropObject>,
 		     QList<PathObject>);
 
   QBitArray getBitmask(unsigned char*,
-		       QList<Vec>,
-		       QList<Vec>,
+		       QList<qglviewer::Vec>,
+		       QList<qglviewer::Vec>,
 		       QList<CropObject>,
 		       QList<PathObject>);
 
-  QList<QVariant> rawValues(QList<Vec>);
-  QMap<QString, QList<QVariant> > rawValues(int, QList<Vec>);
-  QList<float> getThicknessProfile(int, uchar*, QList<Vec>, QList<Vec>);
+  QList<QVariant> rawValues(QList<qglviewer::Vec>);
+  QMap<QString, QList<QVariant> > rawValues(int, QList<qglviewer::Vec>);
+  QList<float> getThicknessProfile(int, uchar*, QList<qglviewer::Vec>, QList<qglviewer::Vec>);
 
-  QList<Vec> stickToSurface(uchar*, int, QList< QPair<Vec,Vec> >);
+  QList<qglviewer::Vec> stickToSurface(uchar*, int, QList< QPair<qglviewer::Vec,qglviewer::Vec> >);
 
   void countIsolatedRegions(unsigned char*,
-			    QList<Vec>,
-			    QList<Vec>,
+			    QList<qglviewer::Vec>,
+			    QList<qglviewer::Vec>,
 			    QList<CropObject>,
 			    QList<PathObject>);
 
@@ -123,14 +123,14 @@ class VolumeSingle : public VolumeBase
   int *m_subvolume1dHistogram, *m_subvolume2dHistogram;
   int *m_drag1dHistogram, *m_drag2dHistogram;
 
-  Vec m_dataMin, m_dataMax;
-  Vec m_subvolumeSize, m_subvolumeTextureSize;
+  qglviewer::Vec m_dataMin, m_dataMax;
+  qglviewer::Vec m_subvolumeSize, m_subvolumeTextureSize;
   int m_subvolumeSubsamplingLevel;
   unsigned char* m_subvolumeTexture;
 
   int m_texColumns, m_texRows;
   int m_texWidth, m_texHeight;
-  Vec m_dragTextureInfo;
+  qglviewer::Vec m_dragTextureInfo;
   int m_dragTexWidth, m_dragTexHeight;
   uchar* m_dragTexture;
   uchar* m_dgTexture;
@@ -151,21 +151,21 @@ class VolumeSingle : public VolumeBase
 		     int, int,
 		     int, int,
 		     unsigned char*,
-		     QList<Vec>,
-		     QList<Vec>,
+		     QList<qglviewer::Vec>,
+		     QList<qglviewer::Vec>,
 		     QList<CropObject>,
 		     QList<PathObject>);
 
   void getSurfaceBitmask(int, int,
 			 int, int,
 			 int, int);
-  void findConnectedRegion(QList<Vec>,
+  void findConnectedRegion(QList<qglviewer::Vec>,
 			   int, int,
 			   int, int,
 			   int, int,
 			   int, int,
-			   QList<Vec>,
-			   QList<Vec>);
+			   QList<qglviewer::Vec>,
+			   QList<qglviewer::Vec>);
 
   void saveSubsampledVolume();
   void createSubsampledVolume();

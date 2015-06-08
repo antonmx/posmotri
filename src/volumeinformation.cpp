@@ -1,6 +1,7 @@
 #include "global.h"
 #include "volumeinformation.h"
 
+using namespace qglviewer;
 
 VolumeInformation VolumeInformation::m_volInfo[4];
 void

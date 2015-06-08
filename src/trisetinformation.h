@@ -2,35 +2,25 @@
 #define TRISETINFORMATION_H
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+#include "PromotedWidgets.h"
 
-#include <fstream>
-using namespace std;
-
-class TrisetInformation
-{
- public :
+class TrisetInformation {
+public :
   TrisetInformation();
   TrisetInformation& operator=(const TrisetInformation&);
 
-  static TrisetInformation interpolate(const TrisetInformation,
-				       const TrisetInformation,
-				       float);
-
-  static QList<TrisetInformation> interpolate(const QList<TrisetInformation>,
-					      const QList<TrisetInformation>,
-					      float);
+  static TrisetInformation interpolate(const TrisetInformation &, const TrisetInformation &,  float);
+  static QList<TrisetInformation> interpolate(const QList<TrisetInformation> &, const QList<TrisetInformation> &, float);
 
   void clear();
-
-  void save(fstream&);
-  void load(fstream&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
   
   QString filename;
-  Vec position;
-  Vec scale;
-  Vec color;
-  Vec cropcolor;
+  qglviewer::Vec position;
+  qglviewer::Vec scale;
+  qglviewer::Vec color;
+  qglviewer::Vec cropcolor;
   float opacity;
   float ambient;
   float diffuse;

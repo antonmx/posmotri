@@ -1,6 +1,8 @@
 #include "colorbargrabber.h"
 #include <QMouseEvent>
 
+using namespace qglviewer;
+
 ColorBarGrabber::ColorBarGrabber() { m_dragging = false; }
 ColorBarGrabber::~ColorBarGrabber() { removeFromMouseGrabberPool(); }
 

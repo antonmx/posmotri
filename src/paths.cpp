@@ -3,9 +3,10 @@
 #include "staticfunctions.h"
 #include "propertyeditor.h"
 #include "captiondialog.h"
-//#include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+
+using namespace qglviewer;
 
 int Paths::count() { return m_paths.count(); }
 
@@ -1407,7 +1408,7 @@ Paths::getRequiredParameters(int i,
   for(int np=0; np<pathPoints.count(); np++)
     {
       float ht = (pathX[np]*radX[np]).norm();
-      maxheight = max(maxheight, ht);
+      maxheight = qMax(maxheight, ht);
     }
 
   float imglength = 0;

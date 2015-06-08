@@ -28,8 +28,6 @@
 
 #include <QGLViewer/qglviewer.h>
 
-using namespace qglviewer;
-
 class Global
 {
  public :
@@ -123,9 +121,9 @@ class Global
   static bool use1D();
   static void setUse1D(bool);
 
-  static Vec voxelScaling(); // -- m_voxelScaling * m_relativeVoxelScaling
-  static Vec relativeVoxelScaling();
-  static void setRelativeVoxelScaling(Vec);
+  static qglviewer::Vec voxelScaling(); // -- m_voxelScaling * m_relativeVoxelScaling
+  static qglviewer::Vec relativeVoxelScaling();
+  static void setRelativeVoxelScaling(qglviewer::Vec);
 
   static QString previousDirectory();
   static void setPreviousDirectory(QString);
@@ -133,8 +131,8 @@ class Global
   static bool useFBO();
   static void setUseFBO(bool);
 
-  static void setBounds(Vec, Vec);
-  static void bounds(Vec&, Vec&);
+  static void setBounds(qglviewer::Vec, qglviewer::Vec);
+  static void bounds(qglviewer::Vec&, qglviewer::Vec&);
 
   static void setVolumeNumber(int, int vol=0);
   static int volumeNumber(int vol=0);
@@ -163,8 +161,8 @@ class Global
   static void setDrawAxis(bool);
   static bool drawAxis();
 
-  static void setBackgroundColor(Vec);
-  static Vec backgroundColor();
+  static void setBackgroundColor(qglviewer::Vec);
+  static qglviewer::Vec backgroundColor();
 
   static void resetBackgroundImageFile();
   static void setBackgroundImageFile(QString);
@@ -253,8 +251,8 @@ class Global
   static int lod();
   static void setLod(int);
 
-  static Vec getDragInfo(Vec, Vec, int);
-  static QList<Vec> getSlabs(int, Vec, Vec, int&, int&);
+  static qglviewer::Vec getDragInfo(qglviewer::Vec, qglviewer::Vec, int);
+  static QList<qglviewer::Vec> getSlabs(int, qglviewer::Vec, qglviewer::Vec, int&, int&);
 
   static void setStatusBar(QStatusBar*, QAction*);
   static QStatusBar* statusBar();
@@ -302,10 +300,10 @@ class Global
   static int m_textureSizeLimit;
   static int m_lutSize;
   static int m_filteredData;
-  static Vec m_relativeVoxelScaling;
+  static qglviewer::Vec m_relativeVoxelScaling;
   static QString m_previousDirectory;
-  static Vec m_dataMin, m_dataMax;
-  static Vec m_bgColor;
+  static qglviewer::Vec m_dataMin, m_dataMax;
+  static qglviewer::Vec m_bgColor;
   static QString m_bgImageFile;
   static QImage m_bgImage;
   static GLuint m_bgTexture;

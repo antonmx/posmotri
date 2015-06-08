@@ -1,11 +1,7 @@
 #ifndef DRAWHIRESVOLUME_H
 #define DRAWHIRESVOLUME_H
 
-
-
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
-
 #include "clipplane.h"
 #include "classes.h"
 #include "lightinginformation.h"
@@ -13,9 +9,9 @@ using namespace qglviewer;
 #include "cropobject.h"
 #include "pathobject.h"
 #include "volumefilemanager.h"
-
 #include <QGLWidget>
 #include <QGLFramebufferObject>
+
 
 class Viewer;
 class Volume;
@@ -60,9 +56,9 @@ class DrawHiresVolume : public QObject
   LightingInformation lightInfo();
   QList<BrickInformation> bricks();
 
-  Vec volumeSize();
-  Vec volumeMin();
-  Vec volumeMax();
+  qglviewer::Vec volumeSize();
+  qglviewer::Vec volumeMin();
+  qglviewer::Vec volumeMax();
 
   void initShadowBuffers(bool force=false);
 
@@ -78,8 +74,8 @@ class DrawHiresVolume : public QObject
 
   int renderQuality();
 
-  void getClipForMask(QList<Vec>&,
-		      QList<Vec>&);
+  void getClipForMask(QList<qglviewer::Vec>&,
+		      QList<qglviewer::Vec>&);
 
   float focusDistance() { return m_focusDistance; }
 
@@ -99,14 +95,14 @@ class DrawHiresVolume : public QObject
   void loadDragTexture();
   void updateScaling();
   void updateSubvolume();
-  void updateSubvolume(int, Vec, Vec, bool force=false);
-  void updateSubvolume(int, int, Vec, Vec, bool force=false);
-  void updateSubvolume(int, int, int, Vec, Vec, bool force=false);
-  void updateSubvolume(int, int, int, int, Vec, Vec, bool force=false);
+  void updateSubvolume(int, qglviewer::Vec, qglviewer::Vec, bool force=false);
+  void updateSubvolume(int, int, qglviewer::Vec, qglviewer::Vec, bool force=false);
+  void updateSubvolume(int, int, int, qglviewer::Vec, qglviewer::Vec, bool force=false);
+  void updateSubvolume(int, int, int, int, qglviewer::Vec, qglviewer::Vec, bool force=false);
   void setLightInfo(LightingInformation);
   void setRenderQuality(int);
 
-  void updateLightVector(Vec);
+  void updateLightVector(qglviewer::Vec);
   void applyEmissive(bool);
   void applyLighting(bool);
   void applyShadows(bool);
@@ -138,9 +134,9 @@ class DrawHiresVolume : public QObject
 
   int dataTexSize() { return m_dataTexSize; }
 
-  void resliceVolume(Vec, Vec, Vec, Vec, int, int, int);
+  void resliceVolume(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, int, int, int);
   void resliceUsingPath(int, bool, int, int);
-  void resliceUsingClipPlane(Vec, Quaternion, int,
+  void resliceUsingClipPlane(qglviewer::Vec, qglviewer::Quaternion, int,
 			     QVector4D, float, int,
 			     int, int);
 
@@ -171,18 +167,18 @@ class DrawHiresVolume : public QObject
   QImage m_histogramDrag1D;
   QImage m_histogramDrag2D;
 
-  Vec m_dataMin, m_dataMax, m_dataSize;
-  Vec m_virtualTextureSize;
-  Vec m_virtualTextureMin;
-  Vec m_virtualTextureMax;
+  qglviewer::Vec m_dataMin, m_dataMax, m_dataSize;
+  qglviewer::Vec m_virtualTextureSize;
+  qglviewer::Vec m_virtualTextureMin;
+  qglviewer::Vec m_virtualTextureMax;
 
   LightingInformation m_lightInfo;
   LightingInformation m_savedLightInfo;
   Bricks *m_bricks;
 
   bool m_backlit;
-  Vec m_lightPosition;
-  Vec m_lightVector;
+  qglviewer::Vec m_lightPosition;
+  qglviewer::Vec m_lightVector;
 
   int m_shadowWidth;
   int m_shadowHeight;
@@ -193,7 +189,7 @@ class DrawHiresVolume : public QObject
   QGLFramebufferObject *m_blurredBuffer;
 
   int m_loadFromDisk;
-  QList<Vec> m_textureSlab;
+  QList<qglviewer::Vec> m_textureSlab;
 
   GLhandleARB m_lutShader;
   GLhandleARB m_passthruShader;
@@ -214,8 +210,8 @@ class DrawHiresVolume : public QObject
 
   QList<ViewAlignedPolygon*> m_polygon;
 
-  Vec m_enclosingBox[8];
-  Vec m_axisArrow[3];
+  qglviewer::Vec m_enclosingBox[8];
+  qglviewer::Vec m_axisArrow[3];
 
   int m_numBricks;
   DrawBrickInformation m_drawBrickInformation;
@@ -229,8 +225,8 @@ class DrawHiresVolume : public QObject
 
   bool m_updateSubvolume;
 
-  QList<Vec> m_clipPos;
-  QList<Vec> m_clipNormal;
+  QList<qglviewer::Vec> m_clipPos;
+  QList<qglviewer::Vec> m_clipNormal;
   QList<CropObject> m_crops;
   QList<PathObject> m_paths;
 
@@ -250,61 +246,61 @@ class DrawHiresVolume : public QObject
   void createHighQualityShader();
   void createBlurShader(bool, int, float);
   void createBackplaneShader(float);
-  void createShadowShader(Vec);
+  void createShadowShader(qglviewer::Vec);
 
-  int drawpoly(Vec, Vec,
-	       Vec*, Vec*,
+  int drawpoly(qglviewer::Vec, qglviewer::Vec,
+	       qglviewer::Vec*, qglviewer::Vec*,
 	       QList<bool>,
 	       ViewAlignedPolygon*);
 
-  void getDragRenderInfo(Vec&, int&, int&, int&);
+  void getDragRenderInfo(qglviewer::Vec&, int&, int&, int&);
 
-  void drawSlicesDefault(Vec, Vec, Vec, int, float);
-  void drawSlicesHighQuality(Vec, Vec, Vec, int, float);
+  void drawSlicesDefault(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, int, float);
+  void drawSlicesHighQuality(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, int, float);
 
   void enableTextureUnits();
   void disableTextureUnits();
 
   void draw(float, bool);
-  void drawDefault(Vec, Vec, Vec, int, float);
-  void drawHighQuality(Vec, Vec, Vec, int, float);
-  void setRenderToScreen(Vec, Vec, int, int, float);
+  void drawDefault(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, int, float);
+  void drawHighQuality(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, int, float);
+  void setRenderToScreen(qglviewer::Vec, qglviewer::Vec, int, int, float);
   void setViewFromLight();
   void setRenderToShadowBuffer();
   void blurShadows(int, int, int, int);
-  void drawBackplane(Camera*, Vec, Vec, int, int, float);
+  void drawBackplane(qglviewer::Camera*, qglviewer::Vec, qglviewer::Vec, int, int, float);
   void captureToShadowBuffer();
   void releaseShadowBuffer();
 
-  void getMinMaxVertices(float&, Vec&, Vec&);
+  void getMinMaxVertices(float&, qglviewer::Vec&, qglviewer::Vec&);
 
   void loadCameraMatrices();
 
-  void preDrawGeometry(int, int, Vec, Vec, Vec);
+  void preDrawGeometry(int, int, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec);
   void postDrawGeometry();
-  void drawGeometry(float, float, Vec,
-		    bool, bool, Vec);
-  Vec getMinZ(QList<Vec>);
+  void drawGeometry(float, float, qglviewer::Vec,
+		    bool, bool, qglviewer::Vec);
+  qglviewer::Vec getMinZ(QList<qglviewer::Vec>);
 
   void collectEnclosingBoxInfo();
   void drawAxisText();
 
   void drawBackground();
 
-  void clipSlab(Vec, Vec, int&, Vec*, Vec*, Vec*);
+  void clipSlab(qglviewer::Vec, qglviewer::Vec, int&, qglviewer::Vec*, qglviewer::Vec*, qglviewer::Vec*);
 
-  QList<int> getSlices(Vec, Vec, Vec, int);
+  QList<int> getSlices(qglviewer::Vec, qglviewer::Vec, qglviewer::Vec, int);
 
-  void postUpdateSubvolume(Vec, Vec);
+  void postUpdateSubvolume(qglviewer::Vec, qglviewer::Vec);
 
   void getGeoSliceBound(int, int,
-			Vec, Vec, Vec,
+			qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 			float&, float&);
   void renderGeometry(int, int,
-		      Vec, Vec, Vec,
-		      bool, bool, Vec,
+		      qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
+		      bool, bool, qglviewer::Vec,
 		      bool);
-  void renderDragSlice(ViewAlignedPolygon*, bool, Vec);
+  void renderDragSlice(ViewAlignedPolygon*, bool, qglviewer::Vec);
   void renderSlicedSlice(int,
 			 ViewAlignedPolygon*, bool,
 			 int, int, int, int);
@@ -312,21 +308,21 @@ class DrawHiresVolume : public QObject
   void emptySpaceSkip();
   void bindDataTextures(int);
 
-  void drawClipPlaneDefault(int, int, Vec, Vec, Vec,
-			    int, Vec, float, int, int,
-			    int, int, int, Vec);
-  void drawClipPlaneHighQuality(int, int, Vec, Vec, Vec,
-				int, Vec, float, int, int,
-				int, int, int, Vec);
-  void drawClipPlaneShadow(int, int, Vec, Vec, Vec,
+  void drawClipPlaneDefault(int, int, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
+			    int, qglviewer::Vec, float, int, int,
+			    int, int, int, qglviewer::Vec);
+  void drawClipPlaneHighQuality(int, int, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
+				int, qglviewer::Vec, float, int, int,
+				int, int, int, qglviewer::Vec);
+  void drawClipPlaneShadow(int, int, qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 			   int, int, int,
-			   int, int, int, Vec);
+			   int, int, int, qglviewer::Vec);
 
-  void drawClipPlaneInViewport(int, Vec, float,
-			       int, int, int, Vec, bool);
+  void drawClipPlaneInViewport(int, qglviewer::Vec, float,
+			       int, int, int, qglviewer::Vec, bool);
 
-  void drawPathInViewport(int, Vec, float,
-			  int, int, int, Vec, bool);
+  void drawPathInViewport(int, qglviewer::Vec, float,
+			  int, int, int, qglviewer::Vec, bool);
 
   void setShader2DTextureParameter(bool, bool);
   void setRenderDefault();
@@ -335,7 +331,7 @@ class DrawHiresVolume : public QObject
   QString getResliceFileName(bool border=false);
   void saveReslicedVolume(QString,
 			  int, int, int, VolumeFileManager&,
-			  bool tmpfile=false, Vec vs=Vec(1,1,1));
+			  bool tmpfile=false, qglviewer::Vec vs=qglviewer::Vec(1,1,1));
 
   void getTightFit(int, uchar*, int, int,
 		   bool&, int&, int&, int&, int&, int&, int&);

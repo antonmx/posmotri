@@ -4,8 +4,8 @@
 #include "matrix.h"
 #include <netcdfcpp.h>
 #include <QMessageBox>
-//#include <QtGui>
 
+using namespace qglviewer;
 
 
 void NetworkObject::setScale(float s) { m_scaleV = m_scaleE = s; }

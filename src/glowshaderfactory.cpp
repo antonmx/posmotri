@@ -2,6 +2,8 @@
 #include "staticfunctions.h"
 #include "glowshaderfactory.h"
 
+using namespace qglviewer;
+
 QString
 GlowShaderFactory::generateGlow(QList<CropObject> crops,
 				int nvol,

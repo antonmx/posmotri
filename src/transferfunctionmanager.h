@@ -20,7 +20,7 @@ class TransferFunctionManager : public QFrame
   void load(const char *);
   void append(const char *);
   void load(QList<SplineInformation>);
-  void save(const char *);
+  void save(const QString &);
   void loadDefaultTF();
 
  public slots :

@@ -58,7 +58,7 @@ class GeometryObjects
   static bool inPool;
   static bool showGeometry;
 
-  static MouseGrabber* checkIfGrabsMouse(int, int, Camera*);
+  static qglviewer::MouseGrabber* checkIfGrabsMouse(int, int, qglviewer::Camera*);
   static int mouseGrabberType();
 
  private :

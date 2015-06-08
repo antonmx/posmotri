@@ -4,7 +4,7 @@
 #include <QObject>
 //#include <QtGui>
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 class Viewer;
 

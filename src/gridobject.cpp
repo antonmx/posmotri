@@ -10,6 +10,8 @@
 #include <GL/glut.h>
 #endif
 
+using namespace qglviewer;
+
 //------------------------------------------------------------------
 GridObjectUndo::GridObjectUndo() { clear(); }
 GridObjectUndo::~GridObjectUndo() { clear(); }
@@ -563,130 +565,48 @@ GridObject::postdraw(QGLViewer *viewer,
   glEnable(GL_DEPTH_TEST);
 }
 
-void
-GridObject::save(fstream& fout)
-{
-  char keyword[100];
-  int len;
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "gridobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showpoints");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showPoints, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "color");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_color.x;
-  f[1] = m_color.y;
-  f[2] = m_color.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "opacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_opacity, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "cols");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_cols, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "rows");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_rows, sizeof(int));
-
-  int npts = m_points.count();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "points");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_points[i].x;
-      f[1] = m_points[i].y;
-      f[2] = m_points[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "gridobjectend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void GridObject::save(QConfigMe & cfg) const {
+  cfg.beginGroup("GridObject");
+  cfg.setValue("showpoints", m_showPoints);
+  cfg.setValue("color",m_color);
+  cfg.setValue("opacity", m_opacity);
+  cfg.setValue("cols", m_cols);
+  cfg.setValue("rows", m_rows);
+  cfg.setArrayValue("Points", m_points);  
+  cfg.endArray();
 }
 
-void
-GridObject::load(fstream &fin)
-{
+void GridObject::load(const QConfigMe & cfg) {
   m_points.clear();
   m_grid.clear();
-
-  bool done = false;
-  char keyword[100];
-  float f[3];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "gridobjectend") == 0)
-	done = true;
-      else if (strcmp(keyword, "showpoints") == 0)
-	fin.read((char*)&m_showPoints, sizeof(bool));
-      else if (strcmp(keyword, "color") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_color = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "opacity") == 0)
-	fin.read((char*)&m_opacity, sizeof(float));
-      else if (strcmp(keyword, "cols") == 0)
-	fin.read((char*)&m_cols, sizeof(int));
-      else if (strcmp(keyword, "rows") == 0)
-	fin.read((char*)&m_rows, sizeof(int));
-      else if (strcmp(keyword, "points") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_points.append(Vec(f[0], f[1], f[2]));
-	    }
-	}
-    }
-
-
+  cfg.beginGroup("GridObject");
+  cfg.getValue("showpoints", m_showPoints);
+  cfg.getValue("color",m_color);
+  cfg.getValue("opacity", m_opacity);
+  cfg.getValue("cols", m_cols);
+  cfg.getValue("rows", m_rows);
+  cfg.getArrayValue("Points", m_points);  
+  cfg.endArray();
   m_undo.clear();
   updateUndo();
   m_updateFlag = true;
 }
 
-void
-GridObject::undo()
-{
+void GridObject::undo() {
   m_undo.undo();
   m_undo.colrow(m_cols, m_rows);
   m_points = m_undo.points();
   m_updateFlag = true;
 }
 
-void
-GridObject::redo()
-{
+void GridObject::redo() {
   m_undo.redo();
   m_undo.colrow(m_cols, m_rows);
   m_points = m_undo.points();
   m_updateFlag = true;
 }
 
-void
-GridObject::updateUndo()
-{
+void GridObject::updateUndo() {
   m_undo.append(m_cols, m_rows, m_points);
 }
 

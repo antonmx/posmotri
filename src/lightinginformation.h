@@ -3,7 +3,7 @@
 
 #include <QGLViewer/vec.h>
 #include <QGLViewer/quaternion.h>
-#include <QSettings>
+#include "PromotedWidgets.h"
 
 
 #include <fstream>
@@ -33,8 +33,8 @@ class LightingInformation
 					 float);
 
   void clear();
-  void load(QSettings &);
-  void save(QSettings &) const;
+  void load(const QConfigMe  &);
+  void save(QConfigMe  &) const;
 
   bool applyEmissive;
   bool applyLighting;

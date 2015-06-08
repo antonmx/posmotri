@@ -1,6 +1,8 @@
 #include "gilightinfo.h"
 #include "PromotedWidgets.h"
 
+using namespace qglviewer;
+
 GiLightInfo::GiLightInfo() {
   clear();
 }
@@ -90,26 +92,26 @@ GiLightInfo GiLightInfo::interpolate(const GiLightInfo & gi1, const GiLightInfo 
 }
 
 
-void GiLightInfo::load(QSettings & cfg) {
+void GiLightInfo::load(const QConfigMe & cfg) {
   gloInfo.clear();
   cfg.beginGroup("GiLightInfo");
-  basicLight = getQSettingsValue(cfg, "basiclight", basicLight );
-  applyClip = getQSettingsValue(cfg, "applyclip", applyClip );
-  applyCrop = getQSettingsValue(cfg, "applycrop", applyCrop );
-  onlyAOLight = getQSettingsValue(cfg, "onlyaolight", onlyAOLight );
-  lightLod = getQSettingsValue(cfg, "lightlod", lightLod );
-  lightDiffuse = getQSettingsValue(cfg, "lightdiffuse", lightDiffuse );
-  aoLightColor = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "aolightcolor") );
-  aoRad = getQSettingsValue(cfg, "aorad", aoRad );
-  aoTimes = getQSettingsValue(cfg, "aotimes", aoTimes );
-  aoFrac = getQSettingsValue(cfg, "aofrac", aoFrac );
-  aoDensity1 = getQSettingsValue(cfg, "aodensity1", aoDensity1 );
-  aoDensity2 = getQSettingsValue(cfg, "aodensity2", aoDensity2 );
-  emisTF = getQSettingsValue(cfg, "emistf", emisTF );
-  emisDecay = getQSettingsValue(cfg, "emisdecay", emisDecay );
-  emisBoost = getQSettingsValue(cfg, "emisboost", emisBoost );
-  emisTimes = getQSettingsValue(cfg, "emistimes", emisTimes );
-  QSettingsSaveArray(cfg, "GlowInfo", gloInfo);
+  cfg.getValue("basiclight", basicLight);
+  cfg.getValue("applyclip", applyClip);
+  cfg.getValue("applycrop", applyCrop);
+  cfg.getValue("onlyaolight", onlyAOLight);
+  cfg.getValue("lightlod", lightLod);
+  cfg.getValue("lightdiffuse", lightDiffuse);
+  cfg.getValue("aolightcolor", aoLightColor);
+  cfg.getValue("aorad", aoRad);
+  cfg.getValue("aotimes", aoTimes);
+  cfg.getValue("aofrac", aoFrac);
+  cfg.getValue("aodensity1", aoDensity1);
+  cfg.getValue("aodensity2", aoDensity2);
+  cfg.getValue("emistf", emisTF);
+  cfg.getValue("emisdecay", emisDecay);
+  cfg.getValue("emisboost", emisBoost);
+  cfg.getValue("emistimes", emisTimes);
+  cfg.getClassArray("GlowInfo", gloInfo);
   cfg.endGroup();
 }
 
@@ -117,7 +119,7 @@ void GiLightInfo::load(QSettings & cfg) {
 
 
 
-void GiLightInfo::save(QSettings & cfg) const {
+void GiLightInfo::save(QConfigMe & cfg) const {
   cfg.beginGroup("GiLightInfo");
   cfg.setValue("basiclight", basicLight);
   cfg.setValue("applyclip", applyClip);
@@ -125,7 +127,7 @@ void GiLightInfo::save(QSettings & cfg) const {
   cfg.setValue("onlyaolight", onlyAOLight);
   cfg.setValue("lightlod", lightLod);
   cfg.setValue("lightdiffuse", lightDiffuse);
-  cfg.setValue("aolightcolor", QVecEdit::toString(aoLightColor));
+  cfg.setValue("aolightcolor", aoLightColor);
   cfg.setValue("aorad", aoRad);
   cfg.setValue("aotimes", aoTimes);
   cfg.setValue("aofrac", aoFrac);
@@ -135,6 +137,6 @@ void GiLightInfo::save(QSettings & cfg) const {
   cfg.setValue("emisdecay", emisDecay);
   cfg.setValue("emisboost", emisBoost);
   cfg.setValue("emistimes", emisTimes);
-  QSettingsSaveArray(cfg, "GlowInfo", gloInfo);
+  cfg.setClassArray("GlowInfo", gloInfo);
   cfg.endGroup();
 }

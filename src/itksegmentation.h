@@ -3,12 +3,12 @@
 
 //#include <QtGui>
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 class ITKSegmentation
 {
  public :
-  static bool applyITKFilter(int, int, int, uchar*, QList<Vec>);
+  static bool applyITKFilter(int, int, int, uchar*, QList<qglviewer::Vec>);
 };
 
 #endif

@@ -1,6 +1,8 @@
 #include "staticfunctions.h"
 #include "tearshaderfactory.h"
 
+using namespace qglviewer;
+
 QString
 TearShaderFactory::generateTear(QList<CropObject> crops)
 {

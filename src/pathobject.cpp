@@ -5,15 +5,14 @@
 #include <QFileDialog>
 #include <QImage>
 #include <QMessageBox>
-//#include <QtGui>
-
-
 
 #ifdef Q_WS_MAC
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
+
+using namespace qglviewer;
 
 //------------------------------------------------------------------
 PathObjectUndo::PathObjectUndo() { clear(); }
@@ -2986,253 +2985,52 @@ PathObject::postdraw(QGLViewer *viewer,
   glEnable(GL_DEPTH_TEST);
 }
 
-void
-PathObject::save(fstream& fout)
-{
-  char keyword[100];
-  int len;
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pathobjectstart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "usetype");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_useType, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keepinside");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_keepInside, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "keepends");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_keepEnds, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "blendtf");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_blendTF, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "allowinterpolate");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_allowInterpolate, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showpoints");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showPoints, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showlength");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showLength, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "showangle");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_showAngle, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "tube");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_tube, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "closed");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_closed, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captype");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_capType, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "arrowdirection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_arrowDirection, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "arrowforall");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_arrowForAll, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "halfsection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_halfSection, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "sections");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_sections, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "segments");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_segments, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "color");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_color.x;
-  f[1] = m_color.y;
-  f[2] = m_color.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "lengthcolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_lengthColor.x;
-  f[1] = m_lengthColor.y;
-  f[2] = m_lengthColor.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "opacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_opacity, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "arrowheadlength");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_arrowHeadLength, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "lengthtextdistance");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_lengthTextDistance, sizeof(int));
-
-  int npts = m_points.count();
-  memset(keyword, 0, 100);
-  sprintf(keyword, "points");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_points[i].x;
-      f[1] = m_points[i].y;
-      f[2] = m_points[i].z;
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "crosssection");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&npts, sizeof(int));
-  for(int i=0; i<npts; i++)
-    {
-      f[0] = m_pointRadX[i];
-      f[1] = m_pointRadY[i];
-      f[2] = m_pointAngle[i];
-      fout.write((char*)&f, 3*sizeof(float));
-    }
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionpresent");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_captionPresent, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionlabel");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_captionLabel, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captiontext");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_captionText.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  if (len > 0)
-    fout.write((char*)m_captionText.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionfont");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  QString fontStr = m_captionFont.toString();
-  len = fontStr.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  if (len > 0)
-    fout.write((char*)fontStr.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captioncolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  unsigned char r = m_captionColor.red();
-  unsigned char g = m_captionColor.green();
-  unsigned char b = m_captionColor.blue();
-  unsigned char a = m_captionColor.alpha();
-  fout.write((char*)&r, sizeof(unsigned char));
-  fout.write((char*)&g, sizeof(unsigned char));
-  fout.write((char*)&b, sizeof(unsigned char));
-  fout.write((char*)&a, sizeof(unsigned char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "captionhalocolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  r = m_captionHaloColor.red();
-  g = m_captionHaloColor.green();
-  b = m_captionHaloColor.blue();
-  a = m_captionHaloColor.alpha();
-  fout.write((char*)&r, sizeof(unsigned char));
-  fout.write((char*)&g, sizeof(unsigned char));
-  fout.write((char*)&b, sizeof(unsigned char));
-  fout.write((char*)&a, sizeof(unsigned char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "imagepresent");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_imagePresent, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "imagename");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_imageName.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  if (len > 0)
-    fout.write((char*)m_imageName.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "viewportstyle");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_viewportStyle, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "viewporttf");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_viewportTF, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "viewport");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_viewport.x();
-  f[1] = m_viewport.y();
-  f[2] = m_viewport.z();
-  f[3] = m_viewport.w();
-  fout.write((char*)&f, 4*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "viewportcam");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = m_viewportCamPos.x;
-  f[1] = m_viewportCamPos.y;
-  f[2] = m_viewportCamPos.z;
-  f[3] = m_viewportCamRot;
-  fout.write((char*)&f, 4*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pathobjectend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void PathObject::save(QConfigMe & cfg) const {
+  cfg.beginGroup("PathObject");
+  cfg.setValue("usetype", m_useType);
+  cfg.setValue("keepinside", m_keepInside);
+  cfg.setValue("keepends", m_keepEnds);
+  cfg.setValue("blendtf", m_blendTF);
+  cfg.setValue("allowinterpolate", m_allowInterpolate);
+  cfg.setValue("showpoints", m_showPoints);
+  cfg.setValue("showlength", m_showLength);
+  cfg.setValue("showangle", m_showAngle);
+  cfg.setValue("tube", m_tube);
+  cfg.setValue("closed", m_closed);
+  cfg.setValue("captype", m_capType);
+  cfg.setValue("arrowdirection", m_arrowDirection);
+  cfg.setValue("arrowforall", m_arrowForAll);
+  cfg.setValue("halfsection", m_halfSection);
+  cfg.setValue("sections", m_sections);
+  cfg.setValue("segments", m_segments);
+  cfg.setValue("color", m_color);
+  cfg.setValue("lengthcolor", m_lengthColor);
+  cfg.setValue("opacity", m_opacity);
+  cfg.setValue("arrowheadlength", m_arrowHeadLength);
+  cfg.setValue("lengthtextdistance", m_lengthTextDistance);
+  cfg.setArrayValue("Points", m_points);
+  cfg.setArrayValue("PointRadX", m_pointRadX);
+  cfg.setArrayValue("PointRadY", m_pointRadY);
+  cfg.setArrayValue("PointAngle", m_pointAngle);
+  cfg.setValue("captionpresent", m_captionPresent);
+  cfg.setValue("captionlabel", m_captionLabel);
+  cfg.setValue("captiontext", m_captionText);
+  cfg.setValue("captionfont", m_captionFont);
+  cfg.setValue("captioncolor", m_captionColor);
+  cfg.setValue("captionhalocolor", m_captionHaloColor);
+  cfg.setValue("imagepresent", m_imagePresent);
+  cfg.setValue("imagename", m_imageName);
+  cfg.setValue("viewportstyle", m_viewportStyle);
+  cfg.setValue("viewporttf", m_viewportTF);
+  cfg.setValue("viewport", m_viewport);
+  cfg.setValue("viewportcampos", m_viewportCamPos);
+  cfg.setValue("viewportcamrot", m_viewportCamRot);
+  cfg.endGroup();
 }
 
-void
-PathObject::load(fstream &fin)
-{
+
+void PathObject::load ( const QConfigMe & cfg) {
+
   m_add = false;
   m_points.clear();
   m_pointRadX.clear();
@@ -3252,164 +3050,47 @@ PathObject::load(fstream &fin)
   m_viewport = QVector4D(-1,-1,-1,-1);
   m_viewportCamPos = Vec(0, 0, 0);
   m_viewportCamRot = 0.0;
-
-  bool done = false;
-  char keyword[100];
-  float f[5];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "pathobjectend") == 0)
-	done = true;
-      else if (strcmp(keyword, "usetype") == 0)
-	fin.read((char*)&m_useType, sizeof(bool));
-      else if (strcmp(keyword, "keepinside") == 0)
-	fin.read((char*)&m_keepInside, sizeof(bool));
-      else if (strcmp(keyword, "keepends") == 0)
-	fin.read((char*)&m_keepEnds, sizeof(bool));
-      else if (strcmp(keyword, "blendtf") == 0)
-	fin.read((char*)&m_blendTF, sizeof(int));
-      else if (strcmp(keyword, "allowinterpolate") == 0)
-	fin.read((char*)&m_allowInterpolate, sizeof(int));
-      else if (strcmp(keyword, "showpoints") == 0)
-	fin.read((char*)&m_showPoints, sizeof(bool));
-      else if (strcmp(keyword, "showlength") == 0)
-	fin.read((char*)&m_showLength, sizeof(bool));
-      else if (strcmp(keyword, "showangle") == 0)
-	fin.read((char*)&m_showAngle, sizeof(bool));
-      else if (strcmp(keyword, "tube") == 0)
-	fin.read((char*)&m_tube, sizeof(bool));
-      else if (strcmp(keyword, "closed") == 0)
-	fin.read((char*)&m_closed, sizeof(bool));
-      else if (strcmp(keyword, "captype") == 0)
-	fin.read((char*)&m_capType, sizeof(int));
-      else if (strcmp(keyword, "arrowdirection") == 0)
-	fin.read((char*)&m_arrowDirection, sizeof(bool));
-      else if (strcmp(keyword, "arrowforall") == 0)
-	fin.read((char*)&m_arrowForAll, sizeof(bool));
-      else if (strcmp(keyword, "halfsection") == 0)
-	fin.read((char*)&m_halfSection, sizeof(bool));
-      else if (strcmp(keyword, "sections") == 0)
-	fin.read((char*)&m_sections, sizeof(int));
-      else if (strcmp(keyword, "segments") == 0)
-	fin.read((char*)&m_segments, sizeof(int));
-      else if (strcmp(keyword, "color") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_color = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "lengthcolor") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  m_lengthColor = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "opacity") == 0)
-	fin.read((char*)&m_opacity, sizeof(float));
-      else if (strcmp(keyword, "arrowheadlength") == 0)
-	fin.read((char*)&m_arrowHeadLength, sizeof(float));
-      else if (strcmp(keyword, "lengthtextdistance") == 0)
-	fin.read((char*)&m_lengthTextDistance, sizeof(int));
-      else if (strcmp(keyword, "points") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_points.append(Vec(f[0], f[1], f[2]));
-	    }
-	}
-      else if (strcmp(keyword, "crosssection") == 0)
-	{
-	  int npts;
-	  fin.read((char*)&npts, sizeof(int));
-	  for(int i=0; i<npts; i++)
-	    {
-	      fin.read((char*)&f, 3*sizeof(float));
-	      m_pointRadX.append(f[0]);
-	      m_pointRadY.append(f[1]);
-	      m_pointAngle.append(f[2]);
-	    }
-	}
-      else if (strcmp(keyword, "captionpresent") == 0)
-	fin.read((char*)&m_captionPresent, sizeof(bool));
-      else if (strcmp(keyword, "captionlabel") == 0)
-	fin.read((char*)&m_captionLabel, sizeof(bool));
-      else if (strcmp(keyword, "captiontext") == 0)
-	{
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  if (len > 0)
-	    {
-	      char *str = new char[len];
-	      fin.read((char*)str, len*sizeof(char));
-	      m_captionText = QString(str);
-	      delete [] str;
-	    }
-	}
-      else if (strcmp(keyword, "captionfont") == 0)
-	{
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  if (len > 0)
-	    {
-	      char *str = new char[len];
-	      fin.read((char*)str, len*sizeof(char));
-	      QString fontStr = QString(str);
-	      m_captionFont.fromString(fontStr);
-	      delete [] str;
-	    }
-	}
-      else if (strcmp(keyword, "captioncolor") == 0)
-	{
-	  unsigned char r, g, b, a;
-	  fin.read((char*)&r, sizeof(unsigned char));
-	  fin.read((char*)&g, sizeof(unsigned char));
-	  fin.read((char*)&b, sizeof(unsigned char));
-	  fin.read((char*)&a, sizeof(unsigned char));
-	  m_captionColor = QColor(r,g,b,a);
-	}
-      else if (strcmp(keyword, "captionhalocolor") == 0)
-	{
-	  unsigned char r, g, b, a;
-	  fin.read((char*)&r, sizeof(unsigned char));
-	  fin.read((char*)&g, sizeof(unsigned char));
-	  fin.read((char*)&b, sizeof(unsigned char));
-	  fin.read((char*)&a, sizeof(unsigned char));
-	  m_captionHaloColor = QColor(r,g,b,a);
-	}
-      else if (strcmp(keyword, "imagepresent") == 0)
-	fin.read((char*)&m_imagePresent, sizeof(bool));
-      else if (strcmp(keyword, "imagename") == 0)
-	{
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  if (len > 0)
-	    {
-	      char *str = new char[len];
-	      fin.read((char*)str, len*sizeof(char));
-	      m_imageName = QString(str);
-	      delete [] str;
-	    }
-	}
-      else if (strcmp(keyword, "viewportstyle") == 0)
-	fin.read((char*)&m_viewportStyle, sizeof(bool));
-      else if (strcmp(keyword, "viewporttf") == 0)
-	fin.read((char*)&m_viewportTF, sizeof(int));
-      else if (strcmp(keyword, "viewport") == 0)
-	{
-	  fin.read((char*)&f, 4*sizeof(float));
-	  m_viewport = QVector4D(f[0],f[1],f[2],f[3]);
-	}
-      else if (strcmp(keyword, "viewportcam") == 0)
-	{
-	  fin.read((char*)&f, 4*sizeof(float));
-	  m_viewportCamPos = Vec(f[0],f[1],f[2]);
-	  m_viewportCamRot = f[3];
-	}
-    }
-
+  
+  cfg.beginGroup("PathObject");
+  cfg.getValue("usetype", m_useType);
+  cfg.getValue("keepinside", m_keepInside);
+  cfg.getValue("keepends", m_keepEnds);
+  cfg.getValue("blendtf", m_blendTF);
+  cfg.getValue("allowinterpolate", m_allowInterpolate);
+  cfg.getValue("showpoints", m_showPoints);
+  cfg.getValue("showlength", m_showLength);
+  cfg.getValue("showangle", m_showAngle);
+  cfg.getValue("tube", m_tube);
+  cfg.getValue("closed", m_closed);
+  cfg.getValue("captype", m_capType);
+  cfg.getValue("arrowdirection", m_arrowDirection);
+  cfg.getValue("arrowforall", m_arrowForAll);
+  cfg.getValue("halfsection", m_halfSection);
+  cfg.getValue("sections", m_sections);
+  cfg.getValue("segments", m_segments);
+  cfg.getValue("color", m_color);
+  cfg.getValue("lengthcolor", m_lengthColor);
+  cfg.getValue("opacity", m_opacity);
+  cfg.getValue("arrowheadlength", m_arrowHeadLength);
+  cfg.getValue("lengthtextdistance", m_lengthTextDistance);
+  cfg.getArrayValue("Points", m_points);
+  cfg.getArrayValue("PointRadX", m_pointRadX);
+  cfg.getArrayValue("PointRadY", m_pointRadY);
+  cfg.getArrayValue("PointAngle", m_pointAngle);
+  cfg.getValue("captionpresent", m_captionPresent);
+  cfg.getValue("captionlabel", m_captionLabel);
+  cfg.getValue("captiontext", m_captionText);
+  cfg.getValue("captionfont", m_captionFont);
+  cfg.getValue("captioncolor", m_captionColor);
+  cfg.getValue("captionhalocolor", m_captionHaloColor);
+  cfg.getValue("imagepresent", m_imagePresent);
+  cfg.getValue("imagename", m_imageName);
+  cfg.getValue("viewportstyle", m_viewportStyle);
+  cfg.getValue("viewporttf", m_viewportTF);
+  cfg.getValue("viewport", m_viewport);
+  cfg.getValue("viewportcampos", m_viewportCamPos);
+  cfg.getValue("viewportcamrot", m_viewportCamRot);
+  cfg.endGroup();
 
   m_undo.clear();
   m_undo.append(m_points, m_pointRadX, m_pointRadY, m_pointAngle);

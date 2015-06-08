@@ -10,6 +10,7 @@
 #include "mainwindowui.h"
 #include <QDomDocument>
 
+using namespace qglviewer;
 
 void DrawLowresVolume::activateBounds() {m_boundingBox.activateBounds();}
 bool DrawLowresVolume::raised() { return showing; }
@@ -738,7 +739,7 @@ DrawLowresVolume::load(const char *flnm)
 
 
 void
-DrawLowresVolume::save(const char *flnm)
+DrawLowresVolume::save(const QString & flnm)
 {
   QDomDocument doc;
   QFile fin(flnm);

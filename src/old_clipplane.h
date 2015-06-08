@@ -35,7 +35,7 @@ class ClipPlanes : public QObject
 
  public slots :
   void update();
-  void setBounds(Vec, Vec);
+  void setBounds(qglviewer::Vec, qglviewer::Vec);
   void predraw();
   void draw();
   void postdraw(QGLViewer*);
@@ -45,7 +45,7 @@ class ClipPlanes : public QObject
 
  private :
   bool m_updateFlag;
-  Vec m_dataMin, m_dataMax;
+  qglviewer::Vec m_dataMin, m_dataMax;
   QList<Clipper*> m_clipList;
 };
 

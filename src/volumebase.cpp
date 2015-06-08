@@ -7,6 +7,7 @@
 #include "volumeinformation.h"
 #include <QMessageBox>
 
+using namespace qglviewer;
 
 
 int VolumeBase::pvlVoxelType() { return m_pvlVoxelType; }

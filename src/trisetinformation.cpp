@@ -1,5 +1,7 @@
 #include "trisetinformation.h"
 
+using namespace qglviewer;
+
 TrisetInformation::TrisetInformation() { clear(); }
 
 void
@@ -47,9 +49,9 @@ TrisetInformation::operator=(const TrisetInformation& ti)
 }
 
 TrisetInformation
-TrisetInformation::interpolate(const TrisetInformation tinfo1,
-			       const TrisetInformation tinfo2,
-			       float frc)
+TrisetInformation::interpolate(const TrisetInformation & tinfo1,
+                               const TrisetInformation & tinfo2,
+                               float frc)
 {
   TrisetInformation tinfo;
   tinfo.filename = tinfo1.filename;
@@ -73,9 +75,9 @@ TrisetInformation::interpolate(const TrisetInformation tinfo1,
 }
 
 QList<TrisetInformation>
-TrisetInformation::interpolate(const QList<TrisetInformation> tinfo1,
-			       const QList<TrisetInformation> tinfo2,
-			       float frc)
+TrisetInformation::interpolate(const QList<TrisetInformation> & tinfo1,
+                               const QList<TrisetInformation> & tinfo2,
+                               float frc)
 {
   QVector<int> present;
   present.resize(tinfo1.count());
@@ -108,183 +110,45 @@ TrisetInformation::interpolate(const QList<TrisetInformation> tinfo1,
   return tinfo;
 }
 
-void
-TrisetInformation::save(fstream &fout)
-{
-  char keyword[100];
-  float f[3];
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "trisetinformation");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "filename");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  int len = filename.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  if (len > 0)
-    fout.write((char*)filename.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "position");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = position.x;
-  f[1] = position.y;
-  f[2] = position.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "scale");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = scale.x;
-  f[1] = scale.y;
-  f[2] = scale.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "opacity");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&opacity, sizeof(float));
-  
-  memset(keyword, 0, 100);
-  sprintf(keyword, "color");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = color.x;
-  f[1] = color.y;
-  f[2] = color.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "cropcolor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  f[0] = cropcolor.x;
-  f[1] = cropcolor.y;
-  f[2] = cropcolor.z;
-  fout.write((char*)&f, 3*sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "ambient");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&ambient, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "diffuse");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&diffuse, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "specular");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&specular, sizeof(float));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointmode");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&pointMode, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointstep");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&pointStep, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "pointsize");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&pointSize, sizeof(int));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "blendmode");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&blendMode, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "shadows");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&shadows, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "screendoor");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&screenDoor, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "flipnormals");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&flipNormals, sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "end");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void TrisetInformation::save ( QConfigMe & cfg ) const {
+  cfg.beginGroup("TrisetInformation");
+  cfg.setValue("filename", filename);
+  cfg.setValue("position", position);
+  cfg.setValue("scale", scale);
+  cfg.setValue("opacity", opacity);  
+  cfg.setValue("color", color);
+  cfg.setValue("cropcolor", cropcolor);
+  cfg.setValue("ambient", ambient);
+  cfg.setValue("diffuse", diffuse);
+  cfg.setValue("specular", specular);
+  cfg.setValue("pointmode", pointMode);
+  cfg.setValue("pointstep", pointStep);
+  cfg.setValue("pointsize", pointSize);
+  cfg.setValue("blendmode", blendMode);
+  cfg.setValue("shadows", shadows);
+  cfg.setValue("screendoor", screenDoor);
+  cfg.setValue("flipnormals", flipNormals);
+  cfg.endGroup();
 }
 
-void
-TrisetInformation::load(fstream &fin)
-{
+void TrisetInformation::load ( const QConfigMe & cfg ) {
   clear();
-
-  bool done = false;
-  char keyword[100];
-  float f[3];
-
-  while(!done)
-    { 
-      fin.getline(keyword, 100, 0);
-      if (strcmp(keyword, "end") == 0)
-	done = true;
-      else if (strcmp(keyword, "filename") == 0)
-	{
-	  int len;
-	  fin.read((char*)&len, sizeof(int));
-	  if (len > 0)
-	    {
-	      char *str = new char[len];
-	      fin.read((char*)str, len*sizeof(char));
-	      filename = QString(str);
-	      delete [] str;
-	    }
-	}
-      else if (strcmp(keyword, "position") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  position = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "scale") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  scale = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "opacity") == 0)
-	fin.read((char*)&opacity, sizeof(float));
-      else if (strcmp(keyword, "color") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  color = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "cropcolor") == 0)
-	{
-	  fin.read((char*)&f, 3*sizeof(float));
-	  cropcolor = Vec(f[0], f[1], f[2]);
-	}
-      else if (strcmp(keyword, "ambient") == 0)
-	fin.read((char*)&ambient, sizeof(float));
-      else if (strcmp(keyword, "diffuse") == 0)
-	fin.read((char*)&diffuse, sizeof(float));
-      else if (strcmp(keyword, "specular") == 0)
-	fin.read((char*)&specular, sizeof(float));
-      else if (strcmp(keyword, "pointmode") == 0)
-	fin.read((char*)&pointMode, sizeof(bool));
-      else if (strcmp(keyword, "pointstep") == 0)
-	fin.read((char*)&pointStep, sizeof(int));
-      else if (strcmp(keyword, "pointsize") == 0)
-	fin.read((char*)&pointSize, sizeof(int));
-      else if (strcmp(keyword, "blendmode") == 0)
-	fin.read((char*)&blendMode, sizeof(bool));
-      else if (strcmp(keyword, "shadows") == 0)
-	fin.read((char*)&shadows, sizeof(bool));
-      else if (strcmp(keyword, "screendoor") == 0)
-	fin.read((char*)&screenDoor, sizeof(bool));
-      else if (strcmp(keyword, "flipnormals") == 0)
-	fin.read((char*)&flipNormals, sizeof(bool));
-    }
+  cfg.beginGroup("TrisetInformation");
+  cfg.getValue("filename", filename);
+  cfg.getValue("position", position);
+  cfg.getValue("scale", scale);
+  cfg.getValue("opacity", opacity);  
+  cfg.getValue("color", color);
+  cfg.getValue("cropcolor", cropcolor);
+  cfg.getValue("ambient", ambient);
+  cfg.getValue("diffuse", diffuse);
+  cfg.getValue("specular", specular);
+  cfg.getValue("pointmode", pointMode);
+  cfg.getValue("pointstep", pointStep);
+  cfg.getValue("pointsize", pointSize);
+  cfg.getValue("blendmode", blendMode);
+  cfg.getValue("shadows", shadows);
+  cfg.getValue("screendoor", screenDoor);
+  cfg.getValue("flipnormals", flipNormals);
+  cfg.endGroup();
 }

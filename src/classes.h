@@ -3,7 +3,7 @@
 
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 class ViewAlignedPolygon
 {
@@ -14,8 +14,8 @@ class ViewAlignedPolygon
   void scale(float);
 
   int edges;
-  Vec vertex[100];
-  Vec texcoord[100];
+  qglviewer::Vec vertex[100];
+  qglviewer::Vec texcoord[100];
   float tx[100], ty[100];
 };
 
@@ -27,8 +27,8 @@ class VoxelizedPath
   ~VoxelizedPath();
   VoxelizedPath& operator=(const VoxelizedPath&);
 
-  QList<Vec> voxels;
-  QList<Vec> normals;
+  QList<qglviewer::Vec> voxels;
+  QList<qglviewer::Vec> normals;
   QList<uint> index;
 };
 

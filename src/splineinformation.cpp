@@ -7,7 +7,7 @@ void SplineInformation::setName(QString str) {m_name = str; };
 void SplineInformation::setOn(QList<bool> flags) { m_on = flags; };
 void SplineInformation::setPoints(QPolygonF pts) { m_points = pts; };
 void SplineInformation::setNormalWidths(QPolygonF nw) { m_normalWidths = nw; };
-void SplineInformation::setNormalRotations(QVector<float> nr) { m_normalRotations = nr; };
+void SplineInformation::setNormalRotations(const QList<float> & nr) { m_normalRotations = nr; };
 void SplineInformation::setGradientStops(QGradientStops gs) { m_gradientStops = gs; };
 void SplineInformation::setGradLimits(int bot, int top)
 {
@@ -26,7 +26,7 @@ QString SplineInformation::name() { return m_name; };
 QList<bool> SplineInformation::on() { return m_on; };
 QPolygonF SplineInformation::points() { return m_points; };
 QPolygonF SplineInformation::normalWidths() { return m_normalWidths; };
-QVector<float> SplineInformation::normalRotations() { return m_normalRotations; };
+const QList<float> & SplineInformation::normalRotations() { return m_normalRotations; };
 QGradientStops SplineInformation::gradientStops() { return m_gradientStops; };
 void SplineInformation::gradLimits(int& bot, int& top)
 {
@@ -70,9 +70,8 @@ SplineInformation::operator=(const SplineInformation& splineInfo)
   return *this;
 }
 
-void
-SplineInformation::load(fstream &fin)
-{
+void SplineInformation::load ( const QConfigMe & cfg) {
+  
   m_name.clear();
   m_on.clear();
   m_points.clear();
@@ -84,193 +83,46 @@ SplineInformation::load(fstream &fin)
   m_gbotop = 1.0;
   m_gtopop = 1.0;
 
-  int len;
-  bool done = false;
-  char keyword[100];
-  while (!done)
-    {
-      fin.getline(keyword, 100, 0);
+  cfg.beginGroup("SplineInformation");
+  cfg.getValue("name", m_name);
+  cfg.getArrayValue("On", m_on);
+  cfg.getValue("Points", m_points);
+  cfg.getValue("normalwidths", m_normalWidths);
+  cfg.getArrayValue("normalrotations", m_normalRotations);
+  int sz = cfg.beginArray("GradientStops");
+  for (int i=0; i<sz; i++) {
+    QGradientStop st;    
+    cfg.getValue("pos", st.first);
+    cfg.getValue("col", st.second);
+    m_gradientStops.append(st);
+  }
+  cfg.endArray();
+  cfg.getValue("gbot", m_gbot);
+  cfg.getValue("gtop", m_gtop);
+  cfg.getValue("gbotop", m_gbotop);
+  cfg.getValue("gtopop", m_gtopop);
+  cfg.endGroup();
 
-      if (strcmp(keyword, "splineinfoend") == 0)
-	done = true;
-      else if (strcmp(keyword, "name") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  char *str = new char[len];
-	  fin.read((char*)str, len*sizeof(char));
-	  m_name = QString(str);
-	  delete [] str;
-	}
-      else if (strcmp(keyword, "on") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  for(int i=0; i<len; i++)
-	    {
-	      bool t;
-	      fin.read((char*)&t, sizeof(bool));
-	      m_on.append(t);
-	    }
-	}
-      else if (strcmp(keyword, "points") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  float *p = new float[2*len];
-	  fin.read((char*)p, 2*len*sizeof(float));
-	  for(int i=0; i<len; i++)
-	    {
-	      QPointF pt(p[2*i], p[2*i+1]);
-	      m_points << pt;
-	    }
-	  delete [] p;
-	}
-      else if (strcmp(keyword, "normalwidths") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  float *p = new float[2*len];
-	  fin.read((char*)p, 2*len*sizeof(float));
-	  for(int i=0; i<len; i++)
-	    {
-	      QPointF pt(p[2*i], p[2*i+1]);
-	      m_normalWidths << pt;
-	    }
-	  delete [] p;
-	}
-      else if (strcmp(keyword, "normalrotations") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  float *p = new float[len];
-	  fin.read((char*)p, len*sizeof(float));
-	  for(int i=0; i<len; i++)
-	    {
-	      m_normalRotations << p[i];
-	    }
-	  delete [] p;
-	}
-      else if (strcmp(keyword, "gradientstops") == 0)
-	{
-	  fin.read((char*)&len, sizeof(int));
-	  float *p = new float[5*len];
-	  fin.read((char*)p, 5*len*sizeof(float));
-	  for(int i=0; i<len; i++)
-	    {
-	      QColor col = QColor::fromRgbF(p[5*i+1],
-					    p[5*i+2],
-					    p[5*i+3],
-					    p[5*i+4]);
-	      QPair<qreal, QColor> gradStop(p[5*i], col);
-	      m_gradientStops.append(gradStop);
-	    }
-	  delete [] p;
-	}
-      else if (strcmp(keyword, "gradmodop") == 0)
-	{
-	  fin.read((char*)&m_gbot, sizeof(int));
-	  fin.read((char*)&m_gtop, sizeof(int));
-	  fin.read((char*)&m_gbotop, sizeof(float));
-	  fin.read((char*)&m_gtopop, sizeof(float));
-	}
-    }
 }
 
-void
-SplineInformation::save(fstream &fout)
-{
-  char keyword[100];
-  int len;
-  float *p;
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "splineinfostart");
-  fout.write((char*)keyword, strlen(keyword)+1);
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "name");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_name.size()+1;
-  fout.write((char*)&len, sizeof(int));
-  fout.write((char*)m_name.toLatin1().data(), len*sizeof(char));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "on");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_on.count();
-  fout.write((char*)&len, sizeof(int));
-  for(int i=0; i<len; i++)
-    fout.write((char*)&m_on[i], sizeof(bool));
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "points");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_points.count();
-  fout.write((char*)&len, sizeof(int));
-  p = new float [2*len];
-  for(int i=0; i<len; i++)
-    {
-      p[2*i] = m_points[i].x();
-      p[2*i+1] = m_points[i].y();
-    }
-  fout.write((char*)p, 2*len*sizeof(float));
-  delete [] p;
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "normalwidths");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_points.count();
-  fout.write((char*)&len, sizeof(int));
-  p = new float [2*len];
-  for(int i=0; i<len; i++)
-    {
-      p[2*i] = m_normalWidths[i].x();
-      p[2*i+1] = m_normalWidths[i].y();
-    }
-  fout.write((char*)p, 2*len*sizeof(float));
-  delete [] p;
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "normalrotations");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_points.count();
-  fout.write((char*)&len, sizeof(int));
-  p = new float [len];
-  for(int i=0; i<len; i++)
-    {
-      p[i] = m_normalRotations[i];
-    }
-  fout.write((char*)p, len*sizeof(float));
-  delete [] p;
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "gradientstops");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  len = m_gradientStops.count();
-  fout.write((char*)&len, sizeof(int));
-  p = new float [5*len];
-  for(int i=0; i<len; i++)
-    {
-      float pos = m_gradientStops[i].first;
-      QColor color = m_gradientStops[i].second;
-      p[5*i] = pos;
-      p[5*i+1] = color.redF();
-      p[5*i+2] = color.greenF();
-      p[5*i+3] = color.blueF();
-      p[5*i+4] = color.alphaF();
-    }
-  fout.write((char*)p, 5*len*sizeof(float));
-  delete [] p;
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "gradmodop");
-  fout.write((char*)keyword, strlen(keyword)+1);
-  fout.write((char*)&m_gbot, sizeof(int));
-  fout.write((char*)&m_gtop, sizeof(int));
-  fout.write((char*)&m_gbotop, sizeof(float));
-  fout.write((char*)&m_gtopop, sizeof(float));
-
-
-  memset(keyword, 0, 100);
-  sprintf(keyword, "splineinfoend");
-  fout.write((char*)keyword, strlen(keyword)+1);
+void SplineInformation::save ( QConfigMe & cfg) const {
+  cfg.beginGroup("SplineInformation");
+  cfg.setValue("name", m_name);
+  cfg.setArrayValue("On", m_on);
+  cfg.setValue("Points", m_points);
+  cfg.setValue("normalwidths", m_normalWidths);
+  cfg.setArrayValue("normalrotations", m_normalRotations);
+  cfg.beginArray("GradientStops");
+  foreach(QGradientStop st, m_gradientStops) {
+    cfg.setValue("pos", st.first);
+    cfg.setValue("col", st.second);
+  }
+  cfg.endArray();
+  cfg.setValue("gbot", m_gbot);
+  cfg.setValue("gtop", m_gtop);
+  cfg.setValue("gbotop", m_gbotop);
+  cfg.setValue("gtopop", m_gtopop);
+  cfg.endGroup();
 }
 
 SplineInformation
@@ -281,7 +133,7 @@ SplineInformation::interpolate(SplineInformation& splineInfo1,
   SplineInformation splineInfo;
   QPolygonF points, points1, points2;
   QPolygonF normalWidths, normalWidths1, normalWidths2;
-  QVector<float> normalRotations, normalRotations1, normalRotations2;
+  QList<float> normalRotations, normalRotations1, normalRotations2;
   QGradientStops gradStops, gradStops1, gradStops2;
 
   int m1, m2;

@@ -2,10 +2,8 @@
 #include "pathgroupgrabber.h"
 #include "staticfunctions.h"
 #include <QGLViewer/manipulatedCameraFrame.h>
-//#include <QtGui>
 
-
-
+using namespace qglviewer;
 
 PathGroupGrabber::PathGroupGrabber()
 {

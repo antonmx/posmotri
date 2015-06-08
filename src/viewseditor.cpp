@@ -4,6 +4,8 @@
 #include "PromotedWidgets.h"
 #include <QDebug>
 
+using namespace qglviewer;
+
 ViewsEditor::ViewsEditor(QWidget *parent) :
   QWidget(parent)
 {
@@ -441,37 +443,16 @@ ViewsEditor::updateTransition()
   update();
 }
 
-void ViewsEditor::load(fstream &fin) {
-
-  clear();
-  bool done = false;
-  QString keyword;
-
-  while ( ! done  &&  ! fin.eof() ) {
-
-    keyword = nextString(fin,  ' ');
-
-    if (keyword == "views_end")
-      done = true;
-    else if (keyword == "viewstart") {
-      ViewInformation *vi = new ViewInformation();
-      vi->load(fin);
-      m_viewInfo.append(vi);
-    } else {
-      qDebug() <<  "Unrecognized or empty keyword for ViewsEditor" << keyword << ".";
-      done = true;
-    }
-
-  }
-
+void ViewsEditor::load(const QConfigMe & cfg) {
+  cfg.beginGroup("ViewsEditor");
+  cfg.getClassArray("Views",  m_viewInfo);
+  cfg.endGroup();
   ui.groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
   update();
-
 }
 
-void ViewsEditor::save(fstream &fout) {
-  fout << "views" <<  endl;
-  foreach( ViewInformation * vi,  m_viewInfo)
-    vi->save(fout);
-  fout << "views_end" <<  endl;
+void ViewsEditor::save(QConfigMe & cfg) const {
+  cfg.beginGroup("ViewsEditor");
+  cfg.setClassArray("Views",  m_viewInfo);
+  cfg.endGroup();
 }

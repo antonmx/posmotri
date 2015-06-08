@@ -3,7 +3,7 @@
 
 //#include <QtGui>
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 #include <fstream>
 using namespace std;
@@ -20,14 +20,14 @@ class RawVolume
   static void setSlabSize(int);
   static void setVoxelType(int);
 
-  static QVariant rawValue(Vec);
+  static QVariant rawValue(qglviewer::Vec);
   static QVariant rawValue(int, int, int);
-  static QList<QVariant> rawValues(QList<Vec>);
-  static QMap<QString, QList<QVariant> > rawValues(int, QList<Vec>);
+  static QList<QVariant> rawValues(QList<qglviewer::Vec>);
+  static QMap<QString, QList<QVariant> > rawValues(int, QList<qglviewer::Vec>);
 
-  static QVariant tagValue(Vec);
+  static QVariant tagValue(qglviewer::Vec);
   static QVariant tagValue(int, int, int);
-  static QList<QVariant> tagValues(QList<Vec>);
+  static QList<QVariant> tagValues(QList<qglviewer::Vec>);
   
   static void reset();
 
@@ -36,16 +36,16 @@ class RawVolume
 			    int, int,
 			    QBitArray);
 
-  static void extractPath(QList<Vec>,
-			  QList<Vec>, QList<float>,
+  static void extractPath(QList<qglviewer::Vec>,
+			  QList<qglviewer::Vec>, QList<float>,
 			  int, int, bool,
-			  Vec, Vec, QBitArray);
+			  qglviewer::Vec, qglviewer::Vec, QBitArray);
 
-  static void extractPatch(QList<Vec>,
-			   QList<Vec>, QList<float>,
+  static void extractPatch(QList<qglviewer::Vec>,
+			   QList<qglviewer::Vec>, QList<float>,
 			   int, int, bool,
 			   bool, int,
-			   Vec, Vec, QBitArray);
+			   qglviewer::Vec, qglviewer::Vec, QBitArray);
 
  private :
   static QString m_rawFileName;

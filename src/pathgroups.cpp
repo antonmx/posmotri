@@ -4,7 +4,8 @@
 #include "staticfunctions.h"
 #include "propertyeditor.h"
 #include <QMessageBox>
-//#include <QtGui>
+
+using namespace qglviewer;
 
 int PathGroups::count() { return m_paths.count(); }
 

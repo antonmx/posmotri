@@ -2,8 +2,9 @@
 #include "pathgrabber.h"
 #include "staticfunctions.h"
 #include <QGLViewer/manipulatedCameraFrame.h>
-//#include <QtGui>
 
+
+using namespace qglviewer;
 
 
 

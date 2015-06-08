@@ -16,6 +16,8 @@
 #include <GL/glut.h>
 #endif
 
+using namespace qglviewer;
+
 //------------------------------------------------------------------
 ClipObjectUndo::ClipObjectUndo() { clear(); }
 ClipObjectUndo::~ClipObjectUndo() { clear(); }

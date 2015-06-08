@@ -36,11 +36,11 @@ class Crops : public QObject
   bool glowPresent();
 
   int count();
-  void addCrop(QList<Vec>);
-  void addTear(QList<Vec>);
-  void addView(QList<Vec>);
-  void addDisplace(QList<Vec>);
-  void addGlow(QList<Vec>);
+  void addCrop(QList<qglviewer::Vec>);
+  void addTear(QList<qglviewer::Vec>);
+  void addView(QList<qglviewer::Vec>);
+  void addDisplace(QList<qglviewer::Vec>);
+  void addGlow(QList<qglviewer::Vec>);
 
   void addCrop(CropObject);
   void addCrop(QString);

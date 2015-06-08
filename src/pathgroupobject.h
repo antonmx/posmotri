@@ -2,27 +2,21 @@
 #define PATHGROUPOBJECT_H
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
-
-#include <fstream>
-using namespace std;
-
 #include "cropobject.h"
 
-class PathGroupObjectUndo
-{
- public :
+class PathGroupObjectUndo {
+public :
   PathGroupObjectUndo();
   ~PathGroupObjectUndo();
   
   void clear();
-  void append(QList<int>, QList<Vec>, QList<float>, QList<float>, QList<float>);
+  void append(QList<int>, QList<qglviewer::Vec>, QList<float>, QList<float>, QList<float>);
 
   void undo();
   void redo();
 
   QList<int> index();
-  QList<Vec> points();
+  QList<qglviewer::Vec> points();
   QList<float> pointRadX();
   QList<float> pointRadY();
   QList<float> pointAngle();
@@ -30,7 +24,7 @@ class PathGroupObjectUndo
  private :
   int m_index;
   QList< QList<int> > m_pindex;
-  QList< QList<Vec> > m_points;
+  QList< QList<qglviewer::Vec> > m_points;
   QList< QList<float> > m_pointRadX;
   QList< QList<float> > m_pointRadY;
   QList< QList<float> > m_pointAngle;
@@ -39,27 +33,21 @@ class PathGroupObjectUndo
 };
 
 
-class PathGroupObject
-{
- public :
+class PathGroupObject {
+public :
   PathGroupObject();
   ~PathGroupObject();
   
-  void load(fstream&);
-  void save(fstream&);
-
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
+  
   void set(const PathGroupObject&);  
   PathGroupObject get();
-
+  
   PathGroupObject& operator=(const PathGroupObject&);
 
-  static PathGroupObject interpolate(PathGroupObject,
-				     PathGroupObject,
-				     float);
-  static QList<PathGroupObject> interpolate(QList<PathGroupObject>,
-					    QList<PathGroupObject>,
-					    float);
-
+  static PathGroupObject interpolate(PathGroupObject, PathGroupObject, float);
+  static QList<PathGroupObject> interpolate(QList<PathGroupObject>, QList<PathGroupObject>, float);
 
   void undo();
   void redo();
@@ -70,7 +58,7 @@ class PathGroupObject
   QFont captionFont();
   QColor captionColor();
   QColor captionHaloColor();
-  QList<Vec> imageSizes();
+  QList<qglviewer::Vec> imageSizes();
   void loadCaption();
 
   bool depthcue();
@@ -83,8 +71,8 @@ class PathGroupObject
   bool closed();
   QGradientStops stops();
   float opacity();
-  QList<Vec> points();
-  QList<Vec> pathPoints();
+  QList<qglviewer::Vec> points();
+  QList<qglviewer::Vec> pathPoints();
   QList<int> pathPointIndices();
   QVector<bool> valid();
   QList<float> radX();
@@ -98,8 +86,8 @@ class PathGroupObject
   int animateSpeed();
   float length();
 
-  Vec getPoint(int);
-  void setPoint(int, Vec);
+  qglviewer::Vec getPoint(int);
+  void setPoint(int, qglviewer::Vec);
 
   float getRadX(int);
   void setRadX(int, float, bool);
@@ -132,13 +120,13 @@ class PathGroupObject
   void setArrowForAll(bool);
   void setTube(bool);
   void setClosed(bool);
-  void setStops(QGradientStops);
+  void setStops(const QGradientStops &);
   void setOpacity(float);
   void normalize();
-  void setVectorPoints(QList<Vec>);
-  void setPoints(QList<Vec>);
-  void replacePoints(QList<Vec>);
-  void addPoints(QList<Vec>);
+  void setVectorPoints(QList<qglviewer::Vec>);
+  void setPoints(QList<qglviewer::Vec>);
+  void replacePoints(QList<qglviewer::Vec>);
+  void addPoints(QList<qglviewer::Vec>);
   void setRadX(QList<float>);
   void setRadY(QList<float>);
   void setAngle(QList<float>);
@@ -164,10 +152,10 @@ class PathGroupObject
   int getPointPressed();
 
   void predraw(QGLViewer*, bool, bool,
-	       QList<Vec>,
-	       QList<Vec>,
+	       QList<qglviewer::Vec>,
+	       QList<qglviewer::Vec>,
 	       QList<CropObject> crops);
-  void draw(QGLViewer*, bool, bool, Vec);
+  void draw(QGLViewer*, bool, bool, qglviewer::Vec);
   void postdraw(QGLViewer*, int, int, bool);
 
   void disableUndo(bool);
@@ -181,8 +169,7 @@ class PathGroupObject
   void setScaleType(bool);
   bool scaleType();
 
-  enum CapType
-  {
+  enum CapType  {
     FLAT,
     ROUND,
     ARROW
@@ -203,7 +190,7 @@ class PathGroupObject
   bool m_arrowForAll;
   bool m_tube;
   bool m_closed;
-  Vec m_pointColor;
+  qglviewer::Vec m_pointColor;
   QGradientStops m_stops;
   QGradientStops m_resampledStops;
   float m_opacity;
@@ -212,7 +199,7 @@ class PathGroupObject
   bool m_blendMode;
   bool m_allowInterpolate;
   QList<int> m_index;
-  QList<Vec> m_points;
+  QList<qglviewer::Vec> m_points;
   QList<float> m_pointRadX;
   QList<float> m_pointRadY;
   QList<float> m_pointAngle;
@@ -230,9 +217,9 @@ class PathGroupObject
   bool m_updateFlag;
   QVector<bool> m_validPoint;
   QVector<bool> m_valid;
-  QVector<Vec> m_tgP;
+  QVector<qglviewer::Vec> m_tgP;
   QList<int> m_pathIndex;
-  QList<Vec> m_path;
+  QList<qglviewer::Vec> m_path;
   QList<float> m_radX;
   QList<float> m_radY;
   QList<float> m_angle;
@@ -257,38 +244,38 @@ class PathGroupObject
 
   void setCaption(QFont, QColor, QColor);
   void generateImages();
-  void drawImage(QGLViewer*, int, Vec, Vec);
+  void drawImage(QGLViewer*, int, qglviewer::Vec, qglviewer::Vec);
 
   float computeGrabbedPathLength();
   void computePath();
-  float computeLength(QList<Vec>);
+  float computeLength(QList<qglviewer::Vec>);
   void computeTangents(int, int);
-  Vec interpolate(int, int, float);
+  qglviewer::Vec interpolate(int, int, float);
   void generateTube(QGLViewer*, float);
 
-  void addFlatCaps(int, Vec, QList<Vec>);
-  void addRoundCaps(int, Vec, QList<Vec>, QList<Vec>);
+  void addFlatCaps(int, qglviewer::Vec, QList<qglviewer::Vec>);
+  void addRoundCaps(int, qglviewer::Vec, QList<qglviewer::Vec>, QList<qglviewer::Vec>);
 
   void drawPoints();
-  void drawTube(QGLViewer*, bool, Vec);
+  void drawTube(QGLViewer*, bool, qglviewer::Vec);
   void drawLines(QGLViewer*, bool, bool);
   void drawSphereSprites(QGLViewer*, bool, bool);
 
   void generateSphereSprite();
 
-  QList<Vec> getCrossSection(float,
+  QList<qglviewer::Vec> getCrossSection(float,
 			     float, float, float,
 			     int,
-			     Vec, Vec, Vec,
-			     Vec, Vec&, Vec&);
-  QList<Vec> getNormals(QList<Vec>, Vec);
+			     qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
+			     qglviewer::Vec, qglviewer::Vec&, qglviewer::Vec&);
+  QList<qglviewer::Vec> getNormals(QList<qglviewer::Vec>, qglviewer::Vec);
 
   void addArrowHead(int, float,
-		    Vec,
-		    Vec, Vec, Vec,
-		    float, float, Vec,
-		    QList<Vec>,
-		    QList<Vec>);
+		    qglviewer::Vec,
+		    qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
+		    float, float, qglviewer::Vec,
+		    QList<qglviewer::Vec>,
+		    QList<qglviewer::Vec>);
 
 };
 

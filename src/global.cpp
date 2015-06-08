@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QMessageBox>
 #include <QAction>
+using namespace qglviewer;
 
 bool Global::m_playFrames = false;
 bool Global::playFrames() { return m_playFrames; }

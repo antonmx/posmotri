@@ -1,8 +1,10 @@
 #include "global.h"
 #include "staticfunctions.h"
 #include "trisetgrabber.h"
-//#include <QtGui>
 #include <QGLViewer/manipulatedCameraFrame.h>
+
+using namespace qglviewer;
+
 
 
 TrisetGrabber::TrisetGrabber()

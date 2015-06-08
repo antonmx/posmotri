@@ -1,5 +1,6 @@
 #include "staticfunctions.h"
 #include "cropshaderfactory.h"
+using namespace qglviewer;
 
 QString
 CropShaderFactory::generateCropping(QList<CropObject> crops)

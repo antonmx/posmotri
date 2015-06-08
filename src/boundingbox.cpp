@@ -5,6 +5,7 @@
 #include "staticfunctions.h"
 #include "boundingbox.h"
 
+using namespace qglviewer;
 
 BoundingBox::BoundingBox()
 {

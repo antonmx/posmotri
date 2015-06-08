@@ -2,7 +2,7 @@
 #include "scalebargrabber.h"
 #include <QMouseEvent>
 
-
+using namespace qglviewer;
 
 ScaleBarGrabber::ScaleBarGrabber() { m_dragging = false; }
 ScaleBarGrabber::~ScaleBarGrabber() { removeFromMouseGrabberPool(); }

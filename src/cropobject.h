@@ -2,10 +2,7 @@
 #define CROPOBJECT_H
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
-
-#include <fstream>
-using namespace std;
+#include "PromotedWidgets.h"
 
 class CropObjectUndo
 {
@@ -14,45 +11,44 @@ class CropObjectUndo
   ~CropObjectUndo();
   
   void clear();
-  void append(QList<Vec>, QList<float>, QList<float>);
+  void append(QList<qglviewer::Vec>, QList<float>, QList<float>);
 
   void undo();
   void redo();
 
-  QList<Vec> points();
+  QList<qglviewer::Vec> points();
   QList<float> pointRadX();
   QList<float> pointRadY();
 
  private :
   int m_index;
-  QList< QList<Vec> > m_points;
+  QList< QList<qglviewer::Vec> > m_points;
   QList< QList<float> > m_pointRadX;
   QList< QList<float> > m_pointRadY;
 
   void clearTop();
 };
 
-class CropObject
-{
- public :
-  enum CropType
-    {
-      Crop_Tube = 0,
-      Crop_Box,
-      Crop_Ellipsoid,
-      Tear_Tear,
-      Tear_Hole,
-      Tear_Wedge,
-      Tear_Curl,
-      Displace_Displace,
-      View_Tear,
-      View_Tube,
-      View_Ball,
-      View_Block,
-      Glow_Ball,
-      Glow_Block,
-      Glow_Tube
-    };
+class CropObject {
+public :
+  
+  enum CropType  {
+    Crop_Tube = 0,
+    Crop_Box,
+    Crop_Ellipsoid,
+    Tear_Tear,
+    Tear_Hole,
+    Tear_Wedge,
+    Tear_Curl,
+    Displace_Displace,
+    View_Tear,
+    View_Tube,
+    View_Ball,
+    View_Block,
+    Glow_Ball,
+    Glow_Block,
+    Glow_Tube
+  };
 
   CropObject();
   ~CropObject();
@@ -64,8 +60,8 @@ class CropObject
   bool show() { return m_show; }
   void setShow(bool s) { m_show = s; }
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
   void set(const CropObject&);  
   CropObject get();
@@ -89,32 +85,32 @@ class CropObject
   bool keepEnds();
   int cropType();
   bool tube();
-  Vec color();
+  qglviewer::Vec color();
   float opacity();
   int tfset();
   float viewMix();
   bool unionBlend();
-  Vec dtranslate();
-  Vec dpivot();
-  Vec drotaxis();
+  qglviewer::Vec dtranslate();
+  qglviewer::Vec dpivot();
+  qglviewer::Vec drotaxis();
   float drotangle();
-  QList<Vec> points();
+  QList<qglviewer::Vec> points();
   QList<float> radX();
   QList<float> radY();
   QList<int> lift();
   float angle();
-  Vec m_tang, m_xaxis, m_yaxis;
+  qglviewer::Vec m_tang, m_xaxis, m_yaxis;
   float length();
   bool hatch();
   void hatchParameters(bool&, int&, int&, int&, int&, int&, int&);
 
   void shiftPoints(float);
 
-  void translate(Vec);
+  void translate(qglviewer::Vec);
   void translate(bool, bool);
 
-  Vec getPoint(int);
-  void setPoint(int, Vec);
+  qglviewer::Vec getPoint(int);
+  void setPoint(int, qglviewer::Vec);
 
   float getRadX(int);
   void setRadX(int, float, bool);
@@ -127,7 +123,7 @@ class CropObject
 
   float getAngle();
   void setAngle(float);
-  void rotate(Vec, float);
+  void rotate(qglviewer::Vec, float);
 
   void setSameForAll(bool);
 
@@ -139,17 +135,17 @@ class CropObject
   void setKeepEnds(bool);
   void setCropType(int);
   void setTube(bool);
-  void setColor(Vec);
+  void setColor(qglviewer::Vec);
   void setOpacity(float);
   void setTFset(int);
   void setViewMix(float);
   void setUnionBlend(bool);
-  void setDtranslate(Vec);
-  void setDpivot(Vec);
-  void setDrotaxis(Vec);
+  void setDtranslate(qglviewer::Vec);
+  void setDpivot(qglviewer::Vec);
+  void setDrotaxis(qglviewer::Vec);
   void setDrotangle(float);
   void normalize();
-  void setPoints(QList<Vec>);
+  void setPoints(QList<qglviewer::Vec>);
   void setRadX(QList<float>);
   void setRadY(QList<float>);
   void setLift(QList<int>);
@@ -158,7 +154,7 @@ class CropObject
 
   void computeCropLength();
 
-  QList<Vec> getPointCrop();
+  QList<qglviewer::Vec> getPointCrop();
 
   void setPointPressed(int);
   int getPointPressed();
@@ -186,9 +182,9 @@ class CropObject
   int moveAxis();
   void setMoveAxis(int);
 
-  bool checkCropped(Vec);
-  float checkBlend(Vec);
-  float checkTear(Vec, Vec&);
+  bool checkCropped(qglviewer::Vec);
+  float checkBlend(qglviewer::Vec);
+  float checkTear(qglviewer::Vec, qglviewer::Vec&);
 
  private :
   CropObjectUndo m_undo;
@@ -203,47 +199,47 @@ class CropObject
   bool m_showPoints;
   bool m_halfSection;
   bool m_tube;
-  Vec m_color;
+  qglviewer::Vec m_color;
   float m_opacity;
   int m_tfset;
   float m_viewMix;
   bool m_unionBlend;
-  Vec m_dtranslate;
-  Vec m_dpivot;
-  Vec m_drotaxis;
+  qglviewer::Vec m_dtranslate;
+  qglviewer::Vec m_dpivot;
+  qglviewer::Vec m_drotaxis;
   float m_drotangle;
-  QList<Vec> m_points;
+  QList<qglviewer::Vec> m_points;
   QList<float> m_pointRadX;
   QList<float> m_pointRadY;
   float m_pointAngle;
   float m_length;
-  Vec m_oxaxis;
+  qglviewer::Vec m_oxaxis;
   bool m_hatch, m_hatchGrid;
   int m_hxn, m_hxd, m_hyn, m_hyd, m_hzn, m_hzd;
 
   int m_pointPressed;
 
   bool m_updateFlag;
-  QList<Vec> m_tgP;
-  QList<Vec> m_crop;
+  QList<qglviewer::Vec> m_tgP;
+  QList<qglviewer::Vec> m_crop;
   QList<float> m_radX;
   QList<float> m_radY;
   QList<int> m_lift;
   
-  void computeCrop(QList<Vec>);
-  void computeLength(QList<Vec>);
+  void computeCrop(QList<qglviewer::Vec>);
+  void computeLength(QList<qglviewer::Vec>);
   void computeTangents();
-  Vec interpolate(int, int, float);
+  qglviewer::Vec interpolate(int, int, float);
   void generateTube(float);
 
   void drawTube(QGLViewer*, bool);
   void drawLines(QGLViewer*, bool, bool);
 
-  QList<Vec> getCrossSection(float,
+  QList<qglviewer::Vec> getCrossSection(float,
 			     float, float,
-			     Vec, Vec, Vec,
+			     qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 			     int sections = 20);
-  QList<Vec> getNormals(QList<Vec>, Vec);
+  QList<qglviewer::Vec> getNormals(QList<qglviewer::Vec>, qglviewer::Vec);
 
   bool hatched(float, float, float,
 	       bool, bool,

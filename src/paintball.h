@@ -13,16 +13,16 @@ class PaintBall : public QObject
 
   bool grabsMouse();
 
-  void setBounds(Vec, Vec);
+  void setBounds(qglviewer::Vec, qglviewer::Vec);
 
   void setShowPaintBall(bool);
   bool showPaintBall();
   
-  void setPosition(Vec);
-  Vec position();
+  void setPosition(qglviewer::Vec);
+  qglviewer::Vec position();
 
-  void setSize(Vec);
-  Vec size();
+  void setSize(qglviewer::Vec);
+  qglviewer::Vec size();
   
   void draw();
 
@@ -41,15 +41,15 @@ class PaintBall : public QObject
 
  private : 
   bool m_show;
-  Vec m_size;
+  qglviewer::Vec m_size;
 
-  Vec m_dataMin;
-  Vec m_dataMax;
+  qglviewer::Vec m_dataMin;
+  qglviewer::Vec m_dataMax;
 
   int m_tag;
   int m_thickness;
 
-  LocalConstraint *m_constraints;
+  qglviewer::LocalConstraint *m_constraints;
   MyManipulatedFrame m_frame;
 
   MyManipulatedFrame m_bounds[6];
@@ -57,7 +57,7 @@ class PaintBall : public QObject
   void processCommand(QString);
   void setSizeBounds();
 
-  Vec m_fpos, m_pb0, m_pb1;
+  qglviewer::Vec m_fpos, m_pb0, m_pb1;
 };
 
 #endif

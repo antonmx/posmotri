@@ -7,7 +7,7 @@
 #include <QFileDialog>
 #include <QTextStream>
 
-
+using namespace qglviewer;
 
 int Grids::count() { return m_grids.count(); }
 

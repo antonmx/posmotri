@@ -4,7 +4,7 @@
 
 
 #include <QGLViewer/vec.h>
-using namespace qglviewer;
+
 
 class VolumeInformation
 {
@@ -64,11 +64,11 @@ class VolumeInformation
   QString pvlFile;
   QString rawFile;
   QString description;
-  Vec dimensions;
+  qglviewer::Vec dimensions;
   int voxelType;
   int voxelUnit;
-  Vec voxelSize;
-  Vec relativeVoxelScaling;
+  qglviewer::Vec voxelSize;
+  qglviewer::Vec relativeVoxelScaling;
   int skipheaderbytes;
   QPolygonF mapping;
   int slabSize;

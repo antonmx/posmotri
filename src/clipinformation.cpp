@@ -3,6 +3,8 @@
 #include <QVector4D>
 #include "PromotedWidgets.h"
 
+using namespace qglviewer;
+
 ClipInformation::ClipInformation() { clear(); }
 ClipInformation::~ClipInformation() { clear(); }
 int ClipInformation::size() { return pos.size(); }
@@ -276,14 +278,11 @@ ClipInformation::interpolate(const ClipInformation clipInfo1,
 
 
 
-void ClipInformation::save(QSettings &cfg) const {
-  cfg.beginGroup("ClipInformation");
-  cfg.beginWriteArray("ClipInformationArray",  pos.size());
+void ClipInformation::save(QConfigMe &cfg) const {
+  cfg.beginArray("ClipInformationArray");
   for (int i = 0; i < pos.size(); i++) {
-    cfg.setArrayIndex(i);
-    cfg.setValue("position", QVecEdit::toString(pos[i]));
-    cfg.setValue("rotation_axis",  QVecEdit::toString(rot[i].axis()));
-    cfg.setValue("rotation_angle",  rot[i].angle());
+    cfg.setValue("position", pos[i]);
+    cfg.setValue("rotation",  rot[i]);
     cfg.setValue("show", show[i]);
     cfg.setValue("flip", applyFlip[i]);
     cfg.setValue("apply", apply[i]);
@@ -295,7 +294,7 @@ void ClipInformation::save(QSettings &cfg) const {
     cfg.setValue("captionhalocolor", captionHaloColor[i]);
     cfg.setValue("opacity", opacity[i]);
     cfg.setValue("solidcolor", solidColor[i]);
-    cfg.setValue("color", QVecEdit::toString(color[i]));
+    cfg.setValue("color", color[i]);
     cfg.setValue("scale1", scale1[i]);
     cfg.setValue("scale2", scale2[i]);
     cfg.setValue("tfset", tfSet[i]);
@@ -309,48 +308,45 @@ void ClipInformation::save(QSettings &cfg) const {
     cfg.setValue("showotherslice", showOtherSlice[i]);
     cfg.setValue("showthickness", showThickness[i]);
     cfg.setValue("stereo", stereo[i]);
+    cfg.advanceArray();
   }
   cfg.endArray();
-  cfg.endGroup();
 }
 
 
-void ClipInformation::load(QSettings &cfg) {
+void ClipInformation::load(const QConfigMe &cfg) {
   clear();
-  cfg.beginGroup("ClipInformation");
-  const int sz = cfg.beginReadArray("ClipInformationArray");
+  const int sz = cfg.beginArray("ClipInformationArray");
   for (int i = 0; i < sz; i++) {
-    cfg.setArrayIndex(i);
-    pos.append( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") ) );
-    rot.append( Quaternion( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "rotation_axis") ),
-                            getQSettingsValue<qreal>(cfg, "rotation_angle")) );
-    show.append( getQSettingsValue<bool>(cfg, "show") );
-    applyFlip.append( getQSettingsValue<bool>(cfg, "flip") );
-    apply.append( getQSettingsValue<bool>(cfg, "apply") );
-    imageName.append( getQSettingsValue<QString>(cfg, "imagename") );
-    imageFrame.append( getQSettingsValue<int>(cfg, "imageframe") );
-    captionText.append( getQSettingsValue<QString>(cfg, "captiontext") );
-    captionFont.append( getQSettingsValue<QFont>(cfg, "captionfont") );
-    captionColor.append( getQSettingsValue<QColor>(cfg, "captioncolor") );
-    captionHaloColor.append( getQSettingsValue<QColor>(cfg, "captionhalocolor") );
-    opacity.append( getQSettingsValue<float>(cfg, "opacity") );
-    solidColor.append( getQSettingsValue<bool>(cfg, "solidcolor") );
-    color.append( QVecEdit::toVec( getQSettingsValue<QString>(cfg, "color") ) );
-    scale1.append( getQSettingsValue<float>(cfg, "scale1") );
-    scale2.append( getQSettingsValue<float>(cfg, "scale2") );
-    tfSet.append( getQSettingsValue<int>(cfg, "tfset") );
-    gridX.append( getQSettingsValue<int>(cfg, "gridx") );
-    gridY.append( getQSettingsValue<int>(cfg, "gridy") );
-    viewport.append( getQSettingsValue<QVector4D>(cfg, "viewport") );
-    viewportType.append( getQSettingsValue<bool>(cfg, "viewporttype") );
-    viewportScale.append( getQSettingsValue<float>(cfg, "viewportscale") );
-    thickness.append( getQSettingsValue<int>(cfg, "thickness") );
-    showSlice.append( getQSettingsValue<bool>(cfg, "showslice") );
-    showOtherSlice.append( getQSettingsValue<bool>(cfg, "showotherslice") );
-    showThickness.append( getQSettingsValue<bool>(cfg, "showthickness") );
-    stereo.append( getQSettingsValue<float>(cfg, "stereo") );
+    pos.append( cfg.getValue<Vec>("position") );
+    rot.append( cfg.getValue<Quaternion>("rotation") );
+    show.append( cfg.getValue<bool>("show") );
+    applyFlip.append( cfg.getValue<bool>("flip") );
+    apply.append( cfg.getValue<bool>("apply") );
+    imageName.append( cfg.getValue<QString>("imagename") );
+    imageFrame.append( cfg.getValue<int>("imageframe") );
+    captionText.append( cfg.getValue<QString>("captiontext") );
+    captionFont.append( cfg.getValue<QFont>("captionfont") );
+    captionColor.append( cfg.getValue<QColor>("captioncolor") );
+    captionHaloColor.append( cfg.getValue<QColor>("captionhalocolor") );
+    opacity.append( cfg.getValue<float>("opacity") );
+    solidColor.append( cfg.getValue<bool>("solidcolor") );
+    color.append( cfg.getValue<Vec>("color") );
+    scale1.append( cfg.getValue<float>("scale1") );
+    scale2.append( cfg.getValue<float>("scale2") );
+    tfSet.append( cfg.getValue<int>("tfset") );
+    gridX.append( cfg.getValue<int>("gridx") );
+    gridY.append( cfg.getValue<int>("gridy") );
+    viewport.append( cfg.getValue<QVector4D>("viewport") );
+    viewportType.append( cfg.getValue<bool>("viewporttype") );
+    viewportScale.append( cfg.getValue<float>("viewportscale") );
+    thickness.append( cfg.getValue<int>("thickness") );
+    showSlice.append( cfg.getValue<bool>("showslice") );
+    showOtherSlice.append( cfg.getValue<bool>("showotherslice") );
+    showThickness.append( cfg.getValue<bool>("showthickness") );
+    stereo.append( cfg.getValue<float>("stereo") );
+    cfg.advanceArray();
   }
   cfg.endArray();
-  cfg.endGroup();
 }
 

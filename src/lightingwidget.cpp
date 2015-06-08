@@ -180,7 +180,8 @@ LightingWidget::LightingWidget(QWidget *parent)
   ui->applycoloredshadowW->hide();
   ui->applybackplaneW->hide();
 
-  connect(ui->lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)), SLOT(lightDirectionChanged(qglviewer::Vec)));
+  connect(ui->lightpositionW, SIGNAL(directionChanged(qglviewer::Vec)),
+                              SLOT(lightDirectionChanged(qglviewer::Vec)));
 
   connect( ui->applyemissive,  SIGNAL(clicked(bool)),  SIGNAL(applyEmissive(bool)) );
   connect( ui->peel,  SIGNAL(clicked(bool)),  SIGNAL(peel(bool)) );

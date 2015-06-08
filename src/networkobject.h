@@ -18,8 +18,8 @@ class NetworkObject
   bool show() { return m_show; }
   void setShow(bool s) { m_show = s; }
 
-  Vec centroid() { return m_tcentroid; }
-  void enclosingBox(Vec&, Vec&);
+  qglviewer::Vec centroid() { return m_tcentroid; }
+  void enclosingBox(qglviewer::Vec&, qglviewer::Vec&);
 
   QString filename() { return m_fileName; }
 
@@ -74,10 +74,10 @@ class NetworkObject
 
   void predraw(QGLViewer*,
 	       double*,
-	       Vec,
-	       QList<Vec>, QList<Vec>,
+	       qglviewer::Vec,
+	       QList<qglviewer::Vec>, QList<qglviewer::Vec>,
 	       QList<CropObject>,
-	       Vec);
+	       qglviewer::Vec);
   void draw(QGLViewer*,
 	    bool,
 	    float, float,
@@ -95,8 +95,8 @@ class NetworkObject
 
   QString m_fileName;
   int m_nX, m_nY, m_nZ;
-  Vec m_centroid;
-  Vec m_enclosingBox[8];
+  qglviewer::Vec m_centroid;
+  qglviewer::Vec m_enclosingBox[8];
   float m_Vopacity;
   float m_Eopacity;
   int m_Vatt, m_Eatt;
@@ -110,17 +110,17 @@ class NetworkObject
   QGradientStops m_Estops;
   QGradientStops m_resampledEstops;
 
-  Vec m_tcentroid;
-  Vec m_tenclosingBox[8];
+  qglviewer::Vec m_tcentroid;
+  qglviewer::Vec m_tenclosingBox[8];
 
-  QVector<Vec> m_Evertices;
-  QVector<Vec> m_Eovertices;
-  QVector<Vec> m_Eocolor;
+  QVector<qglviewer::Vec> m_Evertices;
+  QVector<qglviewer::Vec> m_Eovertices;
+  QVector<qglviewer::Vec> m_Eocolor;
   QVector<float> m_EtexValues;
 
-  QVector<Vec> m_Vvertices;
-  QVector<Vec> m_Vovertices;
-  QVector<Vec> m_Vocolor;
+  QVector<qglviewer::Vec> m_Vvertices;
+  QVector<qglviewer::Vec> m_Vovertices;
+  QVector<qglviewer::Vec> m_Vocolor;
   QVector<float> m_VtexValues;
 
 
@@ -130,7 +130,7 @@ class NetworkObject
   int m_edgeRadiusAttribute;
   QVector< QPair<QString, QVector<float> > > m_vertexAttribute;
   QVector< QPair<QString, QVector<float> > > m_edgeAttribute;
-  QVector<Vec> m_vertexCenters;
+  QVector<qglviewer::Vec> m_vertexCenters;
   QVector< QPair<int, int> > m_edgeNeighbours;
   QStringList m_nodeId;
   QStringList m_nodeAtt;
@@ -144,18 +144,18 @@ class NetworkObject
 
   void predrawVertices(QGLViewer*,
 		       double*,
-		       Vec,
-		       QList<Vec>, QList<Vec>,
+		       qglviewer::Vec,
+		       QList<qglviewer::Vec>, QList<qglviewer::Vec>,
 		       QList<CropObject>);
 
   void predrawEdges(QGLViewer*,
 		    double*,
-		    Vec,
-		    QList<Vec>, QList<Vec>,
+		    qglviewer::Vec,
+		    QList<qglviewer::Vec>, QList<qglviewer::Vec>,
 		    QList<CropObject> );
 
-  void generateSphereSpriteTexture(Vec);
-  void generateCylinderSpriteTexture(Vec);
+  void generateSphereSpriteTexture(qglviewer::Vec);
+  void generateCylinderSpriteTexture(qglviewer::Vec);
 
   bool loadTextNetwork(QString);
   bool loadGraphML(QString);

@@ -750,7 +750,7 @@ SplineTransferFunction::removePointAt(int index)
     return;
 
   m_points.remove(index);
-  m_normalRotations.remove(index);
+  m_normalRotations.removeAt(index);
   m_normalWidths.remove(index);
   updateNormals();
   updateColorMapImage();

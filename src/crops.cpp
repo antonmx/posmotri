@@ -3,9 +3,10 @@
 #include "staticfunctions.h"
 #include "propertyeditor.h"
 
-//#include <QtGui>
 #include <QMessageBox>
 #include <QFileDialog>
+
+using namespace qglviewer;
 
 int Crops::count() { return m_crops.count(); }
 

@@ -27,8 +27,9 @@
 #include <QLineEdit>
 #include <QValidator>
 #include <QGLViewer/vec.h>
-# include <QSettings>
+#include <QGLViewer/quaternion.h>
 # include <QDebug>
+#include <QBrush>
 
 
 class QSpinSlide : public QObject {
@@ -125,139 +126,160 @@ protected:
 
 
 
-
-template <class varclass> varclass & getQSettingsValue
-  (QSettings & cfg,  const QString & key,  varclass & val)
-{
-  if ( ! cfg.contains(key) ) {
-    qDebug() << "Config does not contain key" << key;
-    return val;
-  }
-  QVariant value = cfg.value(key);
-  if ( ! value.canConvert<varclass>() )
-    qDebug() << "Value read from config key " << key << ": is not valid for the class.";
-  else
-    val = value.value<varclass>();
-  return val;
+template <class Ecl> QVariant toQVariant(const Ecl & val) {
+  return QVariant(val);
 }
-
-template <class varclass> varclass getQSettingsValue
-  (QSettings & cfg,  const QString & key)
-{
-  varclass val;
-  return getQSettingsValue(cfg, key, val);
-}
-
-
-uchar * getQSettingsValue(QSettings & cfg,  const QString & key,  uchar * val,  size_t sz) {
-  const QByteArray qbarr = getQSettingsValue<QByteArray>(cfg,  key);
-  if ( qbarr.size() != sz )
-    qDebug() << "Error on loading char array" << key
-             <<  ": unexpected array size" << qbarr.size() << "not" <<  sz <<  ".";
-  else
-    memcpy(val, qbarr.data(),  1024);
-  return val;
-}
-
-
-
-
-template <class listclass> void QSettingsSetValArray
-  (QSettings & cfg, const QString & arrayName,  const QList<listclass> & list)
-{
-  int arridx = 0;
-  cfg.beginWriteArray(arrayName+"Array",  list.size());
-  foreach (const listclass & element,  list) {
-    cfg.setArrayIndex(arridx++);
-    cfg.setValue(arrayName,  element);
-  }
-
-  cfg.endArray();
-}
-
-void QSettingsSetValArray
-  (QSettings & cfg, const QString & arrayName, const QList<qglviewer::Vec> & list)
-{
-  QStringList slist;
-  foreach (const qglviewer::Vec & vec,  list)
-    slist <<  QVecEdit::toString(vec);
-  QSettingsSetValArray(cfg, arrayName,  slist);
-}
-
-
-template <class listclass> void QSettingsGetValArray
-  (QSettings &cfg, const QString &arrayName, QList<listclass> &list)
-{
-  const int size = cfg.beginReadArray(arrayName + "Array");
-  for (int i = 0; i < size; i++) {
-    cfg.setArrayIndex(i);
-    QVariant val = cfg.value(arrayName);
-    if ( ! val.isValid()  )
-      qDebug() << "Config could not get expected array value for " << arrayName <<  ".";
-    else if  ( ! val.canConvert<listclass>() )
-      qDebug() << "Config could not convert array value (" << val << ") for " << arrayName << ".";
-    else
-      list.append( val.value<listclass>() );
-  }
-  cfg.endArray();
-}
-
-void QSettingsGetValArray(QSettings & cfg, const QString & arrayName, QList<qglviewer::Vec> & list) {
-  QStringList slist;
-  QSettingsGetValArray(cfg,  arrayName,  slist);
-  foreach (const QString & svec,  slist) {
-    bool ok;
-    qglviewer::Vec vec = QVecEdit::toVec(svec,  &ok);
+  
+template <class Ecl> Ecl fromQVariant(const QVariant & var, bool * ok =0) {
+  if ( ! var.isValid() || ! var.canConvert<Ecl>() ){
     if (ok)
-      list.append(vec);
+      *ok=false;
+    return Ecl();
   }
-}
-
-
-template <class listclass> void QSettingsSaveArray
-  (QSettings & cfg, const QString & arrayName, const QList<listclass> & list)
-{
-  int arridx = 0;
-  cfg.beginWriteArray(arrayName,  list.size());
-  foreach (const listclass & element,  list) {
-    cfg.setArrayIndex(arridx++);
-    element.save(cfg);
-  }
-  cfg.endArray();
-}
-
-template <class listclass> void QSettingsLoadArray
-  (QSettings & cfg, const QString & arrayName, QList<listclass> & list)
-{
-  int arridx = 0;
-  const int size = cfg.beginReadArray(arrayName);
-  for (int i = 0; i<size; i++) {
-    cfg.setArrayIndex(arridx++);
-    listclass inst;
-    inst.load(cfg);
-    list.append(inst);
-  }
-  cfg.endArray();
-}
-
-
-template <class listclass> void QSettingsLoadArray
-  (QSettings & cfg, const QString & arrayName, QList<listclass*> & list)
-{
-  int arridx = 0;
-  const int size = cfg.beginReadArray(arrayName);
-  for (int i = 0; i<size; i++) {
-    cfg.setArrayIndex(arridx++);
-    listclass * inst = new listclass;
-    inst->load(cfg);
-    list.append(inst);
-  }
-  cfg.endArray();
+  Ecl val = var.value<Ecl>();
+  *ok=true;
+  return val;
 }
 
 
 
-QString nextString(std::fstream &fin,  char delim = 0);
+QDataStream &operator<<(QDataStream &, const qglviewer::Vec &);
+QDataStream &operator>>(QDataStream &, qglviewer::Vec &);
+QDataStream &operator<<(QDataStream &, const qglviewer::Quaternion &);
+QDataStream &operator>>(QDataStream &, qglviewer::Quaternion &);
+
+
+
+
+class QConfigMe {
+  
+private:  
+  
+  static QString modifyKey(const QString &skey);
+  
+  QMap <QString, QByteArray> store;
+  mutable QString cpath;
+  mutable QList<int> idxelement;
+  mutable int lastelement;
+  
+  QString levelUp() const;  
+  int updateLastelement() const;
+  
+
+public:
+  
+  QConfigMe() : cpath("/") {};
+
+  void read(const QString & fileName);  
+  bool write(const QString & fileName) const ;
+  
+  
+  int beginArray(const QString & key) const;  
+  int advanceArray() const;  
+  QString endArray() const;  
+  int beginGroup(const QString & key) const;  
+  QString endGroup() const;
+  
+  bool contains(const QString & key) const;
+  
+  template <class Ecl> void setValue(const QString & key, const Ecl & val) {
+    QByteArray bval;
+    QDataStream sval(&bval, QIODevice::WriteOnly);
+    sval << val;
+    store[cpath + "/" + modifyKey(key)] = bval;
+  }
+  
+  template <class Ecl> bool getValue(const QString & key, Ecl & val) const {
+    const QString skey = cpath + "/" + modifyKey(key);
+    if ( ! store.contains(skey) )
+      return false;
+    QDataStream sval(store[skey]);
+    sval >> val;
+    return true;
+  }
+  
+  template <class Ecl> Ecl getValue(const QString & key) const {
+    Ecl el;
+    if ( ! getValue<Ecl>(key, el) )
+      qDebug() << "QConfigMe detected error when reading value ok key" << key;
+    return el;
+  }
+
+  template <class Vcl> void setArrayValue(const QString & key, const Vcl & valarr) {
+    QByteArray bval;
+    beginArray(key);
+    for (int i=0; i<valarr.size() ; i++ ) {
+      bval.clear();
+      QDataStream sval(&bval, QIODevice::WriteOnly);
+      sval << valarr.at(i);
+      store[cpath] = bval;
+      advanceArray();
+    }
+    endArray();
+  }
+  
+  template <class Ecl> int getArrayValue(const QString & key, QList<Ecl> & valarr) const {
+    const int sz = beginArray(key);
+    QByteArray bval;
+    for (int i=0; i<sz ; i++ ) {
+      if ( store.contains(cpath) ) {
+        QDataStream sval(store[cpath]);
+        Ecl val;
+        sval >> val;
+        valarr.append(val);
+      }
+      advanceArray();
+    }
+    endArray();
+  }
+  
+  template <class Ecl>
+  void setClassArray(const QString & key, const QList<Ecl> & list) {
+    beginArray(key);
+    foreach (const Ecl & element,  list) {
+      element.save(*this);
+      advanceArray();
+    }
+    endArray();
+  }
+  
+  template <class Ecl>
+  void getClassArray(const QString & key, QList<Ecl> & list) const {
+    const int size = beginArray(key);
+    for (int el=0; el<size; el++) {
+      Ecl element;
+      element.load(*this);
+      list.append(element);
+      advanceArray();
+    }
+    endArray();
+  }
+  
+  template <class Ecl>
+  void setClassArray(const QString & key, const QList<Ecl*> & list) {
+    beginArray(key);
+    foreach (const Ecl * element,  list) {
+      element->save(*this);
+      advanceArray();
+    }
+    endArray();
+  }
+  
+  template <class Ecl>
+  void getClassArray(const QString & key, QList<Ecl*> & list) const {
+    const int size = beginArray(key);
+    for (int el=0; el<size; el++) {
+      Ecl * element = new Ecl();
+      element->load(*this);
+      list.append(element);
+      advanceArray();
+    }
+    endArray();
+  }
+  
+};
+
+
 
 
 

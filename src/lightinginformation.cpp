@@ -1,6 +1,7 @@
 #include "lightinginformation.h"
 #include "staticfunctions.h"
 #include "PromotedWidgets.h"
+using namespace qglviewer;
 
 Highlights::Highlights(float _ambient, float _diffuse, float _specular,  int _specularCoefficient)
   : ambient(_ambient)
@@ -205,17 +206,15 @@ LightingInformation::interpolate(const LightingInformation lightInfo1,
 
 
 
-void LightingInformation::save(QSettings & cfg) const {
-
+void LightingInformation::save(QConfigMe  & cfg) const {
   cfg.beginGroup("LightingInformation");
-
   cfg.setValue("applyemissive", applyEmissive);
   cfg.setValue("applylighting", applyLighting);
   cfg.setValue("applyshadows", applyShadows);
   cfg.setValue("applycoloredshadows", applyColoredShadows);
   cfg.setValue("applybackplane", applyBackplane);
-  cfg.setValue("colorattenuation",  QVecEdit::toString(colorAttenuation));
-  cfg.setValue("userlightvector",  QVecEdit::toString(userLightVector));
+  cfg.setValue("colorattenuation", colorAttenuation);
+  cfg.setValue("userlightvector",  userLightVector);
   cfg.setValue("shadowblur", shadowBlur);
   cfg.setValue("shadowscale", shadowScale);
   cfg.setValue("shadowintensity", shadowIntensity);
@@ -232,42 +231,36 @@ void LightingInformation::save(QSettings & cfg) const {
   cfg.setValue("peelmin", peelMin);
   cfg.setValue("peelmax", peelMax);
   cfg.setValue("peelmix", peelMix);
-
   cfg.endGroup();
-
 }
 
 
 
-void LightingInformation::load(QSettings & cfg) {
-
+void LightingInformation::load(const QConfigMe  & cfg) {
   cfg.beginGroup("LightingInformation");
-
-  applyEmissive = getQSettingsValue(cfg, "applyemissive", applyEmissive);
-  applyLighting = getQSettingsValue(cfg, "applylighting", applyLighting);
-  applyShadows = getQSettingsValue(cfg, "applyshadows", applyShadows);
-  applyColoredShadows = getQSettingsValue(cfg, "applycoloredshadows", applyColoredShadows);
-  applyBackplane = getQSettingsValue(cfg, "applybackplane", applyBackplane);
-  colorAttenuation = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "colorattenuation") );
-  userLightVector = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "userlightvector") );
-  shadowBlur = getQSettingsValue(cfg, "shadowblur", shadowBlur);
-  shadowScale = getQSettingsValue(cfg, "shadowscale", shadowScale);
-  shadowIntensity = getQSettingsValue(cfg, "shadowintensity", shadowIntensity);
-  shadowFovOffset = getQSettingsValue(cfg, "shadowfovoffset", shadowFovOffset);
-  lightDistanceOffset = getQSettingsValue(cfg, "lightdistanceoffset", lightDistanceOffset);
-  backplaneShadowScale = getQSettingsValue(cfg, "backplaneshadowscale", backplaneShadowScale);
-  backplaneIntensity = getQSettingsValue(cfg, "backplaneintensity", backplaneIntensity);
-  highlights.ambient = getQSettingsValue(cfg, "ambient", highlights.ambient);
-  highlights.diffuse = getQSettingsValue(cfg, "diffuse", highlights.diffuse);
-  highlights.specular = getQSettingsValue(cfg, "specular", highlights.specular);
-  highlights.specularCoefficient = getQSettingsValue(cfg, "specularcoefficient", highlights.specularCoefficient);
-  peel = getQSettingsValue(cfg, "peel", peel);
-  peelType = getQSettingsValue(cfg, "peeltype", peelType);
-  peelMin = getQSettingsValue(cfg, "peelmin", peelMin);
-  peelMax = getQSettingsValue(cfg, "peelmax", peelMax);
-  peelMix = getQSettingsValue(cfg, "peelmix", peelMix);
-
+  cfg.getValue("applyemissive", applyEmissive);
+  cfg.getValue("applylighting", applyLighting);
+  cfg.getValue("applyshadows", applyShadows);
+  cfg.getValue("applycoloredshadows", applyColoredShadows);
+  cfg.getValue("applybackplane", applyBackplane);
+  cfg.getValue("colorattenuation", colorAttenuation);
+  cfg.getValue("userlightvector",  userLightVector);
+  cfg.getValue("shadowblur", shadowBlur);
+  cfg.getValue("shadowscale", shadowScale);
+  cfg.getValue("shadowintensity", shadowIntensity);
+  cfg.getValue("shadowfovoffset", shadowFovOffset);
+  cfg.getValue("lightdistanceoffset", lightDistanceOffset);
+  cfg.getValue("backplaneshadowscale", backplaneShadowScale);
+  cfg.getValue("backplaneintensity", backplaneIntensity);
+  cfg.getValue("ambient", highlights.ambient);
+  cfg.getValue("diffuse", highlights.diffuse);
+  cfg.getValue("specular", highlights.specular);
+  cfg.getValue("specularcoefficient", highlights.specularCoefficient);
+  cfg.getValue("peel", peel);
+  cfg.getValue("peeltype", peelType);
+  cfg.getValue("peelmin", peelMin);
+  cfg.getValue("peelmax", peelMax);
+  cfg.getValue("peelmix", peelMix);
   cfg.endGroup();
-
 }
 

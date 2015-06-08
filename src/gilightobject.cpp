@@ -9,6 +9,9 @@
 #include <GL/glut.h>
 #endif
 
+using namespace qglviewer;
+
+
 //------------------------------------------------------------------
 GiLightObjectUndo::GiLightObjectUndo() { clear(); }
 GiLightObjectUndo::~GiLightObjectUndo() { clear(); }

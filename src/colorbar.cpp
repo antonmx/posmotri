@@ -1,11 +1,10 @@
 
-//#include <QtGui>
-
 #include "colorbar.h"
 #include "global.h"
 
-ColorBars::ColorBars()
-{
+using namespace qglviewer;
+
+ColorBars::ColorBars() {
   m_colorbars.clear();
 }
 

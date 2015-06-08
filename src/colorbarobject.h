@@ -1,11 +1,9 @@
 #ifndef COLORBAROBJECT_H
 #define COLORBAROBJECT_H
 
-//#include <QtGui>
-
 # include <QPointF>
-#include <fstream>
-using namespace std;
+# include "PromotedWidgets.h"
+
 
 class ColorBarObject
 {
@@ -13,8 +11,8 @@ class ColorBarObject
   ColorBarObject();
   ~ColorBarObject();
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
   void clear();
 

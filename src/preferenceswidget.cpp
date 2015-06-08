@@ -8,6 +8,8 @@
 #include <QTextStream>
 #include <QDomDocument>
 
+using namespace qglviewer;
+
 PreferencesWidget::PreferencesWidget(QWidget *parent)
   : QWidget(parent)
   , m_tagColorEditor(new TagColorEditor)

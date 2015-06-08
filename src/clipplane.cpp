@@ -4,6 +4,7 @@
 #include <QMessageBox>
 #include <QKeyEvent>
 
+using namespace qglviewer;
 
 int ClipPlanes::count() { return m_clips.count(); }
 

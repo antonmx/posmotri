@@ -3,13 +3,12 @@
 
 #include "glewinitialisation.h"
 #include "viewinformation.h"
-
-//#include <QtGui>
+#include "PromotedWidgets.h"
 #include "ui_viewseditor.h"
 
-class ViewsEditor : public QWidget
-{
- Q_OBJECT
+
+class ViewsEditor : public QWidget {
+  Q_OBJECT;
 
  public :
   ViewsEditor(QWidget *parent=0);
@@ -18,25 +17,25 @@ class ViewsEditor : public QWidget
   void resizeEvent(QResizeEvent*);
   void mousePressEvent(QMouseEvent*);
 
-  void load(fstream&);
-  void save(fstream&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
  signals :
   void showMessage(QString, bool);
   void currentView();
   void updateVolInfo(int);
   void updateVolInfo(int, int);
-  void updateVolumeBounds(int, Vec, Vec);
-  void updateVolumeBounds(int, int, Vec, Vec);
-  void updateVolumeBounds(int, int, int, Vec, Vec);
-  void updateVolumeBounds(int, int, int, int, Vec, Vec);
-  void updateLookFrom(Vec, Quaternion, float);
+  void updateVolumeBounds(int, qglviewer::Vec, qglviewer::Vec);
+  void updateVolumeBounds(int, int, qglviewer::Vec, qglviewer::Vec);
+  void updateVolumeBounds(int, int, int, qglviewer::Vec, qglviewer::Vec);
+  void updateVolumeBounds(int, int, int, int, qglviewer::Vec, qglviewer::Vec);
+  void updateLookFrom(qglviewer::Vec, qglviewer::Quaternion, float);
   void updateLightInfo(LightingInformation);
   void updateBrickInfo(QList<BrickInformation>);
   void updateTransferFunctionManager(QList<SplineInformation>);
   void updateParameters(float, float,
 			int,
-			bool, bool, Vec,
+			bool, bool, qglviewer::Vec,
 			QString,
 			int, int, QString, QString, QString);
   void updateTagColors();
@@ -48,14 +47,14 @@ class ViewsEditor : public QWidget
   void addView(float,
 	       float,
 	       bool, bool,
-	       Vec,
-	       Vec, Quaternion,
+	       qglviewer::Vec,
+	       qglviewer::Vec, qglviewer::Quaternion,
 	       float,
 	       QImage,
 	       int,
 	       LightingInformation,
 	       QList<BrickInformation>,
-	       Vec, Vec,
+	       qglviewer::Vec, qglviewer::Vec,
 	       QList<SplineInformation>,
 	       int, int, QString, QString, QString);
   

@@ -25,6 +25,9 @@
 #include <QDockWidget>
 
 
+using namespace qglviewer;
+
+
 //-------------------------------------------------------------------------------
 // -- turn off OpenGL rendering when menus are triggered --
 //-------------------------------------------------------------------------------
@@ -87,8 +90,8 @@ MainWindow::createHiresLowresWindows()
   //---
   if (m_Lowres) delete m_Lowres;
   m_Lowres = new DrawLowresVolume(m_Viewer, m_Volume);
-  connect(m_keyFrame, SIGNAL(updateVolumeBounds(Vec, Vec)),
-	  m_Lowres, SLOT(setSubvolumeBounds(Vec, Vec)));
+  connect(m_keyFrame, SIGNAL(updateVolumeBounds(qglviewer::Vec, qglviewer::Vec)),
+	  m_Lowres, SLOT(setSubvolumeBounds(qglviewer::Vec, qglviewer::Vec)));
   //---
 
   //---
@@ -99,7 +102,19 @@ MainWindow::createHiresLowresWindows()
     }
   m_Hires = new DrawHiresVolume(m_Viewer, m_Volume);
   m_Hires->setBricks(m_bricks);
-  #include "connecthires.h"
+  
+  connect(m_Hires, SIGNAL(histogramUpdated(QImage, QImage)), m_tfEditor, SLOT(setHistogramImage(QImage, QImage)));
+  connect(m_keyFrame, SIGNAL(updateLightInfo(LightingInformation)), m_Hires, SLOT(setLightInfo(LightingInformation)));
+  connect(m_keyFrame, SIGNAL(updateVolumeBounds(int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_keyFrame, SIGNAL(updateVolumeBounds(int, int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_keyFrame, SIGNAL(updateVolumeBounds(int, int, int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, int, int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_keyFrame, SIGNAL(updateVolumeBounds(int, int, int, int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, int, int, int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_gallery, SIGNAL(updateLightInfo(LightingInformation)), m_Hires, SLOT(setLightInfo(LightingInformation)));
+  connect(m_gallery, SIGNAL(updateVolumeBounds(int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_gallery, SIGNAL(updateVolumeBounds(int, int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_gallery, SIGNAL(updateVolumeBounds(int, int, int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, int, int, qglviewer::Vec, qglviewer::Vec)));
+  connect(m_gallery, SIGNAL(updateVolumeBounds(int, int, int, int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, int, int, int, qglviewer::Vec, qglviewer::Vec)));
+
   //---
 
   m_Viewer->setHiresVolume(m_Hires);
@@ -321,21 +336,176 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(m_preferencesWidget, SIGNAL(stereoSettingsChanged(float, float, float)),  m_Viewer, SLOT(updateStereoSettings(float, float, float)));
   connect(m_preferencesWidget, SIGNAL(tagColorChanged()), m_Viewer, SLOT(updateTagColors()));
   connect(m_Viewer, SIGNAL(stereoSettings(float, float, float)),  m_preferencesWidget, SLOT(setStereoSettings(float, float, float)));
-
-  #include "connectbricks.h"
-  #include "connectbrickswidget.h"
-  #include "connectclipplanes.h"
-  #include "connectkeyframe.h"
-  #include "connectkeyframeeditor.h"
-  #include "connectlightingwidget.h"
-  #include "connectshowmessage.h"
-  #include "connecttfeditor.h"
-  #include "connecttfmanager.h"
-  #include "connectviewer.h"
-  #include "connectviewseditor.h"
-  #include "connectvolinfowidget.h"
-  #include "connectgeometryobjects.h"
-
+  connect(m_bricks, SIGNAL(refresh()), m_bricksWidget, SLOT(refresh()));
+  connect(m_bricksWidget, SIGNAL(updateGL()), m_Viewer, SLOT(updateGL()));
+  connect(GeometryObjects::clipplanes(), SIGNAL(addClipper()), m_bricksWidget, SLOT(addClipper()));
+  connect(GeometryObjects::clipplanes(), SIGNAL(removeClipper(int)), m_bricksWidget, SLOT(removeClipper(int)));
+  connect(m_keyFrame, SIGNAL(updateBrickInfo(QList<BrickInformation>)), m_bricks, SLOT(setBricks(QList<BrickInformation>)));
+  connect(m_keyFrame, SIGNAL(addKeyFrameNumbers(QList<int>)), m_keyFrameEditor, SLOT(addKeyFrameNumbers(QList<int>)));
+  connect(m_keyFrame, SIGNAL(setImage(int, QImage)), m_keyFrameEditor, SLOT(setImage(int, QImage)));
+  connect(m_keyFrame, SIGNAL(loadKeyframes(QList<int>, QList<QImage>)), m_keyFrameEditor, SLOT(loadKeyframes(QList<int>, QList<QImage>)));  
+  connect(m_keyFrame, SIGNAL(updateLightInfo(LightingInformation)), m_lightingWidget, SLOT(setLightInfo(LightingInformation)));
+  connect(m_keyFrame, SIGNAL(updateVolInfo(int)), SLOT(updateVolInfo(int)));
+  connect(m_keyFrame, SIGNAL(updateVolInfo(int, int)), SLOT(updateVolInfo(int, int)));
+  connect(m_keyFrame, SIGNAL(updateTransferFunctionManager(QList<SplineInformation>)), SLOT(updateTransferFunctionManager(QList<SplineInformation>)));
+  connect(m_keyFrame, SIGNAL(updateMorph(bool)), SLOT(updateMorph(bool)));
+  connect(m_keyFrame, SIGNAL(updateFocus(float, float)), SLOT(updateFocus(float, float)));
+  connect(m_keyFrame, SIGNAL(updateParameters(bool, bool, qglviewer::Vec, QString,
+                                              int, int, QString, QString, QString,
+                                              int, bool, bool, float, bool, bool)),
+          SLOT(updateParameters(bool, bool, qglviewer::Vec, QString,
+                                int, int, QString, QString, QString,
+                                int, bool, bool, float, bool, bool)));
+  connect(m_keyFrame, SIGNAL(updateGL()),  m_Viewer, SLOT(updateScaling()));
+  connect(m_keyFrame, SIGNAL(replaceKeyFrameImage(int)), m_Viewer, SLOT(captureKeyFrameImage(int)));
+  connect(m_keyFrame, SIGNAL(currentFrameChanged(int)), m_Viewer, SLOT(setCurrentFrame(int)));
+  connect(m_keyFrame, SIGNAL(updateLookFrom(qglviewer::Vec, qglviewer::Quaternion, float, float)), m_Viewer, SLOT(updateLookFrom(qglviewer::Vec, qglviewer::Quaternion, float, float)));
+  connect(m_keyFrame, SIGNAL(updateLookupTable(unsigned char*)), m_Viewer, SLOT(updateLookupTable(unsigned char*)));
+  connect(m_keyFrame, SIGNAL(updateTagColors()), m_Viewer, SLOT(updateTagColors()));
+  connect(m_keyFrame, SIGNAL(updateTagColors()), m_preferencesWidget, SLOT(updateTagColors()));
+  connect(m_keyFrameEditor, SIGNAL(updateGL()), m_Viewer, SLOT(updateGL()));
+  connect(m_keyFrameEditor, SIGNAL(endPlay()), m_Viewer, SLOT(endPlay()));
+  connect(m_keyFrameEditor, SIGNAL(setKeyFrame(int)), m_Viewer, SLOT(setKeyFrame(int)));
+  connect(m_keyFrameEditor, SIGNAL(reorder(QList<int>)), m_keyFrame, SLOT(reorder(QList<int>)));
+  connect(m_keyFrameEditor, SIGNAL(setKeyFrameNumbers(QList<int>)), m_keyFrame, SLOT(setKeyFrameNumbers(QList<int>)));
+  connect(m_keyFrameEditor, SIGNAL(playFrameNumber(int)), m_keyFrame, SLOT(playFrameNumber(int)));
+  connect(m_keyFrameEditor, SIGNAL(setKeyFrameNumber(int, int)), m_keyFrame, SLOT(setKeyFrameNumber(int, int)));
+  connect(m_keyFrameEditor, SIGNAL(removeKeyFrame(int)), m_keyFrame, SLOT(removeKeyFrame(int)));
+  connect(m_keyFrameEditor, SIGNAL(removeKeyFrames(int, int)), m_keyFrame, SLOT(removeKeyFrames(int, int)));
+  connect(m_keyFrameEditor, SIGNAL(copyFrame(int)), m_keyFrame, SLOT(copyFrame(int)));
+  connect(m_keyFrameEditor, SIGNAL(pasteFrame(int)), m_keyFrame, SLOT(pasteFrame(int)));
+  connect(m_keyFrameEditor, SIGNAL(pasteFrameOnTop(int)), m_keyFrame, SLOT(pasteFrameOnTop(int)));
+  connect(m_keyFrameEditor, SIGNAL(pasteFrameOnTop(int, int)), m_keyFrame, SLOT(pasteFrameOnTop(int, int)));
+  connect(m_keyFrameEditor, SIGNAL(editFrameInterpolation(int)), m_keyFrame, SLOT(editFrameInterpolation(int)));
+  connect(m_lightingWidget, SIGNAL(directionChanged(qglviewer::Vec)), SLOT(lightDirectionChanged(qglviewer::Vec)));
+  connect(m_lightingWidget, SIGNAL(lightDistanceOffset(float)), SLOT(lightDistanceOffset(float)));
+  connect(m_lightingWidget, SIGNAL(applyEmissive(bool)), SLOT(applyEmissive(bool)));
+  connect(m_lightingWidget, SIGNAL(applyLighting(bool)), SLOT(applyLighting(bool)));
+  connect(m_lightingWidget, SIGNAL(highlights(Highlights)),SLOT(highlights(Highlights)));
+  connect(m_lightingWidget, SIGNAL(applyShadow(bool)), SLOT(applyShadow(bool)));
+  connect(m_lightingWidget, SIGNAL(shadowBlur(float)), SLOT(shadowBlur(float)));
+  connect(m_lightingWidget, SIGNAL(shadowScale(float)), SLOT(shadowScale(float)));
+  connect(m_lightingWidget, SIGNAL(shadowFOV(float)), SLOT(shadowFOV(float)));
+  connect(m_lightingWidget, SIGNAL(shadowIntensity(float)), SLOT(shadowIntensity(float)));
+  connect(m_lightingWidget, SIGNAL(applyColoredShadow(bool)), SLOT(applyColoredShadow(bool)));
+  connect(m_lightingWidget, SIGNAL(shadowColorAttenuation(float, float, float)), SLOT(shadowColorAttenuation(float, float, float)));
+  connect(m_lightingWidget, SIGNAL(applyBackplane(bool)), SLOT(applyBackplane(bool)));
+  connect(m_lightingWidget, SIGNAL(backplaneShadowScale(float)), SLOT(backplaneShadowScale(float)));
+  connect(m_lightingWidget, SIGNAL(backplaneIntensity(float)), SLOT(backplaneIntensity(float)));
+  connect(m_lightingWidget, SIGNAL(peel(bool)), SLOT(peel(bool)));
+  connect(m_lightingWidget, SIGNAL(peelInfo(int, float, float, float)), SLOT(peelInfo(int, float, float, float)));
+  connect(this, SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(GeometryObjects::clipplanes(), SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(m_bricksWidget, SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(m_keyFrameEditor, SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(m_gallery, SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(GeometryObjects::paths(), SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(m_tfEditor, SIGNAL(updateComposite()), SLOT(updateComposite()));
+  connect(m_tfEditor, SIGNAL(giveHistogram(int)), SLOT(changeHistogram(int)));
+  connect(m_tfEditor, SIGNAL(applyUndo(bool)), SLOT(applyTFUndo(bool)));
+  connect(m_tfEditor, SIGNAL(transferFunctionUpdated()), SLOT(transferFunctionUpdated()));
+  connect(this, SIGNAL(histogramUpdated(QImage, QImage)), m_tfEditor, SLOT(setHistogramImage(QImage, QImage)));
+  connect(this, SIGNAL(histogramUpdated(int*)), m_tfEditor, SLOT(setHistogram2D(int*)));
+  connect(m_tfManager, SIGNAL(changeTransferFunctionDisplay(int, QList<bool>)), SLOT(changeTransferFunctionDisplay(int, QList<bool>)));
+  connect(m_tfManager, SIGNAL(checkStateChanged(int, int, bool)), SLOT(checkStateChanged(int, int, bool)));
+  connect(m_Viewer, SIGNAL(resetFlipImage()), SLOT(resetFlipImage()));
+  connect(m_Viewer, SIGNAL(addRotationAnimation(int, float, int)), SLOT(addRotationAnimation(int, float, int)));
+  connect(m_Viewer, SIGNAL(quitDrishti()), SLOT(quitDrishti()));
+  connect(m_Viewer, SIGNAL(switchBB()), SLOT(switchBB()));
+  connect(m_Viewer, SIGNAL(switchAxis()), SLOT(switchAxis()));
+  connect(m_Viewer, SIGNAL(moveToKeyframe(int)), SLOT(moveToKeyframe(int)));
+  connect(m_Viewer, SIGNAL(searchCaption(QStringList)), SLOT(searchCaption(QStringList)));
+  connect(m_Viewer, SIGNAL(saveVolume()), SLOT(saveVolume()));
+  connect(m_Viewer, SIGNAL(maskRawVolume()), SLOT(maskRawVolume()));
+  connect(m_Viewer, SIGNAL(countIsolatedRegions()), SLOT(countIsolatedRegions()));
+  connect(m_Viewer, SIGNAL(getSurfaceArea()), SLOT(getSurfaceArea()));
+  connect(m_Viewer, SIGNAL(getSurfaceArea(unsigned char)), SLOT(getSurfaceArea(unsigned char)));
+  connect(m_Viewer, SIGNAL(setView(qglviewer::Vec, qglviewer::Quaternion, QImage, float)), SLOT(setView(qglviewer::Vec, qglviewer::Quaternion, QImage, float)));
+  connect(m_Viewer, SIGNAL(setKeyFrame(qglviewer::Vec, qglviewer::Quaternion, int, float, float, unsigned char*, QImage)), SLOT(setKeyFrame(qglviewer::Vec, qglviewer::Quaternion, int, float, float, unsigned char*, QImage)));
+  connect(m_Viewer, SIGNAL(setHiresMode(bool)), m_keyFrameEditor, SLOT(setHiresMode(bool)));
+  connect(m_Viewer, SIGNAL(replaceKeyFrameImage(int, QImage)), m_keyFrameEditor, SLOT(setImage(int, QImage)));
+  connect(m_Viewer, SIGNAL(replaceKeyFrameImage(int, QImage)), m_keyFrame, SLOT(replaceKeyFrameImage(int, QImage)));
+  connect(m_Viewer, SIGNAL(histogramUpdated(QImage, QImage)), m_tfEditor, SLOT(setHistogramImage(QImage, QImage)));
+  connect(this, SIGNAL(addView(float,
+                               float,
+                               bool, bool,
+                               qglviewer::Vec,
+                               qglviewer::Vec, qglviewer::Quaternion,
+                               float,
+                               QImage,
+                               int,
+                               LightingInformation,
+                               QList<BrickInformation>,
+                               qglviewer::Vec, qglviewer::Vec,
+                               QList<SplineInformation>,
+                               int, int, QString, QString, QString)),
+          m_gallery, SLOT(addView(float,
+                                  float,
+                                  bool, bool,
+                                  qglviewer::Vec,
+                                  qglviewer::Vec, qglviewer::Quaternion,
+                                  float,
+                                  QImage,
+                                  int,
+                                  LightingInformation,
+                                  QList<BrickInformation>,
+                                  qglviewer::Vec, qglviewer::Vec,
+                                  QList<SplineInformation>,
+                                  int, int, QString, QString, QString)));
+  connect(m_Viewer, SIGNAL(setHiresMode(bool)), m_gallery, SLOT(setHiresMode(bool)));
+  connect(m_gallery, SIGNAL(updateVolInfo(int)), SLOT(updateVolInfo(int)));
+  connect(m_gallery, SIGNAL(updateVolInfo(int, int)), SLOT(updateVolInfo(int, int)));
+  connect(m_gallery, SIGNAL(updateParameters(float, float,
+                                             int, bool, bool, qglviewer::Vec,
+                                             QString,
+                                             int, int, 
+                                             QString, QString, QString)),
+          this, SLOT(updateParameters(float, float,
+                                      int, bool, bool, qglviewer::Vec,
+                                      QString,
+                                      int, int,
+                                      QString, QString, QString)));
+  connect(m_gallery, SIGNAL(updateTransferFunctionManager(QList<SplineInformation>)), SLOT(updateTransferFunctionManager(QList<SplineInformation>)));
+  connect(m_gallery, SIGNAL(currentView()), m_Viewer, SLOT(currentView()));
+  connect(m_gallery, SIGNAL(updateGL()), m_Viewer, SLOT(updateGL()));
+  connect(m_gallery, SIGNAL(updateLookFrom(qglviewer::Vec, qglviewer::Quaternion, float)), m_Viewer, SLOT(updateLookFrom(qglviewer::Vec, qglviewer::Quaternion, float)));
+  connect(m_gallery, SIGNAL(updateBrickInfo(QList<BrickInformation>)), m_bricks, SLOT(setBricks(QList<BrickInformation>)));
+  connect(m_gallery, SIGNAL(updateLightInfo(LightingInformation)), m_lightingWidget, SLOT(setLightInfo(LightingInformation)));
+  connect(m_gallery, SIGNAL(updateTagColors()), m_preferencesWidget, SLOT(updateTagColors()));
+  connect(m_volInfoWidget, SIGNAL(volumeNumber(int)), SLOT(setVolumeNumber(int)));
+  connect(m_volInfoWidget, SIGNAL(volumeNumber(int, int)), SLOT(setVolumeNumber(int, int)));
+  connect(m_volInfoWidget, SIGNAL(repeatType(int, bool)), SLOT(setRepeatType(int, bool)));
+  connect(m_volInfoWidget, SIGNAL(updateScaling()), SLOT(updateScaling()));
+  connect(m_volInfoWidget, SIGNAL(updateScaling()), m_Viewer, SLOT(showFullScene()));
+  connect(m_volInfoWidget, SIGNAL(updateGL()), m_Viewer, SLOT(update()));
+  connect(this, SIGNAL(refreshVolInfo(int, VolumeInformation)), m_volInfoWidget, SLOT(refreshVolInfo(int, VolumeInformation)));
+  connect(this, SIGNAL(refreshVolInfo(int, int, VolumeInformation)), m_volInfoWidget, SLOT(refreshVolInfo(int, int, VolumeInformation)));
+  connect(this, SIGNAL(setVolumes(QList<int>)), m_volInfoWidget, SLOT(setVolumes(QList<int>)));
+  connect(GeometryObjects::paths(), SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(GeometryObjects::paths(), SIGNAL(showProfile(int, int, QList<qglviewer::Vec>)), SLOT(viewProfile(int, int, QList<qglviewer::Vec>)));
+  connect(GeometryObjects::paths(), SIGNAL(showThicknessProfile(int, int,  QList< QPair<qglviewer::Vec, qglviewer::Vec> >)), SLOT(viewThicknessProfile(int, int, QList< QPair<qglviewer::Vec, qglviewer::Vec> >)));
+  connect(GeometryObjects::paths(), SIGNAL(addToCameraPath(QList<qglviewer::Vec>,QList<qglviewer::Vec>,QList<qglviewer::Vec>,QList<qglviewer::Vec>)),
+          SLOT(addToCameraPath(QList<qglviewer::Vec>,QList<qglviewer::Vec>,QList<qglviewer::Vec>,QList<qglviewer::Vec>)));
+  connect(GeometryObjects::paths(), SIGNAL(sculpt(int, QList<qglviewer::Vec>, float, float, int)),
+          SLOT(sculpt(int, QList<qglviewer::Vec>, float, float, int)));
+  connect(GeometryObjects::paths(), SIGNAL(fillPathPatch(QList<qglviewer::Vec>, int, int)),
+          SLOT(fillPathPatch(QList<qglviewer::Vec>, int, int)));
+  connect(GeometryObjects::paths(), SIGNAL(paintPathPatch(QList<qglviewer::Vec>, int, int)),
+          SLOT(paintPathPatch(QList<qglviewer::Vec>, int, int)));
+  connect(GeometryObjects::hitpoints(), SIGNAL(sculpt(int, QList<qglviewer::Vec>, float, float, int)),
+          SLOT(sculpt(int, QList<qglviewer::Vec>, float, float, int)));
+  connect(GeometryObjects::paths(), SIGNAL(extractPath(int, bool, int, int)), SLOT(extractPath(int, bool, int, int)));
+  connect(GeometryObjects::paths(), SIGNAL(updateGL()), m_Viewer, SLOT(updateGL()));
+  connect(GeometryObjects::crops(), SIGNAL(showMessage(QString, bool)), m_Viewer, SLOT(displayMessage(QString, bool)));
+  connect(GeometryObjects::crops(), SIGNAL(updateGL()), m_Viewer, SLOT(updateGL()));
+  connect(GeometryObjects::crops(), SIGNAL(mopCrop(int)), SLOT(mopCrop(int)));
+  connect(GeometryObjects::clipplanes(), SIGNAL(saveSliceImage(int, int)), SLOT(saveSliceImage(int, int)));
+  connect(GeometryObjects::clipplanes(), SIGNAL(extractClip(int, int, int)), SLOT(extractClip(int, int, int)));
+  connect(GeometryObjects::clipplanes(), SIGNAL(reorientCameraUsingClipPlane(int)), SLOT(reorientCameraUsingClipPlane(int)));
+  connect(GeometryObjects::clipplanes(), SIGNAL(mopClip(qglviewer::Vec, qglviewer::Vec)), SLOT(mopClip(qglviewer::Vec, qglviewer::Vec)));
+  connect(GeometryObjects::grids(), SIGNAL(updateGL()), m_Viewer, SLOT(updateGL()));
+  connect(GeometryObjects::grids(), SIGNAL(gridStickToSurface(int, int, QList< QPair<qglviewer::Vec, qglviewer::Vec> >)),
+          SLOT(gridStickToSurface(int, int, QList< QPair<qglviewer::Vec, qglviewer::Vec> >)));
 
   initializeRecentFiles();
 
@@ -3028,7 +3198,7 @@ void MainWindow::loadProject(const char* flnm) {
 
 }
 
-void MainWindow::saveProject(const char *flnm) {
+void MainWindow::saveProject(const QString & flnm) {
 
   //m_Viewer->saveProject();
   Vec bmin, bmax;
@@ -3160,7 +3330,7 @@ MainWindow::on_actionSave_Project_triggered()
   if (!StaticFunctions::checkExtension(flnm, ".xml"))
     flnm += ".xml";
 
-  saveProject(flnm.toLatin1().data());
+  saveProject(flnm);
 }
 void
 MainWindow::on_actionSave_ProjectAs_triggered()
@@ -3180,7 +3350,7 @@ MainWindow::on_actionSave_ProjectAs_triggered()
   if (!StaticFunctions::checkExtension(flnm, ".xml"))
     flnm += ".xml";
 
-  saveProject(flnm.toLatin1().data());
+  saveProject(flnm);
 }
 
 void
@@ -3563,58 +3733,22 @@ MainWindow::updateParameters(bool drawBox, bool drawAxis,
     }
 }
 
-void
-MainWindow::loadViewsAndKeyFrames(const char* flnm)
-{
-  QString sflnm(flnm);
-  sflnm.replace(QString(".xml"), QString(".keyframes"));
+void MainWindow::loadViewsAndKeyFrames(const QString & sflnm) {
+  QConfigMe cfg;
+  cfg.read(sflnm);
+  m_gallery->load(cfg);
+  m_keyFrame->load(cfg);
+}
 
-  QFileInfo fileInfo(sflnm);
-  if (! fileInfo.exists())
-    return;
-
-  fstream fin(sflnm.toLatin1().data(), ios::binary|ios::in);
-
-  char keyword[100];
-  fin.getline(keyword, 100, 0);
-  if (strcmp(keyword, "Drishti Keyframes") != 0)
-    {
-      QMessageBox::information(0, "Load Keyframes",
-			       QString("Invalid .keyframes file : ")+sflnm);
-      return;
-    }
-
-  while (!fin.eof())
-    {
-      fin.getline(keyword, 100, 0);
-      if (strcmp(keyword, "views") == 0)
-	m_gallery->load(fin);
-      else if (strcmp(keyword, "keyframes") == 0)
-	m_keyFrame->load(fin);
-    }
-  fin.close();
+void MainWindow::saveViewsAndKeyFrames(const QString & sflnm) const {
+  QConfigMe cfg;
+  m_gallery->save(cfg);
+  m_keyFrame->save(cfg);
+  cfg.write(sflnm);
 }
 
 void
-MainWindow::saveViewsAndKeyFrames(const char* flnm)
-{
-  QString sflnm(flnm);
-  sflnm.replace(QString(".xml"), QString(".keyframes"));
-
-  fstream fout(sflnm.toLatin1().data(), ios::binary|ios::out);
-
-  QString keyword;
-  keyword = "Drishti Keyframes";
-  fout.write((char*)(keyword.toLatin1().data()), keyword.length()+1);
-
-  m_gallery->save(fout);
-  m_keyFrame->save(fout);
-
-  fout.close();
-}
-
-void
-MainWindow::saveVolumeIntoProject(const char *flnm)
+MainWindow::saveVolumeIntoProject(const QString & flnm)
 {
   QString str;
 
@@ -3793,7 +3927,7 @@ MainWindow::saveVolumeIntoProject(const char *flnm)
 }
 
 int
-MainWindow::loadVolumeFromProject(const char *flnm)
+MainWindow::loadVolumeFromProject(const QString &flnm)
 {
   int volType = Global::DummyVolume;
 

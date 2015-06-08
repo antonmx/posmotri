@@ -1,8 +1,8 @@
 
 #include "global.h"
 #include "geometryobjects.h"
-//#include <QtGui>
 
+using namespace qglviewer;
 
 
 int GeometryObjects::m_mgType = NOGEO;

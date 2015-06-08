@@ -1,10 +1,10 @@
 #include "global.h"
-//#include <QtGui>
 #include "volume.h"
 #include "staticfunctions.h"
 #include "xmlheaderfunctions.h"
 #include <QMessageBox>
 
+using namespace qglviewer;
 
 bool Volume::valid() { return (m_volume.count() > 0); }
 

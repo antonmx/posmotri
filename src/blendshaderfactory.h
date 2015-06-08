@@ -1,7 +1,6 @@
 #ifndef BLENDSHADERFACTORY_H
 #define BLENDSHADERFACTORY_H
 
-//#include <QtGui>
 #include "cropobject.h"
 
 class BlendShaderFactory
@@ -10,8 +9,8 @@ class BlendShaderFactory
   static QString generateBlend(QList<CropObject>, int nvol = 1);
 
  private :
-  static QString applyBlend(Vec, float,
-			    Vec, Vec, Vec,
+  static QString applyBlend(qglviewer::Vec, float,
+			    qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 			    float, float,
 			    float, float,
 			    int, float,

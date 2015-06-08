@@ -341,36 +341,37 @@ BrickInformation::interpolate(const QList<BrickInformation> brickInfo1,
 
 
 
-void BrickInformation::load(QSettings & cfg) {
+void BrickInformation::load(const QConfigMe & cfg) {
+  reset();
   cfg.beginGroup("BrickInformation");
-  tfSet = getQSettingsValue(cfg, "tfset", tfSet );
-  linkBrick = getQSettingsValue(cfg, "linkbrick", linkBrick );
-  brickMin = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "brickmin") );
-  brickMax = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "brickmax") );
-  position = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "position") );
-  pivot = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "pivot") );
-  axis = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "axis") );
-  angle = getQSettingsValue(cfg, "angle", angle);
-  scalepivot = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "scalepivot") );
-  scale = QVecEdit::toVec( getQSettingsValue<QString>(cfg, "scale") );
-  QSettingsGetValArray(cfg, "Clippers",  clippers);
+  cfg.getValue("tfset", tfSet);
+  cfg.getValue("linkbrick", linkBrick);
+  cfg.getValue("brickmin", brickMin);
+  cfg.getValue("brickmax", brickMax);
+  cfg.getValue("position", position);
+  cfg.getValue("pivot", pivot);
+  cfg.getValue("axis", axis);
+  cfg.getValue("angle", angle);
+  cfg.getValue("scalepivot", scalepivot);
+  cfg.getValue("scale", scale);
+  cfg.getArrayValue("Clippers",  clippers);
   cfg.endGroup();
 }
 
 
 
-void BrickInformation::save(QSettings & cfg) const {
+void BrickInformation::save(QConfigMe  & cfg) const {
   cfg.beginGroup("BrickInformation");
-  cfg.setValue("tfset", tfSet );
-  cfg.setValue("linkbrick", linkBrick );
-  cfg.setValue("brickmin", QVecEdit::toString(brickMin) );
-  cfg.setValue("brickmax", QVecEdit::toString(brickMax) );
-  cfg.setValue("position", QVecEdit::toString(position) );
-  cfg.setValue("pivot", QVecEdit::toString(pivot) );
-  cfg.setValue("axis", QVecEdit::toString(axis) );
+  cfg.setValue("tfset", tfSet);
+  cfg.setValue("linkbrick", linkBrick);
+  cfg.setValue("brickmin", brickMin);
+  cfg.setValue("brickmax", brickMax);
+  cfg.setValue("position", position);
+  cfg.setValue("pivot", pivot);
+  cfg.setValue("axis", axis);
   cfg.setValue("angle", angle);
-  cfg.setValue("scalepivot", QVecEdit::toString(scalepivot));
-  cfg.setValue("scale", QVecEdit::toString(scale) );
-  QSettingsSetValArray(cfg, "Clippers",  clippers);
+  cfg.setValue("scalepivot", scalepivot);
+  cfg.setValue("scale", scale);
+  cfg.setArrayValue("Clippers",  clippers);
   cfg.endGroup();
 }

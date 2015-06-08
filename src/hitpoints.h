@@ -19,18 +19,18 @@ class HitPoints : public QObject
   void removeFromMouseGrabberPool();
   void removeFromMouseGrabberPool(int i);
 
-  QList<Vec> points();
-  QList<Vec> activePoints();
+  QList<qglviewer::Vec> points();
+  QList<qglviewer::Vec> activePoints();
 
-  QList<Vec> barePoints();
+  QList<qglviewer::Vec> barePoints();
 
   void ignore(bool);
 
   int count();
   int bareCount();
   int activeCount();
-  bool point(int, Vec&);
-  bool activePoint(int, Vec&);
+  bool point(int, qglviewer::Vec&);
+  bool activePoint(int, qglviewer::Vec&);
 
   void clear();
   void removeActive();
@@ -42,29 +42,29 @@ class HitPoints : public QObject
   bool keyPressEvent(QKeyEvent*);
 
   int pointSize();
-  Vec pointColor();
+  qglviewer::Vec pointColor();
 
-  QList<Vec> renewValues();
+  QList<qglviewer::Vec> renewValues();
   void setRawTagValues(QList<QVariant>, QList<QVariant>);
 
-  HitPointGrabber* checkIfGrabsMouse(int, int, Camera*);
-  void mousePressEvent(QMouseEvent*, Camera*);
-  void mouseMoveEvent(QMouseEvent*, Camera*);
-  void mouseReleaseEvent(QMouseEvent*, Camera*);
+  HitPointGrabber* checkIfGrabsMouse(int, int, qglviewer::Camera*);
+  void mousePressEvent(QMouseEvent*, qglviewer::Camera*);
+  void mouseMoveEvent(QMouseEvent*, qglviewer::Camera*);
+  void mouseReleaseEvent(QMouseEvent*, qglviewer::Camera*);
 
  signals :
-  void sculpt(int, QList<Vec>, float, float, int);
+  void sculpt(int, QList<qglviewer::Vec>, float, float, int);
 
  public slots :
-  void add(Vec);
-  void setPoints(QList<Vec>);
-  void setBarePoints(const QList<Vec> &);
+  void add(qglviewer::Vec);
+  void setPoints(QList<qglviewer::Vec>);
+  void setBarePoints(const QList<qglviewer::Vec> &);
   void addPoints(QString);
   void addBarePoints(QString);
   void savePoints(QString);
   void removeBarePoints();
   void setPointSize(int);
-  void setPointColor(Vec);
+  void setPointColor(qglviewer::Vec);
   void setMouseGrab(bool);
   void toggleMouseGrab();
 
@@ -81,14 +81,14 @@ class HitPoints : public QObject
   bool m_showTagValues;
   bool m_showCoordinates;
 
-  Vec m_pointColor;
+  qglviewer::Vec m_pointColor;
   int m_pointSize;
 
   bool m_grab;
 
-  QList<Vec> m_barePoints;
+  QList<qglviewer::Vec> m_barePoints;
 
-  void drawArrows(Vec, int);
+  void drawArrows(qglviewer::Vec, int);
 
   void updatePointDialog();
   void makePointConnections();

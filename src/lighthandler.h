@@ -5,7 +5,7 @@
 //#include <QtGui>
 
 #include <QGLViewer/qglviewer.h>
-using namespace qglviewer;
+
 
 #include <QGLWidget>
 #include <QGLFramebufferObject>
@@ -27,13 +27,13 @@ class LightHandler
 
     static void updateOpacityTexture(GLuint,
 				     int, int,
-				     Vec,
-				     Vec, Vec, Vec,
+				     qglviewer::Vec,
+				     qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 				     uchar*);
     static void updateAndLoadLightTexture(GLuint,
 					  int, int,
-					  Vec,
-					  Vec, Vec, Vec,
+					  qglviewer::Vec,
+					  qglviewer::Vec, qglviewer::Vec, qglviewer::Vec,
 					  uchar*);
 
     static void setLut(uchar*);
@@ -57,7 +57,7 @@ class LightHandler
     static void removeFromMouseGrabberPool();
     static void addInMouseGrabberPool();
     static bool keyPressEvent(QKeyEvent*);
-    static void mouseReleaseEvent(QMouseEvent*, Camera*);
+    static void mouseReleaseEvent(QMouseEvent*, qglviewer::Camera*);
 
     static bool updateOnlyLightBuffers() { return (m_onlyLightBuffers); }
     static bool willUpdateLightBuffers() { return (m_doAll || m_onlyLightBuffers); }
@@ -70,8 +70,8 @@ class LightHandler
     static void show();
     static void hide();
 
-    static void setClips(QList<Vec>, QList<Vec>);
-    static bool checkClips(QList<Vec>, QList<Vec>);
+    static void setClips(QList<qglviewer::Vec>, QList<qglviewer::Vec>);
+    static bool checkClips(QList<qglviewer::Vec>, QList<qglviewer::Vec>);
     static bool checkCrops();
 
  private :
@@ -95,7 +95,7 @@ class LightHandler
     static int m_lightLod;
     static int m_lightDiffuse;
 
-    static Vec m_aoLightColor;
+    static qglviewer::Vec m_aoLightColor;
     static int m_aoRad, m_aoTimes;
     static float m_aoFrac, m_aoDensity1, m_aoDensity2;
 
@@ -106,8 +106,8 @@ class LightHandler
     static bool m_applyClip, m_applyCrop;
 
     static int m_dtexX, m_dtexY;
-    static Vec m_dragInfo, m_subVolSize;
-    static Vec m_dataMin, m_dataMax;
+    static qglviewer::Vec m_dragInfo, m_subVolSize;
+    static qglviewer::Vec m_dataMin, m_dataMax;
     static int m_opacityTF, m_emisTF;
 
     static GLuint m_lutTex;
@@ -159,8 +159,8 @@ class LightHandler
 
     static QGLFramebufferObject* newFBO(int, int);
 
-    static QList<Vec> m_clipPos;
-    static QList<Vec> m_clipNorm;
+    static QList<qglviewer::Vec> m_clipPos;
+    static QList<qglviewer::Vec> m_clipNorm;
     static GLhandleARB m_clipShader;
     static GLint m_clipParm[20];
 
@@ -191,17 +191,17 @@ class LightHandler
 
     static void updateAmbientOcclusionLightBuffer(int, float,
 						  float, float,
-						  int, Vec);
-    static void updatePointLightBuffer(QList<Vec>, float,
+						  int, qglviewer::Vec);
+    static void updatePointLightBuffer(QList<qglviewer::Vec>, float,
 				       float, float,
-				       Vec, int, int,
+				       qglviewer::Vec, int, int,
 				       bool);
-    static void updateDirectionalLightBuffer(Vec, float, Vec,
+    static void updateDirectionalLightBuffer(qglviewer::Vec, float, qglviewer::Vec,
 					     int, int);
 
     static void updateEmissiveBuffer(float);
 
-    static void updateFinalLightBuffer(int, Vec);
+    static void updateFinalLightBuffer(int, qglviewer::Vec);
     static void updateFinalLightBuffer(int);
 
     static void diffuseLightBuffer(int);

@@ -13,8 +13,8 @@ class TrisetObject
 
   void gridSize(int&, int&, int&);
 
-  Vec centroid() { return m_tcentroid; }
-  void enclosingBox(Vec&, Vec&);
+  qglviewer::Vec centroid() { return m_tcentroid; }
+  void enclosingBox(qglviewer::Vec&, qglviewer::Vec&);
 
   QString filename() { return m_fileName; }
 
@@ -51,17 +51,17 @@ class TrisetObject
   float ambient() { return m_ambient; }
   void setAmbient(float ambient) { m_ambient = qBound(0.0f, ambient, 1.0f); }
 
-  Vec color() { return m_color; }
-  void setColor(Vec color) { m_color = color; }
+  qglviewer::Vec color() { return m_color; }
+  void setColor(qglviewer::Vec color) { m_color = color; }
 
-  Vec cropBorderColor() { return m_cropcolor; }
-  void setCropBorderColor(Vec color) { m_cropcolor = color; }
+  qglviewer::Vec cropBorderColor() { return m_cropcolor; }
+  void setCropBorderColor(qglviewer::Vec color) { m_cropcolor = color; }
 
-  Vec position() { return m_position; }
-  void setPosition(Vec pos) { m_position = pos; }
+  qglviewer::Vec position() { return m_position; }
+  void setPosition(qglviewer::Vec pos) { m_position = pos; }
 
-  Vec scale() { return m_scale; }
-  void setScale(Vec scl) { m_scale = scl; }
+  qglviewer::Vec scale() { return m_scale; }
+  void setScale(qglviewer::Vec scl) { m_scale = scl; }
 
   int vertexCount() { return m_vertices.count(); }
   int triangleCount() { return m_triangles.count()/3; }
@@ -79,57 +79,57 @@ class TrisetObject
 
   void predraw(QGLViewer*,
 	       double*,
-	       Vec,
+	       qglviewer::Vec,
 	       bool, int, int);
   void draw(QGLViewer*,
 	    bool,
-	    Vec,
-	    float, float, Vec);
+	    qglviewer::Vec,
+	    float, float, qglviewer::Vec);
   void postdraw(QGLViewer*,
 		int, int, bool, int);
 
   void makeReadyForPainting(QGLViewer*);
   void releaseFromPainting();
-  void paint(QGLViewer*, QBitArray, float*, Vec, float);
+  void paint(QGLViewer*, QBitArray, float*, qglviewer::Vec, float);
 
  private :
   QString m_fileName;
 
   bool m_updateFlag;
   int m_nX, m_nY, m_nZ;
-  Vec m_centroid;
-  Vec m_enclosingBox[8];
+  qglviewer::Vec m_centroid;
+  qglviewer::Vec m_enclosingBox[8];
   bool m_shadows;
   bool m_pointMode;
   bool m_blendMode;
   bool m_screenDoor;
   bool m_flipNormals;
   int m_pointStep;
-  Vec m_color;
-  Vec m_cropcolor;
-  Vec m_position;
-  Vec m_scale;
+  qglviewer::Vec m_color;
+  qglviewer::Vec m_cropcolor;
+  qglviewer::Vec m_position;
+  qglviewer::Vec m_scale;
   float m_opacity;
   float m_specular;
   float m_diffuse;
   float m_ambient;
   int m_pointSize;
-  QVector<Vec> m_vertices;
-  QVector<Vec> m_normals;
+  QVector<qglviewer::Vec> m_vertices;
+  QVector<qglviewer::Vec> m_normals;
   QVector<uint> m_triangles;
-  QVector<Vec> m_vcolor;
-  QVector<Vec> m_drawcolor;
+  QVector<qglviewer::Vec> m_vcolor;
+  QVector<qglviewer::Vec> m_drawcolor;
 
-  Vec m_tcentroid;
-  Vec m_tenclosingBox[8];
-  QVector<Vec> m_tvertices;
-  QVector<Vec> m_tnormals;
-  QVector<Vec> m_texValues;
+  qglviewer::Vec m_tcentroid;
+  qglviewer::Vec m_tenclosingBox[8];
+  QVector<qglviewer::Vec> m_tvertices;
+  QVector<qglviewer::Vec> m_tnormals;
+  QVector<qglviewer::Vec> m_texValues;
 
   uint *m_scrV;
   float *m_scrD;
 
-  void drawTriset(float, float, Vec);
+  void drawTriset(float, float, qglviewer::Vec);
   void drawTriset();
 
   bool loadTriset(QString);

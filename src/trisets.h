@@ -17,7 +17,7 @@ class Trisets : public QObject
 
   int count() { return m_trisets.count(); }
 
-  void allEnclosingBox(Vec&, Vec&);
+  void allEnclosingBox(qglviewer::Vec&, qglviewer::Vec&);
   void allGridSize(int&, int&, int&);
 
   bool isInMouseGrabberPool(int);
@@ -35,12 +35,12 @@ class Trisets : public QObject
 
   void predraw(QGLViewer*,
 	       double*,
-	       Vec,
+	       qglviewer::Vec,
 	       bool, int, int);
-  void draw(QGLViewer*, Vec,
-	    float, float, Vec,
-	    bool, bool, Vec,
-	    QList<Vec>, QList<Vec>,
+  void draw(QGLViewer*, qglviewer::Vec,
+	    float, float, qglviewer::Vec,
+	    bool, bool, qglviewer::Vec,
+	    QList<qglviewer::Vec>, QList<qglviewer::Vec>,
 	    bool);
   void postdraw(QGLViewer*);
 
@@ -48,7 +48,7 @@ class Trisets : public QObject
 
   void createDefaultShader(QList<CropObject>);
   void createHighQualityShader(bool, float, QList<CropObject>);
-  void createShadowShader(Vec, QList<CropObject>);
+  void createShadowShader(qglviewer::Vec, QList<CropObject>);
 
   QList<TrisetInformation> get();
   void set(QList<TrisetInformation>);
@@ -58,7 +58,7 @@ class Trisets : public QObject
 
   void makeReadyForPainting(QGLViewer*);
   void releaseFromPainting();
-  void paint(QGLViewer*, QBitArray, float*, Vec, float);
+  void paint(QGLViewer*, QBitArray, float*, qglviewer::Vec, float);
 
  signals :
   void updateGL();

@@ -2,7 +2,7 @@
 #define BRICKINFORMATION_H
 
 #include <QGLViewer/qglviewer.h>
-# include <QSettings>
+#include "PromotedWidgets.h"
 
 class DrawBrickInformation {
  public :
@@ -66,8 +66,8 @@ class BrickInformation
 					     const QList<BrickInformation>,
 					     float);
 
-  void load(QSettings&);
-  void save(QSettings&) const;
+  void load(const QConfigMe&);
+  void save(QConfigMe&) const;
 
 
   int tfSet;

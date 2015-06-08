@@ -5,6 +5,8 @@
 #include <PromotedWidgets.h>
 #include <QDebug>
 
+using namespace qglviewer;
+
 QList<BrickInformation> Bricks::bricks() { return m_bricks; }
 QList<BrickBounds> Bricks::ghostBricks() { return m_ghostBricks; }
 

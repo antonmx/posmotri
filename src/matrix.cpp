@@ -1,6 +1,8 @@
 #include "matrix.h"
 #include <stdlib.h>
 
+using namespace qglviewer;
+
 void
 Matrix::identity(double *xform)
 {

@@ -5,6 +5,7 @@
 #include <QPointF>
 #include <QColor>
 #include <QFont>
+#include "PromotedWidgets.h"
 
 class CaptionObject {
 public :
@@ -13,8 +14,8 @@ public :
 
   QImage image();
 
-  void load(QSettings & cfg);
-  void save(QSettings & cfg) const;
+  void load(const QConfigMe  & cfg);
+  void save(QConfigMe  & cfg) const;
 
   void clear();
 

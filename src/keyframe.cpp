@@ -10,7 +10,7 @@
 #include <QMessageBox>
 #include <PromotedWidgets.h>
 
-
+using namespace qglviewer;
 
 int KeyFrame::numberOfKeyFrames() { return m_keyFrameInfo.count(); }
 
@@ -1893,13 +1893,13 @@ KeyFrame::replaceKeyFrameImage(int kfn, QImage img)
 
 
 
-void KeyFrame::load(QSettings &cfg) {
+void KeyFrame::load(const QConfigMe &cfg) {
 
   clear();
 
   cfg.beginGroup("KeyFrames");
   m_savedKeyFrame.load(cfg);
-  QSettingsLoadArray(cfg, "KeyFarameInfo", m_keyFrameInfo);
+  cfg.getClassArray("KeyFarameInfo", m_keyFrameInfo);
   cfg.endGroup();
 
   for (int i = 0; i < m_keyFrameInfo.size(); i++) {
@@ -1928,10 +1928,10 @@ void KeyFrame::load(QSettings &cfg) {
 
 }
 
-void KeyFrame::save(QSettings &cfg) const {
+void KeyFrame::save(QConfigMe  &cfg) const {
   cfg.beginGroup("KeyFrames");
   m_savedKeyFrame.save(cfg);
-  QSettingsSaveArray(cfg, "KeyFarameInfo", m_keyFrameInfo);
+  cfg.setClassArray("KeyFarameInfo", m_keyFrameInfo);
   cfg.endGroup();
 }
 
@@ -1940,86 +1940,19 @@ void KeyFrame::save(QSettings &cfg) const {
 
 
 
-void
-KeyFrame::import(const QString & flnm)
-{
-  //--------------------------------
-  if (m_keyFrameInfo.count() == 0)
-    {
-      QMessageBox::information(0,
-                               "Import KeyFrames",
-                               "Need atleast one keyframe in the keyframe editor before import can take place");
+void KeyFrame::import(const QString & flnm) {
+  
+  if (m_keyFrameInfo.count() == 0) {
+      qDebug() <<  "Import KeyFrames: need atleast one keyframe in the editor before import.";
       return;
-    }
-  //--------------------------------
-
-
-  //--------------------------------
-  fstream fin(flnm.toAscii().data(), ios::binary|ios::in);
-
-  char keyword[100];
-  fin.getline(keyword, 100, 0);
-  if (strcmp(keyword, "Drishti Keyframes") != 0)
-    {
-      QMessageBox::information(0, "Import Keyframes",
-                               QString("Invalid .keyframes file : ")+flnm);
-      return;
-    }
-
-  // search for keyframes
-  bool flag = false;
-  while (!fin.eof())
-    {
-      fin.getline(keyword, 100, 0);
-      if (strcmp(keyword, "keyframes") == 0)
-	{
-	  flag = true;
-	  break;
-	}
-    }
-  if (!flag)
-    {
-      QMessageBox::information(0, "Import Keyframes", "No keyframes found in the file !");
-      return;
-    }
-  //--------------------------------
-
-
-  //----------------------------------------
-  //-- read all the keyframe data
-  QList<CameraPathNode*> cameraList;
-  QList<KeyFrameInformation*> keyFrameInfo;
-
-  int n;
-  fin.read((char*)&n, sizeof(int));
-
-  bool savedFirst = false;
-  while (!fin.eof())
-    {
-      fin.getline(keyword, 100, 0);
-
-      if (strcmp(keyword, "done") == 0)
-	break;
-
-      if (strcmp(keyword, "keyframestart") == 0)
-	{
-	  // the zeroeth keyframe should be moved to m_savedKeyFrame
-	  if (!savedFirst)
-	    {
-	      KeyFrameInformation dummyKeyFrame;
-	      dummyKeyFrame.load(fin);
-	      savedFirst = true;
-	    }
-	  else
-	    {
-	      KeyFrameInformation *kfi = new KeyFrameInformation();
-	      kfi->load(fin);
-	      keyFrameInfo.append(kfi);
-	    }
-	}
-    }
-  fin.close();
-  //----------------------------------------
+  }
+  
+  QConfigMe cfg;
+  cfg.read(flnm);  
+  QList<KeyFrameInformation*> keyFrameInfo;  
+  cfg.beginGroup("KeyFrames");
+  cfg.getClassArray("KeyFarameInfo", keyFrameInfo);
+  cfg.endGroup();
 
 
   //----------------------------------------

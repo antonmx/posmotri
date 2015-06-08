@@ -6,6 +6,8 @@
 #include <QWheelEvent>
 #include <QGLViewer/manipulatedCameraFrame.h>
 
+using namespace qglviewer;
+
 ClipGrabber::ClipGrabber()
 {
   m_lastX = m_lastY = -1;

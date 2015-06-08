@@ -5,6 +5,9 @@
 #include "propertyeditor.h"
 #include "xmlheaderfunctions.h"
 
+using namespace qglviewer;
+
+
 VolumeInformationWidget::VolumeInformationWidget(QWidget *parent) :
   QWidget(parent)
 {

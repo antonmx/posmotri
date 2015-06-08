@@ -3,6 +3,7 @@
 
 
 #include <QObject>
+#include <QByteArray>
 #include <QGLViewer/qglviewer.h>
 
 #include "camerapathnode.h"
@@ -32,12 +33,12 @@ class KeyFrameInformation
 
   void clear();
 
-  void load(QSettings & cfg);
-  void save(QSettings & cfg) const;
+  void load( const QConfigMe & cfg);
+  void save( QConfigMe & cfg ) const;
 
   void setDrawBox(bool);
   void setDrawAxis(bool);
-  void setBackgroundColor(Vec);
+  void setBackgroundColor(qglviewer::Vec);
   void setBackgroundImageFile(QString);
   void setFrameNumber(int);
   void setFocusDistance(float, float);
@@ -46,14 +47,14 @@ class KeyFrameInformation
   void setVolumeNumber2(int);
   void setVolumeNumber3(int);
   void setVolumeNumber4(int);
-  void setPosition(Vec);
-  void setOrientation(Quaternion);
+  void setPosition(qglviewer::Vec);
+  void setOrientation(qglviewer::Quaternion);
   void setLut(uchar*);
   void setLightInfo(LightingInformation);
   void setGiLightInfo(GiLightInfo);
   void setClipInfo(ClipInformation);
   void setBrickInfo(QList<BrickInformation>);
-  void setVolumeBounds(Vec, Vec);
+  void setVolumeBounds(qglviewer::Vec, qglviewer::Vec);
   void setImage(QImage);
   void setTick(int, int, QString, QString, QString);
   void setMix(int, bool, bool, bool);
@@ -62,7 +63,7 @@ class KeyFrameInformation
   void setCaptions(QList<CaptionObject>);
   void setColorBars(QList<ColorBarObject>);
   void setScaleBars(QList<ScaleBarObject>);
-  void setPoints(QList<Vec>, QList<Vec>, int, Vec);
+  void setPoints(QList<qglviewer::Vec>, QList<qglviewer::Vec>, int, qglviewer::Vec);
   void setPaths(QList<PathObject>);
   void setGrids(QList<GridObject>);
   void setCrops(QList<CropObject>);
@@ -76,7 +77,7 @@ class KeyFrameInformation
   bool hasCaption(QStringList);
   bool drawBox();
   bool drawAxis();
-  Vec backgroundColor();
+  qglviewer::Vec backgroundColor();
   QString backgroundImageFile();
   int frameNumber();
   float focusDistance();
@@ -85,14 +86,14 @@ class KeyFrameInformation
   int volumeNumber2();
   int volumeNumber3();
   int volumeNumber4();
-  Vec position();
-  Quaternion orientation();
+  qglviewer::Vec position();
+  qglviewer::Quaternion orientation();
   uchar* lut();
   LightingInformation lightInfo();
   GiLightInfo giLightInfo();
   ClipInformation clipInfo();
   QList<BrickInformation> brickInfo();
-  void volumeBounds(Vec&, Vec&);
+  void volumeBounds(qglviewer::Vec&, qglviewer::Vec&);
   QImage image();
   void getTick(int&, int&, QString&, QString&, QString&);
   void getMix(int&, bool&, bool&, bool&);
@@ -101,10 +102,10 @@ class KeyFrameInformation
   QList<CaptionObject> captions();
   QList<ColorBarObject> colorbars();
   QList<ScaleBarObject> scalebars();
-  QList<Vec> points();
-  QList<Vec> barepoints();
+  QList<qglviewer::Vec> points();
+  QList<qglviewer::Vec> barepoints();
   int pointSize();
-  Vec pointColor();
+  qglviewer::Vec pointColor();
   QList<PathObject> paths();
   QList<GridObject> grids();
   QList<CropObject> crops();
@@ -156,16 +157,16 @@ class KeyFrameInformation
   int m_volumeNumber2;
   int m_volumeNumber3;
   int m_volumeNumber4;
-  Vec m_position;
-  Quaternion m_rotation;
-  uchar *m_lut;
+  qglviewer::Vec m_position;
+  qglviewer::Quaternion m_rotation;
+  QByteArray m_lut;
   LightingInformation m_lightInfo;
   GiLightInfo m_giLightInfo;
   ClipInformation m_clipInfo;
   QList<BrickInformation> m_brickInfo;
-  Vec m_volMin, m_volMax;
+  qglviewer::Vec m_volMin, m_volMax;
   QImage m_image;
-  Vec m_backgroundColor;
+  qglviewer::Vec m_backgroundColor;
   QString m_backgroundImageFile;
   bool m_drawBox, m_drawAxis;
   int m_tickSize, m_tickStep;
@@ -177,17 +178,17 @@ class KeyFrameInformation
   QList<CaptionObject> m_captions;
   QList<ColorBarObject> m_colorbars;
   QList<ScaleBarObject> m_scalebars;
-  QList<Vec> m_points;
-  QList<Vec> m_barepoints;
+  QList<qglviewer::Vec> m_points;
+  QList<qglviewer::Vec> m_barepoints;
   int m_pointSize;
-  Vec m_pointColor;
+  qglviewer::Vec m_pointColor;
   QList<PathObject> m_paths;
   QList<GridObject> m_grids;
   QList<CropObject> m_crops;
   QList<PathGroupObject> m_pathgroups;
   QList<TrisetInformation> m_trisets;
   QList<NetworkInformation> m_networks;
-  uchar *m_tagColors;
+  QByteArray m_tagColors;
   QByteArray m_pruneBuffer;
   bool m_pruneBlend;
 

@@ -1,7 +1,7 @@
 #ifndef GILIGHTINFO_H
 #define GILIGHTINFO_H
 
-#include <QSettings>
+#include "PromotedWidgets.h"
 #include <QGLViewer/qglviewer.h>
 #include "gilightobjectinfo.h"
 
@@ -17,8 +17,8 @@ public :
   GiLightInfo &operator=(const GiLightInfo &);
   static GiLightInfo interpolate(const GiLightInfo &, const GiLightInfo &, float);
 
-  void load(QSettings &);
-  void save(QSettings &) const;
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
   QList<GiLightObjectInfo> gloInfo;
 
