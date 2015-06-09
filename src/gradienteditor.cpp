@@ -636,8 +636,16 @@ GradientEditor::askGradientChoice()
   emit gradientChanged();
 }
 
-void
-GradientEditor::saveGradientStops()
+void GradientEditor::load ( const QConfigMe & ) {
+
+}
+
+void GradientEditor::save ( QConfigMe & cfg ) const {
+
+}
+
+
+void GradientEditor::saveGradientStops()
 {
   QString gname;
   bool ok;

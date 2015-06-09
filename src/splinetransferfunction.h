@@ -38,9 +38,10 @@ class SplineTransferFunction : public QObject
 
   SplineTransferFunction(QObject * parent = 0);
   ~SplineTransferFunction();
+  
+  void load(const QConfigMe & cfg);
+  void save(QConfigMe & cfg) const;
 
-  QDomElement domElement(QDomDocument&);
-  void fromDomElement(QDomElement);
 
   int size();
   QImage colorMapImage();
@@ -51,7 +52,7 @@ class SplineTransferFunction : public QObject
   void setOn(int, bool);
   bool on(int);
 
-  SplineInformation getSpline();
+  SplineInformation getSpline() const;
   void setSpline(SplineInformation);
 
   void setGradLimits(int, int);

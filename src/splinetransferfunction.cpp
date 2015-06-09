@@ -213,87 +213,14 @@ SplineTransferFunction::~SplineTransferFunction()
   m_undo.clear();
 }
 
-QDomElement
-SplineTransferFunction::domElement(QDomDocument& doc)
-{
-  QDomElement de = doc.createElement("transferfunction");
-  QString str;
 
-  // -- name
-  QDomText tn0 = doc.createTextNode(m_name);
-
-  // -- points
-  str.clear();
-  for(int i=0; i<m_points.count(); i++)
-    str += QString("%1 %2  ").arg(m_points[i].x()).arg(m_points[i].y());
-  QDomText tn1 = doc.createTextNode(str);
-
-  // -- normalWidths
-  str.clear();
-  for(int i=0; i<m_points.count(); i++)
-    str += QString("%1 %2  ").arg(m_normalWidths[i].x()).arg(m_normalWidths[i].y());
-  QDomText tn2 = doc.createTextNode(str);
-
-  // -- normalRotations
-  str.clear();
-  for(int i=0; i<m_points.count(); i++)
-    str += QString("%1 ").arg(m_normalRotations[i]);
-  QDomText tn3 = doc.createTextNode(str);
-
-  // -- gradientStops
-  str.clear();
-  for(int i=0; i<m_gradientStops.count(); i++)
-    {
-      float pos = m_gradientStops[i].first;
-      QColor color = m_gradientStops[i].second;
-      str += QString("%1 %2 %3 %4 %5   ").arg(pos).			\
-	arg(color.red()).arg(color.green()).arg(color.blue()).arg(color.alpha());
-    }
-  QDomText tn4 = doc.createTextNode(str);
-
-  // -- sets
-  str.clear();
-  for(int i=0; i<m_on.count(); i++)
-    str += QString("%1 ").arg(m_on[i]);
-  QDomText tn5 = doc.createTextNode(str);
-
-
-  // -- gradmodop
-  str.clear();
-  str += QString("%1 %2 %3 %4 ").\
-    arg(m_gbot).arg(m_gtop).arg(m_gbotop).arg(m_gtopop);
-  QDomText tn6 = doc.createTextNode(str);
-
-  QDomElement de0 = doc.createElement("name");
-  QDomElement de1 = doc.createElement("points");
-  QDomElement de2 = doc.createElement("normalwidths");
-  QDomElement de3 = doc.createElement("normalrotations");
-  QDomElement de4 = doc.createElement("gradientstops");
-  QDomElement de5 = doc.createElement("sets");
-  QDomElement de6 = doc.createElement("gradmodop");
-
-  de0.appendChild(tn0);
-  de1.appendChild(tn1);
-  de2.appendChild(tn2);
-  de3.appendChild(tn3);
-  de4.appendChild(tn4);
-  de5.appendChild(tn5);
-  de6.appendChild(tn6);
-
-  de.appendChild(de0);
-  de.appendChild(de1);
-  de.appendChild(de2);
-  de.appendChild(de3);
-  de.appendChild(de4);
-  de.appendChild(de5);
-  de.appendChild(de6);
-
-  return de;
+void SplineTransferFunction::save(QConfigMe & cfg) const {
+  getSpline().save(cfg);
 }
 
-void
-SplineTransferFunction::fromDomElement(QDomElement de)
-{
+
+void SplineTransferFunction::load(const QConfigMe & cfg) {
+  
   m_on.clear();
   m_name.clear();
   m_points.clear();
@@ -307,90 +234,18 @@ SplineTransferFunction::fromDomElement(QDomElement de)
   m_gtop = 255;
   m_gbotop = 1.0;
   m_gtopop = 1.0;
-
-  QDomNodeList dlist = de.childNodes();
-  for(int i=0; i<dlist.count(); i++)
-    {
-      QDomElement dnode = dlist.at(i).toElement();
-      if (dnode.tagName() == "name")
-	{
-	  m_name = dnode.toElement().text();
-	}
-      else if (dnode.tagName() == "points")
-	{
-	  QString str = dnode.toElement().text();
-	  QStringList strlist = str.split(" ", QString::SkipEmptyParts);
-	  for(int j=0; j<strlist.count()/2; j++)
-	    {
-	      float x,y;
-	      x = strlist[2*j].toFloat();
-	      y = strlist[2*j+1].toFloat();
-	      m_points << QPointF(x,y);
-	    }
-	}
-      else if (dnode.tagName() == "normalwidths")
-	{
-	  QString str = dnode.toElement().text();
-	  QStringList strlist = str.split(" ", QString::SkipEmptyParts);
-	  for(int j=0; j<strlist.count()/2; j++)
-	    {
-	      float x,y;
-	      x = strlist[2*j].toFloat();
-	      y = strlist[2*j+1].toFloat();
-	      m_normalWidths << QPointF(x,y);
-	    }
-	}
-      else if (dnode.tagName() == "normalrotations")
-	{
-	  QString str = dnode.toElement().text();
-	  QStringList strlist = str.split(" ", QString::SkipEmptyParts);
-	  for(int j=0; j<strlist.count(); j++)
-	    m_normalRotations << strlist[j].toFloat();
-	}
-      else if (dnode.tagName() == "gradientstops")
-	{
-	  QString str = dnode.toElement().text();
-	  QStringList strlist = str.split(" ", QString::SkipEmptyParts);
-	  for(int j=0; j<strlist.count()/5; j++)
-	    {
-	      float pos, r,g,b,a;
-	      pos = strlist[5*j].toFloat();
-	      r = strlist[5*j+1].toInt();
-	      g = strlist[5*j+2].toInt();
-	      b = strlist[5*j+3].toInt();
-	      a = strlist[5*j+4].toInt();
-	      m_gradientStops << QGradientStop(pos, QColor(r,g,b,a));
-	    }
-	}
-      else if (dnode.tagName() == "sets")
-	{
-	  QString str = dnode.toElement().text();
-	  QStringList strlist = str.split(" ", QString::SkipEmptyParts);
-	  for(int j=0; j<strlist.count(); j++)
-	    m_on.append(strlist[j].toInt() > 0);
-	}
-      else if (dnode.tagName() == "gradmodop")
-	{
-	  QString str = dnode.toElement().text();
-	  QStringList strlist = str.split(" ", QString::SkipEmptyParts);
-	  if (strlist.count() == 4)
-	    {
-	      m_gbot = strlist[0].toInt();
-	      m_gtop = strlist[1].toInt();
-	      m_gbotop = strlist[2].toFloat();
-	      m_gtopop = strlist[3].toFloat();
-	    }
-	}
-    }
+  
+  SplineInformation inf;
+  inf.load(cfg);
+  setSpline(inf);
 
   updateNormals();
   updateColorMapImage();
+  
 }
 
 
-SplineInformation
-SplineTransferFunction::getSpline()
-{
+SplineInformation SplineTransferFunction::getSpline() const {
   SplineInformation splineInfo;
   splineInfo.setName(m_name);
   splineInfo.setOn(m_on);

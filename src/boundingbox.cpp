@@ -145,18 +145,9 @@ BoundingBox::setBounds(Vec dmin, Vec dmax)
   m_bounds[5].setConstraint(lc);
 }
 
-void BoundingBox::bounds(Vec &bmin, Vec &bmax)
-{
-  int minX, maxX, minY, maxY, minZ, maxZ;
-  minX = m_bounds[0].position().x;
-  maxX = m_bounds[1].position().x;
-  minY = m_bounds[2].position().y;
-  maxY = m_bounds[3].position().y;
-  minZ = m_bounds[4].position().z;
-  maxZ = m_bounds[5].position().z;
-
-  bmin = Vec(minX, minY, minZ);
-  bmax = Vec(maxX, maxY, maxZ);
+void BoundingBox::bounds(Vec &bmin, Vec &bmax) const {
+  bmin = Vec(m_bounds[0].position().x , m_bounds[2].position().y, m_bounds[4].position().z);
+  bmax = Vec(m_bounds[1].position().x , m_bounds[3].position().y, m_bounds[5].position().z);
 }
 
 bool

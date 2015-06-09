@@ -24,7 +24,7 @@ class SaveImageSeqDialog : public QDialog
   void on_m_file_pressed();
 
  private :
-  Ui::SaveImageSeqDialog ui; 
+  Ui::SaveImageSeqDialog * ui; 
 
   QString m_dir;
 

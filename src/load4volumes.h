@@ -22,7 +22,7 @@ class Load4Volumes : public QDialog
   void on_volButton4_pressed();
 
  private :
-  Ui::Load4VolumesDialog ui;
+  Ui::Load4VolumesDialog * ui;
 
   QStringList m_vol1Files;
   QStringList m_vol2Files;

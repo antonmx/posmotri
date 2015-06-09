@@ -33,7 +33,7 @@ LightingInformation::LightingInformation()
   shadowScale = 0.7f;
   shadowIntensity = 0.5f;
   shadowFovOffset = 0.0f;
-  lightDistanceOffset = 0.0f;
+  lightDistanceOffset = 1.0f;
   backplaneShadowScale = 1.0f;
   backplaneIntensity = 1.0f;
 

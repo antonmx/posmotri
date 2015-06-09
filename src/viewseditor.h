@@ -67,7 +67,7 @@ class ViewsEditor : public QWidget {
   void updateTransition();
 
  private :
-  Ui::ViewsEditorWidget ui;
+  Ui::ViewsEditorWidget * ui;
 
   int m_leftMargin, m_topMargin;
   int m_row, m_maxRows;

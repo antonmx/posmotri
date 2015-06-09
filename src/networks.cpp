@@ -6,7 +6,6 @@
 #include "geoshaderfactory.h"
 #include "propertyeditor.h"
 #include <QTextStream>
-#include <QDomDocument>
 
 using namespace qglviewer;
 

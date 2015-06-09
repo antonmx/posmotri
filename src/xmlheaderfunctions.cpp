@@ -1,8 +1,6 @@
 #include "global.h"
 #include "xmlheaderfunctions.h"
 #include <QMessageBox>
-#include <QDomDocument>
-//#include <QtGui>
 
 
 

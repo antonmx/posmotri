@@ -59,13 +59,6 @@ TransferFunctionContainer::setCheckState(int row, int col, bool flag)
     m_splineTF[row]->setOn(col, flag);
 }
 
-void
-TransferFunctionContainer::fromDomElement(QDomElement de)
-{
-  SplineTransferFunction *splineTF = new SplineTransferFunction();
-  splineTF->fromDomElement(de);
-  m_splineTF.push_back(splineTF);
-}
 
 void
 TransferFunctionContainer::fromSplineInformation(SplineInformation si)

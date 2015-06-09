@@ -957,222 +957,21 @@ TrisetObject::drawTriset()
     }
 }
 
-QDomElement
-TrisetObject::domElement(QDomDocument &doc)
-{
-  QDomElement de = doc.createElement("triset");
 
-  {
-    QDomElement de0 = doc.createElement("name");
-    QDomText tn0 = doc.createTextNode(m_fileName);
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
 
-  {
-    QDomElement de0 = doc.createElement("position");
-    QDomText tn0 = doc.createTextNode(QString("%1 %2 %3").\
-				      arg(m_position.x).arg(m_position.y).arg(m_position.z));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("scale");
-    QDomText tn0 = doc.createTextNode(QString("%1 %2 %3").\
-				      arg(m_scale.x).arg(m_scale.y).arg(m_scale.z));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("opacity");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_opacity));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("color");
-    QDomText tn0 = doc.createTextNode(QString("%1 %2 %3").\
-				      arg(m_color.x).arg(m_color.y).arg(m_color.z));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("cropcolor");
-    QDomText tn0 = doc.createTextNode(QString("%1 %2 %3").\
-				      arg(m_cropcolor.x).arg(m_cropcolor.y).arg(m_cropcolor.z));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("ambient");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_ambient));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("diffuse");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_diffuse));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("specular");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_specular));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("pointmode");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_pointMode));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("pointsize");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_pointSize));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("pointstep");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_pointStep));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("blendmode");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_blendMode));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("flipnormals");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_flipNormals));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  {
-    QDomElement de0 = doc.createElement("screendoor");
-    QDomText tn0 = doc.createTextNode(QString("%1").arg(m_screenDoor));
-    de0.appendChild(tn0);
-    de.appendChild(de0);
-  }
-
-  return de;
+void TrisetObject::save(QConfigMe & cfg) const {
+  get().save(cfg);
 }
 
-bool
-TrisetObject::fromDomElement(QDomElement de)
-{
+void TrisetObject::load(const QConfigMe & cfg) {
   clear();
-
-  bool ok = false;
-
-  QString name;
-  QDomNodeList dlist = de.childNodes();
-  for(int i=0; i<dlist.count(); i++)
-    {
-      QDomElement dnode = dlist.at(i).toElement();
-      QString str = dnode.toElement().text();
-      if (dnode.tagName() == "name")
-	ok = load(str);
-      else if (dnode.tagName() == "position")
-	{
-	  QStringList xyz = str.split(" ");
-	  float x = 0;
-	  float y = 0;
-	  float z = 0;
-	  if (xyz.size() > 0) x = xyz[0].toFloat();
-	  if (xyz.size() > 1) y  = xyz[1].toFloat();
-	  if (xyz.size() > 2) z  = xyz[2].toFloat();
-	  m_position = Vec(x,y,z);
-	}
-      else if (dnode.tagName() == "scale")
-	{
-	  QStringList xyz = str.split(" ");
-	  float x = 0;
-	  float y = 0;
-	  float z = 0;
-	  if (xyz.size() > 0) x = xyz[0].toFloat();
-	  if (xyz.size() > 1) y  = xyz[1].toFloat();
-	  if (xyz.size() > 2) z  = xyz[2].toFloat();
-	  m_scale = Vec(x,y,z);
-	}
-      else if (dnode.tagName() == "opacity")
-	m_opacity = str.toFloat();
-      else if (dnode.tagName() == "color")
-	{
-	  QStringList xyz = str.split(" ");
-	  float x = 0;
-	  float y = 0;
-	  float z = 0;
-	  if (xyz.size() > 0) x = xyz[0].toFloat();
-	  if (xyz.size() > 1) y  = xyz[1].toFloat();
-	  if (xyz.size() > 2) z  = xyz[2].toFloat();
-	  m_color = Vec(x,y,z);
-	}
-      else if (dnode.tagName() == "cropcolor")
-	{
-	  QStringList xyz = str.split(" ");
-	  float x = 0;
-	  float y = 0;
-	  float z = 0;
-	  if (xyz.size() > 0) x = xyz[0].toFloat();
-	  if (xyz.size() > 1) y  = xyz[1].toFloat();
-	  if (xyz.size() > 2) z  = xyz[2].toFloat();
-	  m_cropcolor = Vec(x,y,z);
-	}
-      else if (dnode.tagName() == "ambient")
-	m_ambient = str.toFloat();
-      else if (dnode.tagName() == "diffuse")
-	m_diffuse = str.toFloat();
-      else if (dnode.tagName() == "specular")
-	m_specular = str.toFloat();
-      else if (dnode.tagName() == "pointmode")
-	{
-	  if (str == "yes" || str == "1") m_pointMode = true;
-	  else m_pointMode = false;
-	}
-      else if (dnode.tagName() == "pointsize")
-	m_pointSize = str.toFloat();
-      else if (dnode.tagName() == "pointstep")
-	m_pointStep = str.toFloat();
-      else if (dnode.tagName() == "blendmode")
-	{
-	  if (str == "yes" || str == "1") m_pointMode = true;
-	  else m_blendMode = false;
-	}
-      else if (dnode.tagName() == "screendoor")
-	{
-	  if (str == "yes" || str == "1") m_screenDoor = true;
-	  else m_screenDoor = false;
-	}
-      else if (dnode.tagName() == "flipnormals")
-	{
-	  if (str == "yes" || str == "1") m_flipNormals = true;
-	  else m_flipNormals = false;
-	}
-    }
-
-  return ok;
+  TrisetInformation inf;
+  inf.load(cfg);
+  set(inf);
 }
 
-TrisetInformation
-TrisetObject::get()
-{
+
+TrisetInformation TrisetObject::get() const {
   TrisetInformation ti;
   ti.filename = m_fileName;
   ti.position = m_position;
@@ -1190,7 +989,6 @@ TrisetObject::get()
   ti.specular = m_specular;
   ti.flipNormals = m_flipNormals;
   ti.screenDoor = m_screenDoor;
-
   return ti;
 }
 

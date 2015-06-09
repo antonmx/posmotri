@@ -5,25 +5,26 @@ SaveImageSeqDialog::SaveImageSeqDialog(QWidget *parent,
 				       QString dir,
 				       int start,
 				       int end,
-				       int step) :
-  QDialog(parent)
+				       int step)
+  : QDialog(parent)
+  , ui(new Ui::SaveImageSeqDialog)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
   m_dir = dir;
-  ui.m_startFrame->setValue(start);
-  ui.m_endFrame->setValue(end);
-  ui.m_stepFrame->setValue(step);
-  ui.m_imageMode->setCurrentIndex(0);
+  ui->m_startFrame->setValue(start);
+  ui->m_endFrame->setValue(end);
+  ui->m_stepFrame->setValue(step);
+  ui->m_imageMode->setCurrentIndex(0);
 }
 
-QString SaveImageSeqDialog::fileName() { return ui.m_fileName->text();}
-int SaveImageSeqDialog::startFrame() { return ui.m_startFrame->value();}
-int SaveImageSeqDialog::endFrame() { return ui.m_endFrame->value();}
-int SaveImageSeqDialog::stepFrame() { return ui.m_stepFrame->value();}
+QString SaveImageSeqDialog::fileName() { return ui->m_fileName->text();}
+int SaveImageSeqDialog::startFrame() { return ui->m_startFrame->value();}
+int SaveImageSeqDialog::endFrame() { return ui->m_endFrame->value();}
+int SaveImageSeqDialog::stepFrame() { return ui->m_stepFrame->value();}
 int SaveImageSeqDialog::imageMode()
 {
-  return(ui.m_imageMode->currentIndex());
+  return(ui->m_imageMode->currentIndex());
 }
 
 void
@@ -38,5 +39,5 @@ SaveImageSeqDialog::on_m_file_pressed()
   if (flnm.isEmpty())
     return;
 
-  ui.m_fileName->setText(flnm);
+  ui->m_fileName->setText(flnm);
 }

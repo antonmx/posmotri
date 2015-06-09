@@ -35,7 +35,7 @@ private slots:
   void onStereoChanged();
 
  private :
-  Ui::PreferencesWidget ui;
+  Ui::PreferencesWidget * ui;
 
   TagColorEditor *m_tagColorEditor;
 

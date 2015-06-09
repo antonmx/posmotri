@@ -24,7 +24,7 @@ class SaveMovieDialog : public QDialog
   void on_m_file_pressed();
 
  private :
-  Ui::SaveMovieDialog ui; 
+  Ui::SaveMovieDialog * ui; 
 
   QString m_dir;
 

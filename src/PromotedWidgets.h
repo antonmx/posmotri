@@ -125,24 +125,6 @@ protected:
 
 
 
-
-template <class Ecl> QVariant toQVariant(const Ecl & val) {
-  return QVariant(val);
-}
-  
-template <class Ecl> Ecl fromQVariant(const QVariant & var, bool * ok =0) {
-  if ( ! var.isValid() || ! var.canConvert<Ecl>() ){
-    if (ok)
-      *ok=false;
-    return Ecl();
-  }
-  Ecl val = var.value<Ecl>();
-  *ok=true;
-  return val;
-}
-
-
-
 QDataStream &operator<<(QDataStream &, const qglviewer::Vec &);
 QDataStream &operator>>(QDataStream &, qglviewer::Vec &);
 QDataStream &operator<<(QDataStream &, const qglviewer::Quaternion &);
@@ -162,13 +144,13 @@ private:
   mutable QList<int> idxelement;
   mutable int lastelement;
   
-  QString levelUp() const;  
+  void levelUp() const;  
   int updateLastelement() const;
   
 
 public:
   
-  QConfigMe() : cpath("/") {};
+  QConfigMe() {};
 
   void read(const QString & fileName);  
   bool write(const QString & fileName) const ;
@@ -176,9 +158,9 @@ public:
   
   int beginArray(const QString & key) const;  
   int advanceArray() const;  
-  QString endArray() const;  
+  void endArray() const;  
   int beginGroup(const QString & key) const;  
-  QString endGroup() const;
+  void endGroup() const;
   
   bool contains(const QString & key) const;
   

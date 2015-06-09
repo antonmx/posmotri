@@ -20,7 +20,7 @@ class Load3Volumes : public QDialog
   void on_volButton3_pressed();
 
  private :
-  Ui::Load3VolumesDialog ui;
+  Ui::Load3VolumesDialog * ui;
 
   QStringList m_vol1Files;
   QStringList m_vol2Files;

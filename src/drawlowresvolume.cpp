@@ -8,7 +8,6 @@
 #include "shaderfactoryrgb.h"
 #include "global.h"
 #include "mainwindowui.h"
-#include <QDomDocument>
 
 using namespace qglviewer;
 
@@ -689,143 +688,42 @@ DrawLowresVolume::keyPressEvent(QKeyEvent *event)
   return m_boundingBox.keyPressEvent(event);
 }
 
-void
-DrawLowresVolume::load(const char *flnm)
-{
-  QDomDocument document;
-  QFile f(flnm);
-  if (f.open(QIODevice::ReadOnly))
-    {
-      document.setContent(&f);
-      f.close();
-    }
-
-  QDomElement main = document.documentElement();
-  QDomNodeList dlist = main.childNodes();
-  Vec svmin = m_dataMin;
-  Vec svmax = m_dataMax;
-  for(int i=0; i<dlist.count(); i++)
-    {
-      if (dlist.at(i).nodeName() == "volmin")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  m_dataMin = StaticFunctions::getVec(str);
-	}
-      else if (dlist.at(i).nodeName() == "volmax")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  m_dataMax = StaticFunctions::getVec(str);
-	}
-      else if (dlist.at(i).nodeName() == "subvolmin")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  svmin = StaticFunctions::getVec(str);
-	}
-      else if (dlist.at(i).nodeName() == "subvolmax")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  svmax = StaticFunctions::getVec(str);
-	}
-    }
-
-//  Vec voxelScaling = Global::voxelScaling();
-//  m_boundingBox.setBounds(vMv(m_dataMin,voxelScaling),
-//			  vMv(m_dataMax,voxelScaling));
+void DrawLowresVolume::load(const QConfigMe & cfg) {
+  cfg.beginGroup("DrawLowresVolume");
+  cfg.getValue("volmin", m_dataMin);
+  cfg.getValue("volmax", m_dataMax);
+  Vec bbmin, bbmax;
+  cfg.getValue("subvolmin", bbmin);
+  cfg.getValue("subvolmax", bbmax);
   m_boundingBox.setBounds(m_dataMin, m_dataMax);
-//  svmin = vMv(svmin, voxelScaling);
-//  svmax = vMv(svmax, voxelScaling);
-  m_boundingBox.setPositions(svmin, svmax);
+  m_boundingBox.setPositions(bbmin, bbmax);
+  cfg.endGroup();
 }
 
 
-void
-DrawLowresVolume::save(const QString & flnm)
-{
-  QDomDocument doc;
-  QFile fin(flnm);
-  if (fin.open(QIODevice::ReadOnly))
-    {
-      doc.setContent(&fin);
-      fin.close();
-    }
-  QDomElement topElement = doc.documentElement();
-
-  QString str;
-
-  {
-    QDomElement de0 = doc.createElement("volmin");
-    if (Global::volumeType() != Global::DummyVolume)
-      str = QString("%1 %2 %3").		\
-  	    arg(m_dataMin.x).\
-  	    arg(m_dataMin.y).\
-            arg(m_dataMin.z);
-    else
-      str = QString("%1 %2 %3").		\
-  	    arg(m_dataMin.z).\
-  	    arg(m_dataMin.y).\
-            arg(m_dataMin.x);
-    QDomText tn0 = doc.createTextNode(str);
-    de0.appendChild(tn0);
-    topElement.appendChild(de0);
-
-    QDomElement de1 = doc.createElement("volmax");
-    if (Global::volumeType() != Global::DummyVolume)
-      str = QString("%1 %2 %3").		\
-  	    arg(m_dataMax.x).\
-  	    arg(m_dataMax.y).\
-  	    arg(m_dataMax.z);
-    else
-      str = QString("%1 %2 %3").		\
-  	    arg(m_dataMax.z).\
-  	    arg(m_dataMax.y).\
-  	    arg(m_dataMax.x);
-    QDomText tn1 = doc.createTextNode(str);
-    de1.appendChild(tn1);
-    topElement.appendChild(de1);
-  }
-  {
-    Vec bbmin, bbmax;
-    m_boundingBox.bounds(bbmin, bbmax);
-
-    QDomElement de0 = doc.createElement("subvolmin");
-    if (Global::volumeType() != Global::DummyVolume)
-      str = QString("%1 %2 %3").		\
-            arg(bbmin.x).\
-            arg(bbmin.y).\
-            arg(bbmin.z);
-    else
-      str = QString("%1 %2 %3").		\
-            arg(bbmin.z).\
-            arg(bbmin.y).\
-            arg(bbmin.x);
-    QDomText tn0 = doc.createTextNode(str);
-    de0.appendChild(tn0);
-    topElement.appendChild(de0);
-
-    QDomElement de1 = doc.createElement("subvolmax");
-    if (Global::volumeType() != Global::DummyVolume)
-      str = QString("%1 %2 %3").		\
-  	  arg(bbmax.x).\
-  	  arg(bbmax.y).\
-  	  arg(bbmax.z);
-    else
-      str = QString("%1 %2 %3").		\
-  	  arg(bbmax.z).\
-  	  arg(bbmax.y).\
-  	  arg(bbmax.x);
-    QDomText tn1 = doc.createTextNode(str);
-    de1.appendChild(tn1);
-    topElement.appendChild(de1);
-  }
-
-  QFile fout(flnm);
-  if (fout.open(QIODevice::WriteOnly))
-    {
-      QTextStream out(&fout);
-      doc.save(out, 2);
-      fout.close();
-    }
+void DrawLowresVolume::save(QConfigMe & cfg) const {  
+  cfg.beginGroup("DrawLowresVolume");
+  cfg.setValue("volmin", m_dataMin);
+  cfg.setValue("volmax", m_dataMax);
+  Vec bbmin, bbmax;
+  m_boundingBox.bounds(bbmin, bbmax);
+  cfg.setValue("subvolmin", bbmin);
+  cfg.setValue("subvolmax", bbmax);
+  cfg.endGroup();
 }
+
+void DrawLowresVolume::load(const QString & flnm) {
+  QConfigMe cfg;
+  cfg.read(flnm);
+  load(cfg);
+}
+
+void DrawLowresVolume::save(const QString & flnm) const {
+  QConfigMe cfg;
+  save(cfg);
+  cfg.write(flnm);
+}
+
 
 void
 DrawLowresVolume::switchInterpolation()

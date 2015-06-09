@@ -2,9 +2,9 @@
 #define DRAWLOWRESVOLUME_H
 
 #include <QGLViewer/qglviewer.h>
-
-
 #include "boundingbox.h"
+#include "PromotedWidgets.h"
+
 class Viewer;
 class Volume;
 
@@ -34,9 +34,11 @@ class DrawLowresVolume : public QObject
   void subvolumeBounds(qglviewer::Vec&, qglviewer::Vec&);
 
   bool keyPressEvent(QKeyEvent*);
-
-  void load(const char*);
-  void save(const QString &);
+  
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
+  void load(const QString &);
+  void save(const QString &) const;
 
   void setCurrentVolume(int vnum=0);
 

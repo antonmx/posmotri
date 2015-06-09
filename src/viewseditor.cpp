@@ -6,10 +6,11 @@
 
 using namespace qglviewer;
 
-ViewsEditor::ViewsEditor(QWidget *parent) :
-  QWidget(parent)
+ViewsEditor::ViewsEditor(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::ViewsEditorWidget)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
   m_imgSize = 100;
   m_leftMargin = 40;
@@ -34,10 +35,10 @@ ViewsEditor::clear()
   m_inTransition = false;
 
   m_row = 0;
-  ui.up->setDisabled(true);
-  ui.down->setDisabled(true);
-  ui.restore->setDisabled(true);
-  ui.groupBox->setTitle("0 Views");
+  ui->up->setDisabled(true);
+  ui->down->setDisabled(true);
+  ui->restore->setDisabled(true);
+  ui->groupBox->setTitle("0 Views");
 
   for(int i=0; i<m_viewInfo.size(); i++)
     delete m_viewInfo[i];
@@ -81,14 +82,14 @@ ViewsEditor::calcRect()
   m_maxRows = (m_viewInfo.count()-1)/ncols;
 
   if (m_row == 0)
-    ui.up->setDisabled(true);
+    ui->up->setDisabled(true);
   else
-    ui.up->setEnabled(true);
+    ui->up->setEnabled(true);
 
   if (rowmx <= m_maxRows)
-    ui.down->setEnabled(true);
+    ui->down->setEnabled(true);
   else
-    ui.down->setDisabled(true);
+    ui->down->setDisabled(true);
 
 }
 
@@ -233,7 +234,7 @@ ViewsEditor::addView(float stepStill,
   m_viewInfo.append(vfi);
 
   calcRect();
-  ui.groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
+  ui->groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
   update();
   emit showMessage("View added to the collection", false);
 }
@@ -243,14 +244,14 @@ ViewsEditor::mousePressEvent(QMouseEvent *event)
 {
   QPoint clickPos = event->pos();
 
-  ui.restore->setDisabled(true);
+  ui->restore->setDisabled(true);
   m_selected = -1;
   for(int i=0; i<m_Rect.count(); i++)
     {
       if (m_Rect[i].contains(clickPos))
 	{
 	  m_selected = i;
-	  ui.restore->setEnabled(true);
+	  ui->restore->setEnabled(true);
 	}
     }
   update();
@@ -295,7 +296,7 @@ ViewsEditor::on_remove_pressed()
   m_selected = -1;
 
   calcRect();
-  ui.groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
+  ui->groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
   update();
 
   emit showMessage("Selected view removed", false);
@@ -447,7 +448,7 @@ void ViewsEditor::load(const QConfigMe & cfg) {
   cfg.beginGroup("ViewsEditor");
   cfg.getClassArray("Views",  m_viewInfo);
   cfg.endGroup();
-  ui.groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
+  ui->groupBox->setTitle(QString("%1 Views").arg(m_viewInfo.count()));
   update();
 }
 

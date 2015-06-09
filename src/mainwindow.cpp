@@ -135,20 +135,21 @@ MainWindow::createHiresLowresWindows()
 
 
 
-MainWindow::MainWindow(QWidget *parent) :
-  QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent)
+  : QMainWindow(parent)
+  , ui(new Ui::MainWindow)
 {
 
-  ui.setupUi(this);
+  ui->setupUi(this);
 
 
-  Global::setStatusBar(ui.statusBar, ui.actionStatusBar);
+  Global::setStatusBar(ui->statusBar, ui->actionStatusBar);
 
-  ui.statusBar->setEnabled(true);
-  ui.statusBar->setSizeGripEnabled(true);
-  ui.statusBar->addWidget(Global::progressBar());
+  ui->statusBar->setEnabled(true);
+  ui->statusBar->setSizeGripEnabled(true);
+  ui->statusBar->addWidget(Global::progressBar());
 
-  MainWindowUI::setMainWindowUI(&ui);
+  MainWindowUI::setMainWindowUI(ui);
 
   setWindowIcon(QPixmap(":/images/drishti_32.png"));
 
@@ -182,22 +183,22 @@ MainWindow::MainWindow(QWidget *parent) :
   Global::setImageQuality(Global::_NormalQuality);
 
 #ifndef Q_OS_WIN32
-  ui.actionSave_Movie->setEnabled(false);
+  ui->actionSave_Movie->setEnabled(false);
 #endif
 
-  ui.actionStatusBar->setChecked(true);
-  ui.actionBoundingBox->setChecked(true);
-  ui.actionAxes->setChecked(false);
-  ui.actionVisibility->setChecked(true);
-  ui.actionNormal->setChecked(true);
-  ui.actionLow->setChecked(false);
-  ui.actionVeryLow->setChecked(false);
-  ui.actionBottom_Text->setChecked(Global::bottomText());
-  ui.actionDepthcue->setChecked(Global::depthcue());
-  ui.actionUse_dragvolume->setChecked(Global::useDragVolume());
-  ui.actionUse_dragvolumeforshadows->setChecked(Global::useDragVolumeforShadows());
-  ui.actionUse_stillvolume->setChecked(Global::useStillVolume());
-  ui.actionEmptySpaceSkip->setChecked(Global::emptySpaceSkip());
+  ui->actionStatusBar->setChecked(true);
+  ui->actionBoundingBox->setChecked(true);
+  ui->actionAxes->setChecked(false);
+  ui->actionVisibility->setChecked(true);
+  ui->actionNormal->setChecked(true);
+  ui->actionLow->setChecked(false);
+  ui->actionVeryLow->setChecked(false);
+  ui->actionBottom_Text->setChecked(Global::bottomText());
+  ui->actionDepthcue->setChecked(Global::depthcue());
+  ui->actionUse_dragvolume->setChecked(Global::useDragVolume());
+  ui->actionUse_dragvolumeforshadows->setChecked(Global::useDragVolumeforShadows());
+  ui->actionUse_stillvolume->setChecked(Global::useStillVolume());
+  ui->actionEmptySpaceSkip->setChecked(Global::emptySpaceSkip());
 
   StaticFunctions::initQColorDialog();
 
@@ -318,14 +319,14 @@ MainWindow::MainWindow(QWidget *parent) :
   addDockWidget(Qt::BottomDockWidgetArea,m_dockKeyframe);
   addDockWidget(Qt::BottomDockWidgetArea,m_dockGallery);
 
-  ui.menuView->addAction(m_dockTF->toggleViewAction());
-  ui.menuView->addAction(dock2->toggleViewAction());
-  ui.menuView->addAction(dock3->toggleViewAction());
-  ui.menuView->addAction(dock4->toggleViewAction());
-  ui.menuView->addAction(m_dockKeyframe->toggleViewAction());
-  ui.menuView->addAction(m_dockGallery->toggleViewAction());
-  ui.menuView->addSeparator();
-  ui.menuView->addAction(dock5->toggleViewAction());
+  ui->menuView->addAction(m_dockTF->toggleViewAction());
+  ui->menuView->addAction(dock2->toggleViewAction());
+  ui->menuView->addAction(dock3->toggleViewAction());
+  ui->menuView->addAction(dock4->toggleViewAction());
+  ui->menuView->addAction(m_dockKeyframe->toggleViewAction());
+  ui->menuView->addAction(m_dockGallery->toggleViewAction());
+  ui->menuView->addSeparator();
+  ui->menuView->addAction(dock5->toggleViewAction());
 
   createHiresLowresWindows();
 
@@ -540,7 +541,7 @@ MainWindow::registerPlugins()
 #endif
 
   QString cdir = plugindir;
-  QMenu *menu = ui.menuPlugins;
+  QMenu *menu = ui->menuPlugins;
   pair.first = menu;
   pair.second = cdir;
   stack.push(pair);
@@ -607,7 +608,7 @@ MainWindow::registerPlugins()
 			  if (cmenu)
 			    cmenu->addAction(action);
 			  else
-			    ui.menuPlugins->addAction(action);
+			    ui->menuPlugins->addAction(action);
 			}
 		    }
 		  else
@@ -1024,7 +1025,7 @@ MainWindow::loadProjectRunKeyframesAndExit()
     {
       m_dockTF->hide();
       qApp->processEvents();
-      ui.statusBar->hide();
+      ui->statusBar->hide();
       qApp->processEvents();
 
       Global::setBatchMode(true);
@@ -1199,9 +1200,9 @@ MainWindow::on_actionHiresMode_triggered()
 void
 MainWindow::on_actionNormal_triggered()
 {
-  ui.actionNormal->setChecked(true);
-  ui.actionLow->setChecked(false);
-  ui.actionVeryLow->setChecked(false);
+  ui->actionNormal->setChecked(true);
+  ui->actionLow->setChecked(false);
+  ui->actionVeryLow->setChecked(false);
   Global::setImageQuality(Global::_NormalQuality);
   m_Viewer->createImageBuffers();
   m_Viewer->update();
@@ -1210,9 +1211,9 @@ MainWindow::on_actionNormal_triggered()
 void
 MainWindow::on_actionLow_triggered()
 {
-  ui.actionNormal->setChecked(false);
-  ui.actionLow->setChecked(true);
-  ui.actionVeryLow->setChecked(false);
+  ui->actionNormal->setChecked(false);
+  ui->actionLow->setChecked(true);
+  ui->actionVeryLow->setChecked(false);
   Global::setImageQuality(Global::_LowQuality);
   m_Viewer->createImageBuffers();
   m_Viewer->update();
@@ -1221,9 +1222,9 @@ MainWindow::on_actionLow_triggered()
 void
 MainWindow::on_actionVeryLow_triggered()
 {
-  ui.actionNormal->setChecked(false);
-  ui.actionLow->setChecked(false);
-  ui.actionVeryLow->setChecked(true);
+  ui->actionNormal->setChecked(false);
+  ui->actionLow->setChecked(false);
+  ui->actionVeryLow->setChecked(true);
   Global::setImageQuality(Global::_VeryLowQuality);
   m_Viewer->createImageBuffers();
   m_Viewer->update();
@@ -1291,11 +1292,11 @@ MainWindow::initializeRecentFiles()
       m_recentFileActions[i]->setVisible(false);
       connect(m_recentFileActions[i], SIGNAL(triggered()),
 	      this, SLOT(openRecentFile()));
-      ui.menuFile->insertAction(ui.actionExit,
+      ui->menuFile->insertAction(ui->actionExit,
 				m_recentFileActions[i]);
     }
 
-  ui.menuFile->insertSeparator(ui.actionExit);
+  ui->menuFile->insertSeparator(ui->actionExit);
 }
 
 void
@@ -2505,7 +2506,7 @@ MainWindow::postLoadVolume()
   if (m_Volume->pvlVoxelType(0) > 0)
     {
       Global::setUse1D(true);
-      ui.actionSwitch_To1D->setChecked(Global::use1D());
+      ui->actionSwitch_To1D->setChecked(Global::use1D());
       m_tfContainer->switch1D();
     }
 }
@@ -2734,7 +2735,7 @@ MainWindow::loadVolume3List(QList<QString> files1,
 
 //  // for 3 or 4 volumes always use 1D transfer functions
 //  Global::setUse1D(true);
-//  ui.actionSwitch_To1D->setChecked(Global::use1D());
+//  ui->actionSwitch_To1D->setChecked(Global::use1D());
 }
 
 bool
@@ -2751,7 +2752,7 @@ MainWindow::loadVolume3(QList<QString> flnm1,
 
 //  // for 3 or 4 volumes always use 1D transfer functions
 //  Global::setUse1D(true);
-//  ui.actionSwitch_To1D->setChecked(Global::use1D());
+//  ui->actionSwitch_To1D->setChecked(Global::use1D());
 
 
   preLoadVolume();
@@ -2860,7 +2861,7 @@ MainWindow::loadVolume4List(QList<QString> files1,
 
 //  // for 3 or 4 volumes always use 1D transfer functions
 //  Global::setUse1D(true);
-//  ui.actionSwitch_To1D->setChecked(Global::use1D());
+//  ui->actionSwitch_To1D->setChecked(Global::use1D());
 }
 
 bool
@@ -2879,7 +2880,7 @@ MainWindow::loadVolume4(QList<QString> flnm1,
 
 //  // for 3 or 4 volumes always use 1D transfer functions
 //  Global::setUse1D(true);
-//  ui.actionSwitch_To1D->setChecked(Global::use1D());
+//  ui->actionSwitch_To1D->setChecked(Global::use1D());
 
   preLoadVolume();
 
@@ -3077,7 +3078,7 @@ MainWindow::loadTransferFunctionsOnly(const char* flnm)
   m_tfManager->append(flnm);
 }
 
-void MainWindow::loadProject(const char* flnm) {
+void MainWindow::loadProject(const QString & flnm) {
 
   if (! GlewInit::initialised())  {
     QMessageBox::information(0, "Drishti", "Not yet ready to start work!");
@@ -3127,8 +3128,8 @@ void MainWindow::loadProject(const char* flnm) {
 
   if (!Global::batchMode())
     emit showMessage("Volume loaded. Loading Project ....", false);
-
-  m_Lowres->load(flnm);
+  
+  m_Lowres->load(flnm+".low");
   if (projectType == Global::DummyVolume)  {
     Vec bmin, bmax;
     m_Lowres->subvolumeBounds(bmin, bmax);
@@ -3146,13 +3147,12 @@ void MainWindow::loadProject(const char* flnm) {
   }
 
   //m_preferencesWidget->load(flnm);
-  m_tfManager->load(flnm);
-
+  m_tfManager->load(flnm+".tf");
 
   m_dockGallery->setVisible(false);
   m_dockKeyframe->setVisible(false);
 
-  loadViewsAndKeyFrames(flnm);
+  loadViewsAndKeyFrames(flnm+".kf");
 
   m_bricksWidget->refresh();
 
@@ -3231,15 +3231,15 @@ void MainWindow::saveProject(const QString & flnm) {
   );
 
   saveVolumeIntoProject(flnm);
-  m_Lowres->save(flnm);
+  m_Lowres->save(flnm+".low");
   //m_preferencesWidget->save(flnm);
   //GeometryObjects::trisets()->save(flnm);
-  m_tfManager->save(flnm);
-  saveViewsAndKeyFrames(flnm);
+  m_tfManager->save(flnm+".tf");
+  saveViewsAndKeyFrames(flnm+".kf");
 
   QFileInfo f(flnm);
   Global::setPreviousDirectory(f.absolutePath());
-  Global::setCurrentProjectFile(QString(flnm));
+  Global::setCurrentProjectFile(flnm);
 
   emit showMessage("Project saved", false);
 
@@ -3692,8 +3692,8 @@ MainWindow::updateParameters(float stepStill, float stepDrag,
   Global::setDrawAxis(drawAxis);
   m_Hires->setRenderQuality(renderQuality);
 
-  ui.actionAxes->setChecked(Global::drawAxis());
-  ui.actionBoundingBox->setChecked(Global::drawBox());
+  ui->actionAxes->setChecked(Global::drawAxis());
+  ui->actionBoundingBox->setChecked(Global::drawBox());
 
   // remove all geometry from mousegrab pool
   GeometryObjects::removeFromMouseGrabberPool();
@@ -3719,8 +3719,8 @@ MainWindow::updateParameters(bool drawBox, bool drawAxis,
   m_Hires->setMix(mv, mc, mo, iv);
   m_Hires->setMixTag(mt);
 
-  ui.actionAxes->setChecked(Global::drawAxis());
-  ui.actionBoundingBox->setChecked(Global::drawBox());
+  ui->actionAxes->setChecked(Global::drawAxis());
+  ui->actionBoundingBox->setChecked(Global::drawBox());
 
   // remove all geometry from mousegrab pool
   GeometryObjects::removeFromMouseGrabberPool();
@@ -4086,7 +4086,7 @@ MainWindow::loadVolumeFromProject(const QString &flnm)
 //      Global::volumeType() == Global::QuadVolume)
 //    Global::setUse1D(true);
 //
-//  ui.actionSwitch_To1D->setChecked(Global::use1D());
+//  ui->actionSwitch_To1D->setChecked(Global::use1D());
 
   return volType;
 }
@@ -4141,9 +4141,9 @@ MainWindow::resetFlipImage()
   Global::setFlipImageX(false);
   Global::setFlipImageY(false);
   Global::setFlipImageZ(false);
-  ui.actionFlip_ImageX->setChecked(Global::flipImageX());
-  ui.actionFlip_ImageY->setChecked(Global::flipImageY());
-  ui.actionFlip_ImageZ->setChecked(Global::flipImageZ());
+  ui->actionFlip_ImageX->setChecked(Global::flipImageX());
+  ui->actionFlip_ImageY->setChecked(Global::flipImageY());
+  ui->actionFlip_ImageZ->setChecked(Global::flipImageZ());
   m_Hires->collectBrickInformation(true);
 }
 void
@@ -4151,7 +4151,7 @@ MainWindow::on_actionFlip_ImageX_triggered()
 {
   bool fi = Global::flipImageX();
   Global::setFlipImageX(!fi);
-  ui.actionFlip_ImageX->setChecked(Global::flipImageX());
+  ui->actionFlip_ImageX->setChecked(Global::flipImageX());
   m_Hires->collectBrickInformation(true);
   m_Viewer->updateGL();
 }
@@ -4160,7 +4160,7 @@ MainWindow::on_actionFlip_ImageY_triggered()
 {
   bool fi = Global::flipImageY();
   Global::setFlipImageY(!fi);
-  ui.actionFlip_ImageY->setChecked(Global::flipImageY());
+  ui->actionFlip_ImageY->setChecked(Global::flipImageY());
   m_Hires->collectBrickInformation(true);
   m_Viewer->updateGL();
 }
@@ -4169,7 +4169,7 @@ MainWindow::on_actionFlip_ImageZ_triggered()
 {
   bool fi = Global::flipImageZ();
   Global::setFlipImageZ(!fi);
-  ui.actionFlip_ImageZ->setChecked(Global::flipImageZ());
+  ui->actionFlip_ImageZ->setChecked(Global::flipImageZ());
   m_Hires->collectBrickInformation(true);
   m_Viewer->updateGL();
 }
@@ -4197,14 +4197,14 @@ MainWindow::on_actionEnable_Mask_triggered()
 			       "Use of masks allowed only for SingleVolumes");
     }
 
-  ui.actionEnable_Mask->setChecked(Global::useMask());
+  ui->actionEnable_Mask->setChecked(Global::useMask());
 }
 
 void
 MainWindow::on_actionSwitch_To1D_triggered()
 {
   Global::setUse1D(!Global::use1D());
-  ui.actionSwitch_To1D->setChecked(Global::use1D());
+  ui->actionSwitch_To1D->setChecked(Global::use1D());
   m_tfContainer->switch1D();
 
   if (m_Volume->valid())
@@ -4222,14 +4222,14 @@ MainWindow::on_actionSwitch_To1D_triggered()
 void
 MainWindow::on_actionAxes_triggered()
 {
-  Global::setDrawAxis(ui.actionAxes->isChecked());
+  Global::setDrawAxis(ui->actionAxes->isChecked());
   m_Viewer->update();
 }
 void
 MainWindow::switchAxis()
 {
   Global::setDrawAxis(!Global::drawAxis());
-  ui.actionAxes->setChecked(Global::drawAxis());
+  ui->actionAxes->setChecked(Global::drawAxis());
 }
 
 void
@@ -4246,14 +4246,14 @@ MainWindow::searchCaption(QStringList str)
 void
 MainWindow::on_actionBoundingBox_triggered()
 {
-  Global::setDrawBox(ui.actionBoundingBox->isChecked());
+  Global::setDrawBox(ui->actionBoundingBox->isChecked());
   m_Viewer->update();
 }
 void
 MainWindow::switchBB()
 {
   Global::setDrawBox(!Global::drawBox());
-  ui.actionBoundingBox->setChecked(Global::drawBox());
+  ui->actionBoundingBox->setChecked(Global::drawBox());
 }
 
 
@@ -4467,7 +4467,7 @@ MainWindow::on_actionLinear_TextureInterpolation_triggered()
 {
   bool ti = Global::interpolationType(Global::TextureInterpolation);
   Global::setInterpolationType(Global::TextureInterpolation, !ti); // nearest
-  ui.actionLinear_TextureInterpolation->setChecked(Global::interpolationType(Global::TextureInterpolation));
+  ui->actionLinear_TextureInterpolation->setChecked(Global::interpolationType(Global::TextureInterpolation));
 
   if (m_Volume->valid())
     m_Lowres->switchInterpolation();
@@ -4477,7 +4477,7 @@ MainWindow::on_actionSpline_PositionInterpolation_triggered()
 {
   bool cpi = Global::interpolationType(Global::CameraPositionInterpolation);
   Global::setInterpolationType(Global::CameraPositionInterpolation, !cpi);
-  ui.actionSpline_PositionInterpolation->setChecked(Global::interpolationType(Global::CameraPositionInterpolation));
+  ui->actionSpline_PositionInterpolation->setChecked(Global::interpolationType(Global::CameraPositionInterpolation));
 }
 
 void
@@ -4746,16 +4746,16 @@ MainWindow::gridStickToSurface(int gidx, int rad,
 void
 MainWindow::on_actionStatusBar_triggered()
 {
-  if (ui.actionStatusBar->isChecked())
-    ui.statusBar->show();
+  if (ui->actionStatusBar->isChecked())
+    ui->statusBar->show();
   else
-    ui.statusBar->hide();
+    ui->statusBar->hide();
 }
 
 void
 MainWindow::on_actionShadowRender_triggered()
 {
-  if (ui.actionShadowRender->isChecked())
+  if (ui->actionShadowRender->isChecked())
     m_Hires->setRenderQuality(Enums::RenderHighQuality);
   else
     m_Hires->setRenderQuality(Enums::RenderDefault);
@@ -4765,14 +4765,14 @@ void
 MainWindow::on_actionPerspective_triggered()
 {
   m_Viewer->camera()->setType(Camera::PERSPECTIVE);
-  ui.actionOrthographic->setChecked(false);
+  ui->actionOrthographic->setChecked(false);
 }
 
 void
 MainWindow::on_actionOrthographic_triggered()
 {
   m_Viewer->camera()->setType(Camera::ORTHOGRAPHIC);
-  ui.actionPerspective->setChecked(false);
+  ui->actionPerspective->setChecked(false);
 }
 
 void

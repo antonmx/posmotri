@@ -5,25 +5,26 @@ SaveMovieDialog::SaveMovieDialog(QWidget *parent,
 				 QString dir,
 				 int start,
 				 int end,
-				 int step) :
-  QDialog(parent)
+				 int step)
+  : QDialog(parent)
+  , ui(new Ui::SaveMovieDialog)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
   m_dir = dir;
-  ui.m_startFrame->setValue(start);
-  ui.m_endFrame->setValue(end);
-  ui.m_stepFrame->setValue(step);
+  ui->m_startFrame->setValue(start);
+  ui->m_endFrame->setValue(end);
+  ui->m_stepFrame->setValue(step);
   
 }
 
-QString SaveMovieDialog::fileName() { return ui.m_fileName->text();}
-int SaveMovieDialog::startFrame() { return ui.m_startFrame->value();}
-int SaveMovieDialog::endFrame() { return ui.m_endFrame->value();}
-int SaveMovieDialog::stepFrame() { return ui.m_stepFrame->value();}
+QString SaveMovieDialog::fileName() { return ui->m_fileName->text();}
+int SaveMovieDialog::startFrame() { return ui->m_startFrame->value();}
+int SaveMovieDialog::endFrame() { return ui->m_endFrame->value();}
+int SaveMovieDialog::stepFrame() { return ui->m_stepFrame->value();}
 bool SaveMovieDialog::movieMode()
 {
-  if (ui.m_movieMode->currentIndex() == 0)
+  if (ui->m_movieMode->currentIndex() == 0)
     return true; // save Mono image frames
   else
     return false; // save Stereo image frames
@@ -54,5 +55,5 @@ SaveMovieDialog::on_m_file_pressed()
   if (flnm.isEmpty())
     return;
 
-  ui.m_fileName->setText(flnm);
+  ui->m_fileName->setText(flnm);
 }

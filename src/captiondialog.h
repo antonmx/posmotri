@@ -29,7 +29,7 @@ class CaptionDialog : public QDialog
   void on_haloColor_pressed();
 
  private :
-  Ui::CaptionInputDialog ui;
+  Ui::CaptionInputDialog * ui;
 
   QFont m_font;
   QColor m_color;

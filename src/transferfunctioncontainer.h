@@ -23,7 +23,6 @@ class TransferFunctionContainer : public QObject
  public slots :  
   void switch1D();
   void clearContainer();
-  void fromDomElement(QDomElement);
   void fromSplineInformation(SplineInformation);
   void addSplineTF();
   void removeSplineTF(int);

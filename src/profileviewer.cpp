@@ -4,10 +4,11 @@
 #include <QGraphicsTextItem>
 #include <QFileDialog>
 
-ProfileViewer::ProfileViewer(QWidget *parent) :
-  QWidget(parent)
+ProfileViewer::ProfileViewer(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::ProfileViewer)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
   m_minV = m_maxV = 1.0;
   m_scene = new QGraphicsScene();
@@ -25,8 +26,8 @@ ProfileViewer::ProfileViewer(QWidget *parent) :
   m_captionTextItem = m_scene->addText(m_captionString);
   m_captionTextItem->setPos(0, m_height); // bottom
 
-  ui.graphicsView->setScene(m_scene);
-  ui.graphicsView->setRenderHints(QPainter::Antialiasing |
+  ui->graphicsView->setScene(m_scene);
+  ui->graphicsView->setRenderHints(QPainter::Antialiasing |
 				  QPainter::TextAntialiasing |
 				  QPainter::HighQualityAntialiasing |
 				  QPainter::SmoothPixmapTransform);
@@ -37,7 +38,7 @@ ProfileViewer::on_caption_editingFinished()
   QFont fnt("Helvetica", 12);
   QFontMetrics fmt(fnt);
 
-  m_captionString = ui.caption->text();
+  m_captionString = ui->caption->text();
   m_captionTextItem->setFont(fnt);
   m_captionTextItem->setPlainText(m_captionString);
   int tw = fmt.width(m_captionString);
@@ -84,8 +85,8 @@ ProfileViewer::generateScene()
   int sw = 50;
   int sh = 10;
 
-  m_height = ui.graphicsView->height()-51;
-  m_width = ui.graphicsView->width()-101;
+  m_height = ui->graphicsView->height()-51;
+  m_width = ui->graphicsView->width()-101;
 
   delete m_scene;
   m_scene = new QGraphicsScene();
@@ -200,13 +201,13 @@ ProfileViewer::generateScene()
       m_scene->addPath(pp, QPen(QColor(200, 0, 0, 128)));
     }
 
-  ui.graphicsView->setScene(m_scene);
+  ui->graphicsView->setScene(m_scene);
 }
 
 void
 ProfileViewer::on_saveImage_clicked()
 {
-  QPixmap pix = QPixmap::grabWidget(ui.graphicsView);
+  QPixmap pix = QPixmap::grabWidget(ui->graphicsView);
 
   QString imgFile = QFileDialog::getSaveFileName(0,
 			     "Save profile image to",

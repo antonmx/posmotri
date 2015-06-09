@@ -1,7 +1,7 @@
 #include "global.h"
 #include "transferfunctionmanager.h"
 #include "propertyeditor.h"
-#include <QDomDocument>
+
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -529,89 +529,65 @@ TransferFunctionManager::removeTransferFunction()
     }
 }
 
-void
-TransferFunctionManager::load(const char *flnm)
-{
+
+
+
+
+
+void TransferFunctionManager::load(const QList<SplineInformation> & splineInfo) {
   m_tfContainer->clearContainer();
-
-  QDomDocument document;
-  QFile f(flnm);
-  if (f.open(QIODevice::ReadOnly))
-    {
-      document.setContent(&f);
-      f.close();
-    }
-
-  QDomElement main = document.documentElement();
-  QDomNodeList dlist = main.childNodes();
-  for(int i=0; i<dlist.count(); i++)
-    {
-      if (dlist.at(i).nodeName() == "transferfunction")
-	m_tfContainer->fromDomElement(dlist.at(i).toElement());
-    }
-
-  refreshManager(0);
+  append(splineInfo);
 }
 
-void
-TransferFunctionManager::append(const char *flnm)
-{
-  QDomDocument document;
-  QFile f(flnm);
-  if (f.open(QIODevice::ReadOnly))
-    {
-      document.setContent(&f);
-      f.close();
-    }
-
-  QDomElement main = document.documentElement();
-  QDomNodeList dlist = main.childNodes();
-  for(int i=0; i<dlist.count(); i++)
-    {
-      if (dlist.at(i).nodeName() == "transferfunction")
-	m_tfContainer->fromDomElement(dlist.at(i).toElement());
-    }
-
-  refreshManager(0);
-}
-
-void
-TransferFunctionManager::load(QList<SplineInformation> splineInfo)
-{
-  m_tfContainer->clearContainer();
-
+void TransferFunctionManager::append(const QList<SplineInformation> & splineInfo) {
   for(int i=0; i<splineInfo.count(); i++)
     m_tfContainer->fromSplineInformation(splineInfo[i]);
-
   refreshManager(0);
 }
 
 
-void
-TransferFunctionManager::save(const QString & flnm)
-{
-  QDomDocument document;
-  QFile f(flnm);
-  if (f.open(QIODevice::ReadOnly))
-    {
-      document.setContent(&f);
-      f.close();
-    }
-  QDomElement topElement = document.documentElement();
-  for(int i=0; i<m_tfContainer->count(); i++)
-    {
-      QDomElement de = m_tfContainer->transferFunctionPtr(i)->domElement(document);
-      topElement.appendChild(de);
-    }
-
-  QFile fout(flnm);
-  if (fout.open(QIODevice::WriteOnly))
-    {
-      QTextStream out(&fout);
-      document.save(out, 2);
-      fout.close();
-    }
+void TransferFunctionManager::save(const QString & flnm) const {
+  QConfigMe cfg;
+  cfg.beginArray("TransferFunctionManager");
+  for(int i=0; i<m_tfContainer->count(); i++)  {
+    m_tfContainer->transferFunctionPtr(i)->save(cfg);
+    cfg.advanceArray();
+  }
+  cfg.endArray();
+  cfg.write(flnm);
 }
+
+void TransferFunctionManager::load(const QString & flnm) {
+  QList<SplineInformation> splineInfo;
+  QConfigMe cfg;  
+  cfg.read(flnm);
+  const int sz=cfg.beginArray("TransferFunctionManager");
+  for(int i=0; i<sz; i++)  {
+    SplineInformation inf;
+    inf.load(cfg);
+    splineInfo.append(inf);
+    cfg.advanceArray();
+  }
+  cfg.endArray();
+  load(splineInfo);
+}
+
+
+void TransferFunctionManager::append(const QString & flnm) {
+  QList<SplineInformation> splineInfo;
+  QConfigMe cfg;  
+  cfg.read(flnm);
+  const int sz=cfg.beginArray("TransferFunctionManager");
+  for(int i=0; i<sz; i++)  {
+    SplineInformation inf;
+    inf.load(cfg);
+    splineInfo.append(inf);
+    cfg.advanceArray();
+  }
+  cfg.endArray();
+  append(splineInfo);
+}
+
 
 void
 TransferFunctionManager::applyUndo(bool flag)

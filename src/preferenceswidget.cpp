@@ -6,35 +6,35 @@
 
 #include <QFile>
 #include <QTextStream>
-#include <QDomDocument>
 
 using namespace qglviewer;
 
 PreferencesWidget::PreferencesWidget(QWidget *parent)
   : QWidget(parent)
   , m_tagColorEditor(new TagColorEditor)
+  , ui(new Ui::PreferencesWidget)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
-  ui.tabWidget->widget(3)->layout()->addWidget(m_tagColorEditor);
+  ui->tabWidget->widget(3)->layout()->addWidget(m_tagColorEditor);
   connect(m_tagColorEditor, SIGNAL(tagColorChanged()), SIGNAL(tagColorChanged()));
   connect(m_tagColorEditor, SIGNAL(tagColorChanged()), SIGNAL(updateGL()));
 
-  textureMemorySizeLink = new QSpinSlide(ui.m_textureMemorySize, ui.m_textureMemorySize_SB, this);
-  stilLink = new QSpinSlide(ui.m_still, ui.m_still_SB, this);
-  dragLink = new QSpinSlide(ui.m_drag, ui.m_drag_SB, this);
+  textureMemorySizeLink = new QSpinSlide(ui->m_textureMemorySize, ui->m_textureMemorySize_SB, this);
+  stilLink = new QSpinSlide(ui->m_still, ui->m_still_SB, this);
+  dragLink = new QSpinSlide(ui->m_drag, ui->m_drag_SB, this);
   connect( textureMemorySizeLink,  SIGNAL(valueChanged(int)),  SLOT(onImageQualityChanged()));
   connect( stilLink,  SIGNAL(valueChanged(int)),  SLOT( onImageQualityChanged() ));
   connect( dragLink,  SIGNAL(valueChanged(int)),  SLOT( onImageQualityChanged() ));
 
-  connect( ui.m_tickSize,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
-  connect( ui.m_tickStep,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
-  connect( ui.m_labelX,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
-  connect( ui.m_labelY,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
-  connect( ui.m_labelZ,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
-  connect( ui.m_eyeSeparation,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
-  connect( ui.m_focus,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
-  connect( ui.m_screenWidth,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
+  connect( ui->m_tickSize,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
+  connect( ui->m_tickStep,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
+  connect( ui->m_labelX,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
+  connect( ui->m_labelY,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
+  connect( ui->m_labelZ,  SIGNAL(editingFinished()),  SLOT(onTickChanged()));
+  connect( ui->m_eyeSeparation,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
+  connect( ui->m_focus,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
+  connect( ui->m_screenWidth,  SIGNAL(editingFinished()),  SLOT(onStereoChanged()));
 
   onTickChanged();
   updateTextureMemory();
@@ -54,10 +54,10 @@ void PreferencesWidget::updateTextureMemory() {
 
 
 void PreferencesWidget::setStereoSettings(float dist, float es, float width) {
-  ui.m_focus->setRange(dist/10, 2*dist);
-  ui.m_focus->setValue(dist);
-  ui.m_screenWidth->setValue(width);
-  ui.m_eyeSeparation->setValue(es);
+  ui->m_focus->setRange(dist/10, 2*dist);
+  ui->m_focus->setValue(dist);
+  ui->m_screenWidth->setValue(width);
+  ui->m_eyeSeparation->setValue(es);
 }
 
 
@@ -92,19 +92,19 @@ void PreferencesWidget::setRenderQualityValues(float still, float drag) {
 
 
 void PreferencesWidget::getTick(int& sz, int& st, QString& xl, QString& yl, QString& zl) const {
-  sz = ui.m_tickSize->value();
-  st = ui.m_tickStep->value();
-  xl = ui.m_labelX->text();
-  yl = ui.m_labelY->text();
-  zl = ui.m_labelZ->text();
+  sz = ui->m_tickSize->value();
+  st = ui->m_tickStep->value();
+  xl = ui->m_labelX->text();
+  yl = ui->m_labelY->text();
+  zl = ui->m_labelZ->text();
 }
 
 void PreferencesWidget::setTick(int sz, int st, const QString & xl, const QString & yl, const QString & zl) {
-  ui.m_tickSize->setValue(sz);
-  ui.m_tickStep->setValue(st);
-  ui.m_labelX->setText(xl);
-  ui.m_labelY->setText(yl);
-  ui.m_labelZ->setText(zl);
+  ui->m_tickSize->setValue(sz);
+  ui->m_tickStep->setValue(st);
+  ui->m_labelX->setText(xl);
+  ui->m_labelY->setText(yl);
+  ui->m_labelZ->setText(zl);
 }
 
 
@@ -114,24 +114,24 @@ void PreferencesWidget::setTick(int sz, int st, const QString & xl, const QStrin
 
 
 void PreferencesWidget::on_m_newColorSet_clicked() {
-  m_tagColorEditor->newColorSet(ui.m_colorSeed->value());
+  m_tagColorEditor->newColorSet(ui->m_colorSeed->value());
 }
 
 void PreferencesWidget::on_m_setOpacity_clicked() {
-  m_tagColorEditor->setOpacity(ui.m_opacity->value());
+  m_tagColorEditor->setOpacity(ui->m_opacity->value());
 }
 
 void PreferencesWidget::onTickChanged() {
-  Tick::setTickSize(ui.m_tickSize->value());
-  Tick::setTickStep(ui.m_tickStep->value());
-  Tick::setLabelX(ui.m_labelX->text());
-  Tick::setLabelY(ui.m_labelY->text());
-  Tick::setLabelZ(ui.m_labelZ->text());
+  Tick::setTickSize(ui->m_tickSize->value());
+  Tick::setTickStep(ui->m_tickStep->value());
+  Tick::setLabelX(ui->m_labelX->text());
+  Tick::setLabelY(ui->m_labelY->text());
+  Tick::setLabelZ(ui->m_labelZ->text());
   emit updateGL();
 }
 
 void PreferencesWidget::onStereoChanged() {
-  emit stereoSettingsChanged(ui.m_focus->value(), ui.m_eyeSeparation->value(), ui.m_screenWidth->value() );
+  emit stereoSettingsChanged(ui->m_focus->value(), ui->m_eyeSeparation->value(), ui->m_screenWidth->value() );
 }
 
 void PreferencesWidget::on_m_bgcolor_clicked() {

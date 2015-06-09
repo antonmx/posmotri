@@ -18,7 +18,7 @@ class Load2Volumes : public QDialog
   void on_volButton2_pressed();
 
  private :
-  Ui::Load2VolumesDialog ui;
+  Ui::Load2VolumesDialog * ui;
 
   QStringList m_vol1Files;
   QStringList m_vol2Files;

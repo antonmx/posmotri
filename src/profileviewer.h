@@ -29,7 +29,7 @@ class ProfileViewer : public QWidget
   void on_caption_editingFinished();
 
  private :
-  Ui::ProfileViewer ui;
+  Ui::ProfileViewer * ui;
 
   QGraphicsScene *m_scene;
   int m_height, m_width;

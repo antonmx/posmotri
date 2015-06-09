@@ -1,18 +1,18 @@
 #include "global.h"
-//#include <QtGui>
 #include "load2volumes.h"
 #include <QFileDialog>
 
 QStringList Load2Volumes::volume1Files() { return m_vol1Files; }
 QStringList Load2Volumes::volume2Files() { return m_vol2Files; }
 
-Load2Volumes::Load2Volumes(QWidget *parent) :
-  QDialog(parent)
+Load2Volumes::Load2Volumes(QWidget *parent)
+  : QDialog(parent)
+  , ui (new Ui::Load2VolumesDialog)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
-  ui.volList1->clear();
-  ui.volList2->clear();
+  ui->volList1->clear();
+  ui->volList2->clear();
 }
 
 void
@@ -43,8 +43,8 @@ Load2Volumes::on_volButton1_pressed()
 
   m_vol1Files = flnm;
 
-  ui.volList1->clear();
-  ui.volList1->addItems(flnm);
+  ui->volList1->clear();
+  ui->volList1->addItems(flnm);
 }
 
 void
@@ -75,6 +75,6 @@ Load2Volumes::on_volButton2_pressed()
 
   m_vol2Files = flnm;
 
-  ui.volList2->clear();
-  ui.volList2->addItems(flnm);
+  ui->volList2->clear();
+  ui->volList2->addItems(flnm);
 }

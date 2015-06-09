@@ -121,7 +121,7 @@ class MainWindow : public QMainWindow
    void updateComposite();
    void checkStateChanged(int, int, bool);
    void openRecentFile();
-   void loadProject(const char*);
+   void loadProject(const QString &);
    void loadTransferFunctionsOnly(const char*);
    void saveProject(const QString &);
    void GlewInit();
@@ -202,7 +202,7 @@ class MainWindow : public QMainWindow
    void loadPlugin();
 
  private :
-   Ui::MainWindow ui;
+   Ui::MainWindow * ui;
 
    Volume *m_Volume;
 

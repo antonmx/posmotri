@@ -59,7 +59,7 @@ class VolumeInformationWidget : public QWidget
 
 
  private :
-  Ui::processedVolumeInformation ui;
+  Ui::processedVolumeInformation * ui;
 
   bool m_replaceInHeader;
 

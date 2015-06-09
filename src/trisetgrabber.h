@@ -4,16 +4,18 @@
 #include <QGLViewer/mouseGrabber.h>
 
 
-class TrisetGrabber : public QObject, public qglviewer::MouseGrabber, public TrisetObject
+class TrisetGrabber
+  : public QObject
+  , public qglviewer::MouseGrabber
+  , public TrisetObject
 {
-  Q_OBJECT
+  Q_OBJECT;
 
- public :
+public :
   TrisetGrabber();
   ~TrisetGrabber();
 
-  enum MoveAxis
-  {
+  enum MoveAxis {
     MoveX,
     MoveY,
     MoveZ,
@@ -39,6 +41,7 @@ class TrisetGrabber : public QObject, public qglviewer::MouseGrabber, public Tri
   int m_moveAxis;
   bool m_pressed;
   QPoint m_prevPos;
+  
 };
 
 #endif

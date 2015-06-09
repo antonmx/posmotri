@@ -8,79 +8,80 @@
 using namespace qglviewer;
 
 
-VolumeInformationWidget::VolumeInformationWidget(QWidget *parent) :
-  QWidget(parent)
+VolumeInformationWidget::VolumeInformationWidget(QWidget *parent)
+  : QWidget(parent)
+  , ui(new Ui::processedVolumeInformation)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
 
   QRegExp rx("(\\-?\\d*\\.?\\d*\\s?){3,3}");
   QRegExpValidator *validator = new QRegExpValidator(rx,0);
-  ui.m_voxelSize->setValidator(validator);
+  ui->m_voxelSize->setValidator(validator);
 
-  ui.m_boxSize->setValidator(validator);
+  ui->m_boxSize->setValidator(validator);
 
   QRegExp rx1("(\\d+)");
   QRegExpValidator *validator1 = new QRegExpValidator(rx1,0);
-  ui.m_volnum->setValidator(validator1);
-  ui.m_volnum_2->setValidator(validator1);
-  ui.m_volnum_3->setValidator(validator1);
-  ui.m_volnum_4->setValidator(validator1);
+  ui->m_volnum->setValidator(validator1);
+  ui->m_volnum_2->setValidator(validator1);
+  ui->m_volnum_3->setValidator(validator1);
+  ui->m_volnum_4->setValidator(validator1);
 
-  ui.m_pvlFile->setReadOnly(true);
-  ui.m_rawFile->setReadOnly(true);
-  ui.m_dimensions->setReadOnly(true);
-  ui.m_voxelType->setReadOnly(true);
-  ui.m_description->setDisabled(true);
-  ui.m_voxelUnit->setDisabled(true);
-  ui.m_voxelSize->setDisabled(true);
-  ui.m_boxSize->setDisabled(true);
-
-
-  ui.m_pvlFile_2->setReadOnly(true);
-  ui.m_rawFile_2->setReadOnly(true);
-  ui.m_dimensions_2->setReadOnly(true);
-  ui.m_voxelType_2->setReadOnly(true);
-  ui.m_description_2->setDisabled(true);
-  ui.m_voxelUnit_2->setDisabled(true);
-  ui.m_voxelSize_2->setDisabled(true);
-  ui.m_boxSize_2->setDisabled(true);
-
-  ui.m_pvlFile_3->setReadOnly(true);
-  ui.m_rawFile_3->setReadOnly(true);
-  ui.m_dimensions_3->setReadOnly(true);
-  ui.m_voxelType_3->setReadOnly(true);
-  ui.m_description_3->setDisabled(true);
-  ui.m_voxelUnit_3->setDisabled(true);
-  ui.m_voxelSize_3->setDisabled(true);
-  ui.m_boxSize_3->setDisabled(true);
-
-  ui.m_pvlFile_4->setReadOnly(true);
-  ui.m_rawFile_4->setReadOnly(true);
-  ui.m_dimensions_4->setReadOnly(true);
-  ui.m_voxelType_4->setReadOnly(true);
-  ui.m_description_4->setDisabled(true);
-  ui.m_voxelUnit_4->setDisabled(true);
-  ui.m_voxelSize_4->setDisabled(true);
-  ui.m_boxSize_4->setDisabled(true);
+  ui->m_pvlFile->setReadOnly(true);
+  ui->m_rawFile->setReadOnly(true);
+  ui->m_dimensions->setReadOnly(true);
+  ui->m_voxelType->setReadOnly(true);
+  ui->m_description->setDisabled(true);
+  ui->m_voxelUnit->setDisabled(true);
+  ui->m_voxelSize->setDisabled(true);
+  ui->m_boxSize->setDisabled(true);
 
 
-  ui.tabWidget->setTabText(0, "Volume 1");
+  ui->m_pvlFile_2->setReadOnly(true);
+  ui->m_rawFile_2->setReadOnly(true);
+  ui->m_dimensions_2->setReadOnly(true);
+  ui->m_voxelType_2->setReadOnly(true);
+  ui->m_description_2->setDisabled(true);
+  ui->m_voxelUnit_2->setDisabled(true);
+  ui->m_voxelSize_2->setDisabled(true);
+  ui->m_boxSize_2->setDisabled(true);
+
+  ui->m_pvlFile_3->setReadOnly(true);
+  ui->m_rawFile_3->setReadOnly(true);
+  ui->m_dimensions_3->setReadOnly(true);
+  ui->m_voxelType_3->setReadOnly(true);
+  ui->m_description_3->setDisabled(true);
+  ui->m_voxelUnit_3->setDisabled(true);
+  ui->m_voxelSize_3->setDisabled(true);
+  ui->m_boxSize_3->setDisabled(true);
+
+  ui->m_pvlFile_4->setReadOnly(true);
+  ui->m_rawFile_4->setReadOnly(true);
+  ui->m_dimensions_4->setReadOnly(true);
+  ui->m_voxelType_4->setReadOnly(true);
+  ui->m_description_4->setDisabled(true);
+  ui->m_voxelUnit_4->setDisabled(true);
+  ui->m_voxelSize_4->setDisabled(true);
+  ui->m_boxSize_4->setDisabled(true);
+
+
+  ui->tabWidget->setTabText(0, "Volume 1");
   m_currVol = 0;
 
-  if (ui.tabWidget->count() > 3)
+  if (ui->tabWidget->count() > 3)
     {
-      m_widget4 = ui.tabWidget->widget(3);
-      ui.tabWidget->removeTab(3);
+      m_widget4 = ui->tabWidget->widget(3);
+      ui->tabWidget->removeTab(3);
     }
-  if (ui.tabWidget->count() > 2)
+  if (ui->tabWidget->count() > 2)
     {
-      m_widget3 = ui.tabWidget->widget(2);
-      ui.tabWidget->removeTab(2);
+      m_widget3 = ui->tabWidget->widget(2);
+      ui->tabWidget->removeTab(2);
     }
-  if (ui.tabWidget->count() > 1)
+  if (ui->tabWidget->count() > 1)
     {
-      m_widget2 = ui.tabWidget->widget(1);
-      ui.tabWidget->removeTab(1);
+      m_widget2 = ui->tabWidget->widget(1);
+      ui->tabWidget->removeTab(1);
     }
 
   m_replaceInHeader = true;
@@ -90,10 +91,10 @@ QList<bool>
 VolumeInformationWidget::repeatType()
 {
   QList<bool> rt;
-  rt << ui.m_repeatType->isChecked();
-  rt << ui.m_repeatType_2->isChecked();
-  rt << ui.m_repeatType_3->isChecked();
-  rt << ui.m_repeatType_4->isChecked();
+  rt << ui->m_repeatType->isChecked();
+  rt << ui->m_repeatType_2->isChecked();
+  rt << ui->m_repeatType_3->isChecked();
+  rt << ui->m_repeatType_4->isChecked();
   return rt;
 }
 
@@ -101,13 +102,13 @@ void
 VolumeInformationWidget::setRepeatType(QList<bool> rt)
 {
   if (rt.count() > 0)
-    ui.m_repeatType->setChecked(rt[0]);
+    ui->m_repeatType->setChecked(rt[0]);
   if (rt.count() > 1)
-    ui.m_repeatType_2->setChecked(rt[1]);
+    ui->m_repeatType_2->setChecked(rt[1]);
   if (rt.count() > 2)
-    ui.m_repeatType_3->setChecked(rt[2]);
+    ui->m_repeatType_3->setChecked(rt[2]);
   if (rt.count() > 3)
-    ui.m_repeatType_4->setChecked(rt[3]);
+    ui->m_repeatType_4->setChecked(rt[3]);
 }
 
 
@@ -143,147 +144,147 @@ VolumeInformationWidget::setVolumes(QList<int> vsizes)
 void
 VolumeInformationWidget::setVolumes(int vmax)
 {
-  ui.m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax));
-  ui.m_volnum->setText("0");
-  ui.m_description->setEnabled(true);
-  ui.m_voxelUnit->setEnabled(true);
-  ui.m_voxelSize->setEnabled(true);
-  ui.m_boxSize->setEnabled(true);
+  ui->m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax));
+  ui->m_volnum->setText("0");
+  ui->m_description->setEnabled(true);
+  ui->m_voxelUnit->setEnabled(true);
+  ui->m_voxelSize->setEnabled(true);
+  ui->m_boxSize->setEnabled(true);
 
-  if (ui.tabWidget->count() > 3)
+  if (ui->tabWidget->count() > 3)
     {
-      m_widget4 = ui.tabWidget->widget(3);
-      ui.tabWidget->removeTab(3);
+      m_widget4 = ui->tabWidget->widget(3);
+      ui->tabWidget->removeTab(3);
     }
-  if (ui.tabWidget->count() > 2)
+  if (ui->tabWidget->count() > 2)
     {
-      m_widget3 = ui.tabWidget->widget(2);
-      ui.tabWidget->removeTab(2);
+      m_widget3 = ui->tabWidget->widget(2);
+      ui->tabWidget->removeTab(2);
     }
-  if (ui.tabWidget->count() > 1)
+  if (ui->tabWidget->count() > 1)
     {
-      m_widget2 = ui.tabWidget->widget(1);
-      ui.tabWidget->removeTab(1);
+      m_widget2 = ui->tabWidget->widget(1);
+      ui->tabWidget->removeTab(1);
     }
 }
 
 void
 VolumeInformationWidget::setVolumes(int vmax1, int vmax2)
 {
-  ui.m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax1));
-  ui.m_volnum->setText("0");
-  ui.m_description->setEnabled(true);
-  ui.m_voxelUnit->setEnabled(true);
-  ui.m_voxelSize->setEnabled(true);
-  ui.m_boxSize->setEnabled(true);
+  ui->m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax1));
+  ui->m_volnum->setText("0");
+  ui->m_description->setEnabled(true);
+  ui->m_voxelUnit->setEnabled(true);
+  ui->m_voxelSize->setEnabled(true);
+  ui->m_boxSize->setEnabled(true);
 
 
-  ui.m_maxVolumes_2->setText(QString("  No. of volumes : %1").arg(vmax2));
-  ui.m_volnum_2->setText("0");
-  ui.m_description_2->setEnabled(true);
-  ui.m_voxelUnit_2->setEnabled(true);
-  ui.m_voxelSize_2->setEnabled(true);
-  ui.m_boxSize_2->setEnabled(true);
+  ui->m_maxVolumes_2->setText(QString("  No. of volumes : %1").arg(vmax2));
+  ui->m_volnum_2->setText("0");
+  ui->m_description_2->setEnabled(true);
+  ui->m_voxelUnit_2->setEnabled(true);
+  ui->m_voxelSize_2->setEnabled(true);
+  ui->m_boxSize_2->setEnabled(true);
 
-  if (ui.tabWidget->count() > 3)
+  if (ui->tabWidget->count() > 3)
     {
-      m_widget4 = ui.tabWidget->widget(3);
-      ui.tabWidget->removeTab(3);
+      m_widget4 = ui->tabWidget->widget(3);
+      ui->tabWidget->removeTab(3);
     }
-  if (ui.tabWidget->count() > 2)
+  if (ui->tabWidget->count() > 2)
     {
-      m_widget3 = ui.tabWidget->widget(2);
-      ui.tabWidget->removeTab(2);
+      m_widget3 = ui->tabWidget->widget(2);
+      ui->tabWidget->removeTab(2);
     }
 
-  if (ui.tabWidget->count() == 1)
-    ui.tabWidget->addTab(m_widget2, "Volume 2");
+  if (ui->tabWidget->count() == 1)
+    ui->tabWidget->addTab(m_widget2, "Volume 2");
 }
 
 void
 VolumeInformationWidget::setVolumes(int vmax1, int vmax2, int vmax3)
 {
-  ui.m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax1));
-  ui.m_volnum->setText("0");
-  ui.m_description->setEnabled(true);
-  ui.m_voxelUnit->setEnabled(true);
-  ui.m_voxelSize->setEnabled(true);
-  ui.m_boxSize->setEnabled(true);
+  ui->m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax1));
+  ui->m_volnum->setText("0");
+  ui->m_description->setEnabled(true);
+  ui->m_voxelUnit->setEnabled(true);
+  ui->m_voxelSize->setEnabled(true);
+  ui->m_boxSize->setEnabled(true);
 
-  ui.m_maxVolumes_2->setText(QString("  No. of volumes : %1").arg(vmax2));
-  ui.m_volnum_2->setText("0");
-  ui.m_description_2->setEnabled(true);
-  ui.m_voxelUnit_2->setEnabled(true);
-  ui.m_voxelSize_2->setEnabled(true);
-  ui.m_boxSize_2->setEnabled(true);
+  ui->m_maxVolumes_2->setText(QString("  No. of volumes : %1").arg(vmax2));
+  ui->m_volnum_2->setText("0");
+  ui->m_description_2->setEnabled(true);
+  ui->m_voxelUnit_2->setEnabled(true);
+  ui->m_voxelSize_2->setEnabled(true);
+  ui->m_boxSize_2->setEnabled(true);
 
-  ui.m_maxVolumes_3->setText(QString("  No. of volumes : %1").arg(vmax3));
-  ui.m_volnum_3->setText("0");
-  ui.m_description_3->setEnabled(true);
-  ui.m_voxelUnit_3->setEnabled(true);
-  ui.m_voxelSize_3->setEnabled(true);
-  ui.m_boxSize_3->setEnabled(true);
+  ui->m_maxVolumes_3->setText(QString("  No. of volumes : %1").arg(vmax3));
+  ui->m_volnum_3->setText("0");
+  ui->m_description_3->setEnabled(true);
+  ui->m_voxelUnit_3->setEnabled(true);
+  ui->m_voxelSize_3->setEnabled(true);
+  ui->m_boxSize_3->setEnabled(true);
 
-  if (ui.tabWidget->count() > 3)
+  if (ui->tabWidget->count() > 3)
     {
-      m_widget4 = ui.tabWidget->widget(3);
-      ui.tabWidget->removeTab(3);
+      m_widget4 = ui->tabWidget->widget(3);
+      ui->tabWidget->removeTab(3);
     }
-  if (ui.tabWidget->count() == 1)
+  if (ui->tabWidget->count() == 1)
     {
-      ui.tabWidget->addTab(m_widget2, "Volume 2");
-      ui.tabWidget->addTab(m_widget3, "Volume 3");
+      ui->tabWidget->addTab(m_widget2, "Volume 2");
+      ui->tabWidget->addTab(m_widget3, "Volume 3");
     }
-  if (ui.tabWidget->count() == 2)
-    ui.tabWidget->addTab(m_widget3, "Volume 3");
+  if (ui->tabWidget->count() == 2)
+    ui->tabWidget->addTab(m_widget3, "Volume 3");
 }
 
 void
 VolumeInformationWidget::setVolumes(int vmax1, int vmax2,
 				    int vmax3, int vmax4)
 {
-  ui.m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax1));
-  ui.m_volnum->setText("0");
-  ui.m_description->setEnabled(true);
-  ui.m_voxelUnit->setEnabled(true);
-  ui.m_voxelSize->setEnabled(true);
-  ui.m_boxSize->setEnabled(true);
+  ui->m_maxVolumes->setText(QString("  No. of volumes : %1").arg(vmax1));
+  ui->m_volnum->setText("0");
+  ui->m_description->setEnabled(true);
+  ui->m_voxelUnit->setEnabled(true);
+  ui->m_voxelSize->setEnabled(true);
+  ui->m_boxSize->setEnabled(true);
 
-  ui.m_maxVolumes_2->setText(QString("  No. of volumes : %1").arg(vmax2));
-  ui.m_volnum_2->setText("0");
-  ui.m_description_2->setEnabled(true);
-  ui.m_voxelUnit_2->setEnabled(true);
-  ui.m_voxelSize_2->setEnabled(true);
-  ui.m_boxSize_2->setEnabled(true);
+  ui->m_maxVolumes_2->setText(QString("  No. of volumes : %1").arg(vmax2));
+  ui->m_volnum_2->setText("0");
+  ui->m_description_2->setEnabled(true);
+  ui->m_voxelUnit_2->setEnabled(true);
+  ui->m_voxelSize_2->setEnabled(true);
+  ui->m_boxSize_2->setEnabled(true);
 
-  ui.m_maxVolumes_3->setText(QString("  No. of volumes : %1").arg(vmax3));
-  ui.m_volnum_3->setText("0");
-  ui.m_description_3->setEnabled(true);
-  ui.m_voxelUnit_3->setEnabled(true);
-  ui.m_voxelSize_3->setEnabled(true);
-  ui.m_boxSize_3->setEnabled(true);
+  ui->m_maxVolumes_3->setText(QString("  No. of volumes : %1").arg(vmax3));
+  ui->m_volnum_3->setText("0");
+  ui->m_description_3->setEnabled(true);
+  ui->m_voxelUnit_3->setEnabled(true);
+  ui->m_voxelSize_3->setEnabled(true);
+  ui->m_boxSize_3->setEnabled(true);
 
-  ui.m_maxVolumes_4->setText(QString("  No. of volumes : %1").arg(vmax4));
-  ui.m_volnum_4->setText("0");
-  ui.m_description_4->setEnabled(true);
-  ui.m_voxelUnit_4->setEnabled(true);
-  ui.m_voxelSize_4->setEnabled(true);
-  ui.m_boxSize_4->setEnabled(true);
+  ui->m_maxVolumes_4->setText(QString("  No. of volumes : %1").arg(vmax4));
+  ui->m_volnum_4->setText("0");
+  ui->m_description_4->setEnabled(true);
+  ui->m_voxelUnit_4->setEnabled(true);
+  ui->m_voxelSize_4->setEnabled(true);
+  ui->m_boxSize_4->setEnabled(true);
 
-  if (ui.tabWidget->count() == 1)
+  if (ui->tabWidget->count() == 1)
     {
-      ui.tabWidget->addTab(m_widget2, "Volume 2");
-      ui.tabWidget->addTab(m_widget3, "Volume 3");
-      ui.tabWidget->addTab(m_widget4, "Volume 4");
+      ui->tabWidget->addTab(m_widget2, "Volume 2");
+      ui->tabWidget->addTab(m_widget3, "Volume 3");
+      ui->tabWidget->addTab(m_widget4, "Volume 4");
     }
-  if (ui.tabWidget->count() == 2)
+  if (ui->tabWidget->count() == 2)
     {
-      ui.tabWidget->addTab(m_widget3, "Volume 3");
-      ui.tabWidget->addTab(m_widget4, "Volume 4");
+      ui->tabWidget->addTab(m_widget3, "Volume 3");
+      ui->tabWidget->addTab(m_widget4, "Volume 4");
     }
-  if (ui.tabWidget->count() == 3)
+  if (ui->tabWidget->count() == 3)
     {
-      ui.tabWidget->addTab(m_widget4, "Volume 4");
+      ui->tabWidget->addTab(m_widget4, "Volume 4");
     }
 }
 
@@ -294,17 +295,17 @@ VolumeInformationWidget::refreshVolInfo(int vnum,
   m_replaceInHeader = false;
 
   m_volInfo[0] = volInfo;
-  ui.m_volnum->setText(QString("%1").arg(vnum));
-  ui.m_pvlFile->setText(volInfo.pvlFile);
-  ui.m_rawFile->setText(volInfo.rawFile);
-  ui.m_description->setText(volInfo.description);
-  ui.m_dimensions->setText(QString("%1 %2 %3").\
+  ui->m_volnum->setText(QString("%1").arg(vnum));
+  ui->m_pvlFile->setText(volInfo.pvlFile);
+  ui->m_rawFile->setText(volInfo.rawFile);
+  ui->m_description->setText(volInfo.description);
+  ui->m_dimensions->setText(QString("%1 %2 %3").\
 			   arg(volInfo.dimensions.z).\
 			   arg(volInfo.dimensions.y).\
 			   arg(volInfo.dimensions.x));
-  ui.m_voxelType->setText(volInfo.voxelTypeString());
-  ui.m_voxelUnit->setCurrentIndex(volInfo.voxelUnit);
-  ui.m_voxelSize->setText(QString("%1 %2 %3").\
+  ui->m_voxelType->setText(volInfo.voxelTypeString());
+  ui->m_voxelUnit->setCurrentIndex(volInfo.voxelUnit);
+  ui->m_voxelSize->setText(QString("%1 %2 %3").\
 			  arg(volInfo.voxelSize.x).\
 			  arg(volInfo.voxelSize.y).\
 			  arg(volInfo.voxelSize.z));
@@ -313,7 +314,7 @@ VolumeInformationWidget::refreshVolInfo(int vnum,
   boxSize.x = volInfo.voxelSize.x*volInfo.dimensions.z;
   boxSize.y = volInfo.voxelSize.y*volInfo.dimensions.y;
   boxSize.z = volInfo.voxelSize.z*volInfo.dimensions.x;
-  ui.m_boxSize->setText(QString("%1 %2 %3").\
+  ui->m_boxSize->setText(QString("%1 %2 %3").\
 			arg(boxSize.x).	\
 			arg(boxSize.y).	\
 			arg(boxSize.z));
@@ -329,10 +330,10 @@ VolumeInformationWidget::refreshVolInfo(int vnum,
   //----------------------------------------------------------
 
 
-  ui.m_mapping->clear();
+  ui->m_mapping->clear();
   for(int i=0; i<volInfo.mapping.count(); i++)
     {
-      ui.m_mapping->addItem(QString("%1 <--> %2").\
+      ui->m_mapping->addItem(QString("%1 <--> %2").\
 			    arg(volInfo.mapping[i].x()).\
 			    arg(volInfo.mapping[i].y()));
     }
@@ -349,17 +350,17 @@ VolumeInformationWidget::refreshVolInfo2(int vnum,
   m_replaceInHeader = false;
 
   m_volInfo[1] = volInfo;
-  ui.m_volnum_2->setText(QString("%1").arg(vnum));
-  ui.m_pvlFile_2->setText(volInfo.pvlFile);
-  ui.m_rawFile_2->setText(volInfo.rawFile);
-  ui.m_description_2->setText(volInfo.description);
-  ui.m_dimensions_2->setText(QString("%1 %2 %3").\
+  ui->m_volnum_2->setText(QString("%1").arg(vnum));
+  ui->m_pvlFile_2->setText(volInfo.pvlFile);
+  ui->m_rawFile_2->setText(volInfo.rawFile);
+  ui->m_description_2->setText(volInfo.description);
+  ui->m_dimensions_2->setText(QString("%1 %2 %3").\
 			     arg(volInfo.dimensions.z).	\
 			     arg(volInfo.dimensions.y).	\
 			     arg(volInfo.dimensions.x));
-  ui.m_voxelType_2->setText(volInfo.voxelTypeString());
-  ui.m_voxelUnit_2->setCurrentIndex(volInfo.voxelUnit);
-  ui.m_voxelSize_2->setText(QString("%1 %2 %3").\
+  ui->m_voxelType_2->setText(volInfo.voxelTypeString());
+  ui->m_voxelUnit_2->setCurrentIndex(volInfo.voxelUnit);
+  ui->m_voxelSize_2->setText(QString("%1 %2 %3").\
 			    arg(volInfo.voxelSize.x).	\
 			    arg(volInfo.voxelSize.y).	\
 			    arg(volInfo.voxelSize.z));
@@ -368,7 +369,7 @@ VolumeInformationWidget::refreshVolInfo2(int vnum,
   boxSize.x = volInfo.voxelSize.x*volInfo.dimensions.z;
   boxSize.y = volInfo.voxelSize.y*volInfo.dimensions.y;
   boxSize.z = volInfo.voxelSize.z*volInfo.dimensions.x;
-  ui.m_boxSize_2->setText(QString("%1 %2 %3").\
+  ui->m_boxSize_2->setText(QString("%1 %2 %3").\
 			  arg(boxSize.x).     \
 			  arg(boxSize.y).     \
 			  arg(boxSize.z));
@@ -384,10 +385,10 @@ VolumeInformationWidget::refreshVolInfo2(int vnum,
   Global::setRelativeVoxelScaling(vscl);
   //----------------------------------------------------------
 
-  ui.m_mapping_2->clear();
+  ui->m_mapping_2->clear();
   for(int i=0; i<volInfo.mapping.count(); i++)
     {
-      ui.m_mapping_2->addItem(QString("%1 <--> %2").		\
+      ui->m_mapping_2->addItem(QString("%1 <--> %2").		\
 			      arg(volInfo.mapping[i].x()).	\
 			      arg(volInfo.mapping[i].y()));
     }
@@ -402,17 +403,17 @@ VolumeInformationWidget::refreshVolInfo3(int vnum,
   m_replaceInHeader = false;
 
   m_volInfo[2] = volInfo;
-  ui.m_volnum_3->setText(QString("%1").arg(vnum));
-  ui.m_pvlFile_3->setText(volInfo.pvlFile);
-  ui.m_rawFile_3->setText(volInfo.rawFile);
-  ui.m_description_3->setText(volInfo.description);
-  ui.m_dimensions_3->setText(QString("%1 %2 %3").\
+  ui->m_volnum_3->setText(QString("%1").arg(vnum));
+  ui->m_pvlFile_3->setText(volInfo.pvlFile);
+  ui->m_rawFile_3->setText(volInfo.rawFile);
+  ui->m_description_3->setText(volInfo.description);
+  ui->m_dimensions_3->setText(QString("%1 %2 %3").\
 			     arg(volInfo.dimensions.z).	\
 			     arg(volInfo.dimensions.y).	\
 			     arg(volInfo.dimensions.x));
-  ui.m_voxelType_3->setText(volInfo.voxelTypeString());
-  ui.m_voxelUnit_3->setCurrentIndex(volInfo.voxelUnit);
-  ui.m_voxelSize_3->setText(QString("%1 %2 %3").\
+  ui->m_voxelType_3->setText(volInfo.voxelTypeString());
+  ui->m_voxelUnit_3->setCurrentIndex(volInfo.voxelUnit);
+  ui->m_voxelSize_3->setText(QString("%1 %2 %3").\
 			    arg(volInfo.voxelSize.x).	\
 			    arg(volInfo.voxelSize.y).	\
 			    arg(volInfo.voxelSize.z));
@@ -421,7 +422,7 @@ VolumeInformationWidget::refreshVolInfo3(int vnum,
   boxSize.x = volInfo.voxelSize.x*volInfo.dimensions.z;
   boxSize.y = volInfo.voxelSize.y*volInfo.dimensions.y;
   boxSize.z = volInfo.voxelSize.z*volInfo.dimensions.x;
-  ui.m_boxSize_3->setText(QString("%1 %2 %3").\
+  ui->m_boxSize_3->setText(QString("%1 %2 %3").\
 			  arg(boxSize.x).     \
 			  arg(boxSize.y).     \
 			  arg(boxSize.z));
@@ -436,10 +437,10 @@ VolumeInformationWidget::refreshVolInfo3(int vnum,
   Global::setRelativeVoxelScaling(vscl);
   //----------------------------------------------------------
 
-  ui.m_mapping_3->clear();
+  ui->m_mapping_3->clear();
   for(int i=0; i<volInfo.mapping.count(); i++)
     {
-      ui.m_mapping_3->addItem(QString("%1 <--> %2").		\
+      ui->m_mapping_3->addItem(QString("%1 <--> %2").		\
 			      arg(volInfo.mapping[i].x()).	\
 			      arg(volInfo.mapping[i].y()));
     }
@@ -454,17 +455,17 @@ VolumeInformationWidget::refreshVolInfo4(int vnum,
   m_replaceInHeader = false;
 
   m_volInfo[3] = volInfo;
-  ui.m_volnum_4->setText(QString("%1").arg(vnum));
-  ui.m_pvlFile_4->setText(volInfo.pvlFile);
-  ui.m_rawFile_4->setText(volInfo.rawFile);
-  ui.m_description_4->setText(volInfo.description);
-  ui.m_dimensions_4->setText(QString("%1 %2 %3").\
+  ui->m_volnum_4->setText(QString("%1").arg(vnum));
+  ui->m_pvlFile_4->setText(volInfo.pvlFile);
+  ui->m_rawFile_4->setText(volInfo.rawFile);
+  ui->m_description_4->setText(volInfo.description);
+  ui->m_dimensions_4->setText(QString("%1 %2 %3").\
 			     arg(volInfo.dimensions.z).	\
 			     arg(volInfo.dimensions.y).	\
 			     arg(volInfo.dimensions.x));
-  ui.m_voxelType_4->setText(volInfo.voxelTypeString());
-  ui.m_voxelUnit_4->setCurrentIndex(volInfo.voxelUnit);
-  ui.m_voxelSize_4->setText(QString("%1 %2 %3").\
+  ui->m_voxelType_4->setText(volInfo.voxelTypeString());
+  ui->m_voxelUnit_4->setCurrentIndex(volInfo.voxelUnit);
+  ui->m_voxelSize_4->setText(QString("%1 %2 %3").\
 			    arg(volInfo.voxelSize.x).	\
 			    arg(volInfo.voxelSize.y).	\
 			    arg(volInfo.voxelSize.z));
@@ -473,7 +474,7 @@ VolumeInformationWidget::refreshVolInfo4(int vnum,
   boxSize.x = volInfo.voxelSize.x*volInfo.dimensions.z;
   boxSize.y = volInfo.voxelSize.y*volInfo.dimensions.y;
   boxSize.z = volInfo.voxelSize.z*volInfo.dimensions.x;
-  ui.m_boxSize_4->setText(QString("%1 %2 %3").\
+  ui->m_boxSize_4->setText(QString("%1 %2 %3").\
 			  arg(boxSize.x).     \
 			  arg(boxSize.y).     \
 			  arg(boxSize.z));
@@ -488,10 +489,10 @@ VolumeInformationWidget::refreshVolInfo4(int vnum,
   Global::setRelativeVoxelScaling(vscl);
   //----------------------------------------------------------
 
-  ui.m_mapping_4->clear();
+  ui->m_mapping_4->clear();
   for(int i=0; i<volInfo.mapping.count(); i++)
     {
-      ui.m_mapping_4->addItem(QString("%1 <--> %2").		\
+      ui->m_mapping_4->addItem(QString("%1 <--> %2").		\
 			      arg(volInfo.mapping[i].x()).	\
 			      arg(volInfo.mapping[i].y()));
     }
@@ -524,22 +525,22 @@ void VolumeInformationWidget::on_m_repeatType_4_clicked(bool c) { emit repeatTyp
 
 void VolumeInformationWidget::on_m_volnum_editingFinished()
 {
-  int vnum = ui.m_volnum->text().toInt();
+  int vnum = ui->m_volnum->text().toInt();
   emit volumeNumber(vnum);
 }
 void VolumeInformationWidget::on_m_volnum_2_editingFinished()
 {
-  int vnum = ui.m_volnum_2->text().toInt();
+  int vnum = ui->m_volnum_2->text().toInt();
   emit volumeNumber(1, vnum);
 }
 void VolumeInformationWidget::on_m_volnum_3_editingFinished()
 {
-  int vnum = ui.m_volnum_3->text().toInt();
+  int vnum = ui->m_volnum_3->text().toInt();
   emit volumeNumber(2, vnum);
 }
 void VolumeInformationWidget::on_m_volnum_4_editingFinished()
 {
-  int vnum = ui.m_volnum_4->text().toInt();
+  int vnum = ui->m_volnum_4->text().toInt();
   emit volumeNumber(3, vnum);
 }
 
@@ -571,10 +572,10 @@ void VolumeInformationWidget::on_m_voxelUnit_4_currentIndexChanged(int idx) { ne
 void
 VolumeInformationWidget::newDescription()
 {
-  if (m_currVol == 0) m_volInfo[m_currVol].description = ui.m_description->text();
-  if (m_currVol == 1) m_volInfo[m_currVol].description = ui.m_description_2->text();
-  if (m_currVol == 2) m_volInfo[m_currVol].description = ui.m_description_3->text();
-  if (m_currVol == 3) m_volInfo[m_currVol].description = ui.m_description_4->text();
+  if (m_currVol == 0) m_volInfo[m_currVol].description = ui->m_description->text();
+  if (m_currVol == 1) m_volInfo[m_currVol].description = ui->m_description_2->text();
+  if (m_currVol == 2) m_volInfo[m_currVol].description = ui->m_description_3->text();
+  if (m_currVol == 3) m_volInfo[m_currVol].description = ui->m_description_4->text();
   XmlHeaderFunctions::replaceInHeader(m_volInfo[m_currVol].pvlFile,
 				      "description",
 				      m_volInfo[m_currVol].description);
@@ -592,10 +593,10 @@ void
 VolumeInformationWidget::newVoxelSize()
 {
   Vec vsize;
-  if (m_currVol == 0) vsize = StaticFunctions::getVec(ui.m_voxelSize->text());
-  if (m_currVol == 1) vsize = StaticFunctions::getVec(ui.m_voxelSize_2->text());
-  if (m_currVol == 2) vsize = StaticFunctions::getVec(ui.m_voxelSize_3->text());
-  if (m_currVol == 3) vsize = StaticFunctions::getVec(ui.m_voxelSize_4->text());
+  if (m_currVol == 0) vsize = StaticFunctions::getVec(ui->m_voxelSize->text());
+  if (m_currVol == 1) vsize = StaticFunctions::getVec(ui->m_voxelSize_2->text());
+  if (m_currVol == 2) vsize = StaticFunctions::getVec(ui->m_voxelSize_3->text());
+  if (m_currVol == 3) vsize = StaticFunctions::getVec(ui->m_voxelSize_4->text());
   m_volInfo[m_currVol].voxelSize = vsize;
 
   QString vstr = QString("%1 %2 %3").arg(vsize.x).arg(vsize.y).arg(vsize.z);
@@ -617,10 +618,10 @@ VolumeInformationWidget::newVoxelSize()
 
   QString vtxt = QString("%1 %2 %3").
                    arg(vsize.x).arg(vsize.y).arg(vsize.z);
-  if (m_currVol == 0) ui.m_voxelSize->setText(vtxt);
-  if (m_currVol == 1) ui.m_voxelSize_2->setText(vtxt);
-  if (m_currVol == 2) ui.m_voxelSize_3->setText(vtxt);
-  if (m_currVol == 3) ui.m_voxelSize_4->setText(vtxt);
+  if (m_currVol == 0) ui->m_voxelSize->setText(vtxt);
+  if (m_currVol == 1) ui->m_voxelSize_2->setText(vtxt);
+  if (m_currVol == 2) ui->m_voxelSize_3->setText(vtxt);
+  if (m_currVol == 3) ui->m_voxelSize_4->setText(vtxt);
 
   Vec dim;
   dim = m_volInfo[m_currVol].dimensions;
@@ -632,10 +633,10 @@ VolumeInformationWidget::newVoxelSize()
   vtxt = QString("%1 %2 %3").arg(boxSize.x).\
                              arg(boxSize.y).\
 			     arg(boxSize.z);
-  if (m_currVol == 0) ui.m_boxSize->setText(vtxt);
-  if (m_currVol == 1) ui.m_boxSize_2->setText(vtxt);
-  if (m_currVol == 2) ui.m_boxSize_3->setText(vtxt);
-  if (m_currVol == 3) ui.m_boxSize_4->setText(vtxt);
+  if (m_currVol == 0) ui->m_boxSize->setText(vtxt);
+  if (m_currVol == 1) ui->m_boxSize_2->setText(vtxt);
+  if (m_currVol == 2) ui->m_boxSize_3->setText(vtxt);
+  if (m_currVol == 3) ui->m_boxSize_4->setText(vtxt);
 
   update();
   emit updateScaling();
@@ -655,10 +656,10 @@ void
 VolumeInformationWidget::newBoxSize()
 {
   Vec bsize;
-  if (m_currVol == 0) bsize = StaticFunctions::getVec(ui.m_boxSize->text());
-  if (m_currVol == 1) bsize = StaticFunctions::getVec(ui.m_boxSize_2->text());
-  if (m_currVol == 2) bsize = StaticFunctions::getVec(ui.m_boxSize_3->text());
-  if (m_currVol == 3) bsize = StaticFunctions::getVec(ui.m_boxSize_4->text());
+  if (m_currVol == 0) bsize = StaticFunctions::getVec(ui->m_boxSize->text());
+  if (m_currVol == 1) bsize = StaticFunctions::getVec(ui->m_boxSize_2->text());
+  if (m_currVol == 2) bsize = StaticFunctions::getVec(ui->m_boxSize_3->text());
+  if (m_currVol == 3) bsize = StaticFunctions::getVec(ui->m_boxSize_4->text());
 
   Vec vsize;
   vsize.x = bsize.x/m_volInfo[m_currVol].dimensions.z;
@@ -685,10 +686,10 @@ VolumeInformationWidget::newBoxSize()
 
   QString vtxt = QString("%1 %2 %3").
                    arg(vsize.x).arg(vsize.y).arg(vsize.z);
-  if (m_currVol == 0) ui.m_voxelSize->setText(vtxt);
-  if (m_currVol == 1) ui.m_voxelSize_2->setText(vtxt);
-  if (m_currVol == 2) ui.m_voxelSize_3->setText(vtxt);
-  if (m_currVol == 3) ui.m_voxelSize_4->setText(vtxt);
+  if (m_currVol == 0) ui->m_voxelSize->setText(vtxt);
+  if (m_currVol == 1) ui->m_voxelSize_2->setText(vtxt);
+  if (m_currVol == 2) ui->m_voxelSize_3->setText(vtxt);
+  if (m_currVol == 3) ui->m_voxelSize_4->setText(vtxt);
 
   Vec dim = m_volInfo[m_currVol].dimensions;
 
@@ -699,10 +700,10 @@ VolumeInformationWidget::newBoxSize()
   vtxt = QString("%1 %2 %3").arg(boxSize.x).\
                              arg(boxSize.y).\
 			     arg(boxSize.z);
-  if (m_currVol == 0) ui.m_boxSize->setText(vtxt);
-  if (m_currVol == 1) ui.m_boxSize_2->setText(vtxt);
-  if (m_currVol == 2) ui.m_boxSize_3->setText(vtxt);
-  if (m_currVol == 3) ui.m_boxSize_4->setText(vtxt);
+  if (m_currVol == 0) ui->m_boxSize->setText(vtxt);
+  if (m_currVol == 1) ui->m_boxSize_2->setText(vtxt);
+  if (m_currVol == 2) ui->m_boxSize_3->setText(vtxt);
+  if (m_currVol == 3) ui->m_boxSize_4->setText(vtxt);
 
   update();
   emit updateScaling();

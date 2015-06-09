@@ -53,8 +53,8 @@ class Trisets : public QObject
   QList<TrisetInformation> get();
   void set(QList<TrisetInformation>);
 
-  void load(const char*);
-  void save(const char*);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
   void makeReadyForPainting(QGLViewer*);
   void releaseFromPainting();

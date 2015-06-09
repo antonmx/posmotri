@@ -6,7 +6,6 @@
 #include "geoshaderfactory.h"
 #include "propertyeditor.h"
 #include <QMessageBox>
-#include <QDomDocument>
 
 using namespace qglviewer;
 
@@ -740,61 +739,12 @@ Trisets::createShadowShader(Vec attenuation, QList<CropObject> crops)
   m_shadowParm[2] = glGetUniformLocationARB(m_geoShadowShader, "clipNormal");
 }
 
-void
-Trisets::save(const char *flnm)
-{
-  QDomDocument doc;
-  QFile f(flnm);
-  if (f.open(QIODevice::ReadOnly))
-    {
-      doc.setContent(&f);
-      f.close();
-    }
-
-  QDomElement topElement = doc.documentElement();
-
-  for(int i=0; i<m_trisets.count(); i++)
-    {
-      QDomElement de = m_trisets[i]->domElement(doc);
-      topElement.appendChild(de);
-    }
-
-  QFile fout(flnm);
-  if (fout.open(QIODevice::WriteOnly))
-    {
-      QTextStream out(&fout);
-      doc.save(out, 2);
-      fout.close();
-    }
+void Trisets::save(QConfigMe & cfg) const {
+  cfg.setClassArray("Trisets", m_trisets);
 }
 
-void
-Trisets::load(const char *flnm)
-{
-  QDomDocument document;
-  QFile f(flnm);
-  if (f.open(QIODevice::ReadOnly))
-    {
-      document.setContent(&f);
-      f.close();
-    }
-
-  QDomElement main = document.documentElement();
-  QDomNodeList dlist = main.childNodes();
-  for(int i=0; i<dlist.count(); i++)
-    {
-      if (dlist.at(i).nodeName() == "triset")
-	{
-	  QDomElement de = dlist.at(i).toElement();
-
-	  TrisetGrabber *tg = new TrisetGrabber();
-	  if (tg->fromDomElement(de))
-	    m_trisets.append(tg);
-	  else
-	    delete tg;
-	}
-    }
-
+void Trisets::load(const QConfigMe & cfg) {
+  cfg.getClassArray("Trisets", m_trisets);
 }
 
 QList<TrisetInformation>

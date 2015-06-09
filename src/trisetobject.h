@@ -1,26 +1,25 @@
 #ifndef TRISETOBJECT_H
 #define TRISETOBJECT_H
 
-#include <QFile>
-
+#include "PromotedWidgets.h"
 #include "trisetinformation.h"
 
-class TrisetObject
-{
- public :
+class TrisetObject {
+  
+public :
   TrisetObject();
   ~TrisetObject();
-
+  
   void gridSize(int&, int&, int&);
-
+  
   qglviewer::Vec centroid() { return m_tcentroid; }
   void enclosingBox(qglviewer::Vec&, qglviewer::Vec&);
-
+  
   QString filename() { return m_fileName; }
-
+  
   bool screenDoor() { return m_screenDoor; }
   void setScreenDoor(bool sd) {m_screenDoor = sd; }
-
+  
   bool flipNormals() { return m_flipNormals; }
   void setFlipNormals(bool fn) { m_flipNormals = fn; }
 
@@ -70,10 +69,10 @@ class TrisetObject
   void save();
 
   bool set(TrisetInformation);
-  TrisetInformation get();
+  TrisetInformation get() const;
 
-  bool fromDomElement(QDomElement);
-  QDomElement domElement(QDomDocument&);
+  void load(const QConfigMe &);
+  void save(QConfigMe &) const;
 
   void clear();
 

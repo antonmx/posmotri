@@ -308,9 +308,9 @@ template <> Quaternion fromQVariant(const QVariant & var, bool * ok) {
 }
 */
 
-QString QConfigMe::levelUp() const {
+void QConfigMe::levelUp() const {
   if (cpath.isEmpty())
-    return QString();
+    return;
   int curpos = cpath.length()-1;   
   int startpos=0;
   QString ret;
@@ -328,6 +328,7 @@ QString QConfigMe::levelUp() const {
 
 
 QString QConfigMe::modifyKey(const QString &skey) {
+  return skey;
   QString key(skey);
   key.replace("/", "\\/");
   key.replace(" ", "\\ ");
@@ -346,7 +347,8 @@ void QConfigMe::read(const QString & fileName) {
   while (!stream.atEnd()) {
     QString key;
     QByteArray val;
-    stream >> key >> val;
+    QChar tmp;
+    stream >> key >> tmp >> val >> tmp;
     store[key] = val;
   }
   file.close();
@@ -360,7 +362,7 @@ bool QConfigMe::write(const QString & fileName) const {
   }
   QDataStream stream(&file);    
   foreach ( const QString & skey, store.keys() )
-    stream << skey << store[skey];
+    stream << skey << ' ' << store[skey] << '\n';
   file.close();
 }
 
@@ -399,9 +401,9 @@ int QConfigMe::advanceArray() const {
   return lastelement;
 }
 
-QString QConfigMe::endArray() const {
+void QConfigMe::endArray() const {
   if (idxelement.empty())
-    return QString();
+    return;
   cpath.remove(idxelement.takeLast()-1);    
   levelUp();
 }
@@ -410,12 +412,12 @@ int QConfigMe::beginGroup(const QString & key) const {
   cpath += "/" + modifyKey(key);
   int cnt=0;
   foreach (const QString & path, store.keys())
-    if ( path.indexOf(cpath+"/")==0  ||  path == cpath )
+    if ( path.indexOf(cpath+QString("/"))==0  ||  path == cpath )
       cnt++;
   return cnt;
 }
 
-QString QConfigMe::endGroup() const {
+void QConfigMe::endGroup() const {
   levelUp();
 }
 

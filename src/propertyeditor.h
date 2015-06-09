@@ -33,7 +33,7 @@ class PropertyEditor : public QDialog
   void hotkeymouseClicked(bool);
 
  private :
-  Ui::PropertyEditor ui;
+  Ui::PropertyEditor * ui;
   QSignalMapper *m_signalMapper;
   QMap<QString, QVariantList> m_plist;
   QMap<QString, QWidget*> m_widgets;

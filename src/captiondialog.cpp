@@ -2,15 +2,15 @@
 #include "dcolordialog.h"
 #include <QFontDialog>
 
-float CaptionDialog::angle() { return ui.angle->value(); }
-QString CaptionDialog::text() { return ui.text->text(); }
+float CaptionDialog::angle() { return ui->angle->value(); }
+QString CaptionDialog::text() { return ui->text->text(); }
 QFont CaptionDialog::font() { return m_font; }
 QColor CaptionDialog::color()
 {
   QColor color = QColor::fromRgbF(m_color.redF(),
 				  m_color.greenF(),
 				  m_color.blueF(),
-				  ui.opacity->value());
+				  ui->opacity->value());
 
   return color;
 }
@@ -19,7 +19,7 @@ QColor CaptionDialog::haloColor()
   QColor color = QColor::fromRgbF(m_haloColor.redF(),
 				  m_haloColor.greenF(),
 				  m_haloColor.blueF(),
-				  ui.opacity->value());
+				  ui->opacity->value());
 
   return color;
 }
@@ -29,23 +29,24 @@ CaptionDialog::CaptionDialog(QWidget *parent,
 			     QFont font,
 			     QColor color,
 			     float angle) :
-  QDialog(parent)
+  QDialog(parent),
+  ui(new Ui::CaptionInputDialog)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
   
   m_font = font;
   m_color = color;
 
-  ui.text->setText(text);
+  ui->text->setText(text);
 
   float a = color.alphaF();
-  ui.opacity->setValue(a);
+  ui->opacity->setValue(a);
 
-  ui.haloColor->hide();
+  ui->haloColor->hide();
 
-  ui.angle->setValue(angle);
-  ui.angle->hide();
-  ui.angleLabel->hide();
+  ui->angle->setValue(angle);
+  ui->angle->hide();
+  ui->angleLabel->hide();
 }
 
 CaptionDialog::CaptionDialog(QWidget *parent,
@@ -56,20 +57,20 @@ CaptionDialog::CaptionDialog(QWidget *parent,
 			     float angle) :
   QDialog(parent)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
   
   m_font = font;
   m_color = color;
   m_haloColor = haloColor;
 
-  ui.text->setText(text);
+  ui->text->setText(text);
 
   float a = color.alphaF();
-  ui.opacity->setValue(a);
+  ui->opacity->setValue(a);
 
-  ui.angle->setValue(angle);
-  ui.angle->hide();
-  ui.angleLabel->hide();
+  ui->angle->setValue(angle);
+  ui->angle->hide();
+  ui->angleLabel->hide();
 }
 
 void
@@ -77,13 +78,13 @@ CaptionDialog::hideOpacity(bool flag)
 {
   if (flag)
     {
-      ui.opacity->hide();
-      ui.opacityLabel->hide();
+      ui->opacity->hide();
+      ui->opacityLabel->hide();
     }
   else
     {
-      ui.opacity->show();
-      ui.opacityLabel->show();
+      ui->opacity->show();
+      ui->opacityLabel->show();
     }
 }
 
@@ -91,9 +92,9 @@ void
 CaptionDialog::hideText(bool flag)
 {
   if (flag)
-    ui.text->hide();
+    ui->text->hide();
   else
-    ui.text->show();
+    ui->text->show();
 }
 
 void
@@ -101,13 +102,13 @@ CaptionDialog::hideAngle(bool flag)
 {
   if (flag)
     {
-      ui.angle->hide();
-      ui.angleLabel->hide();
+      ui->angle->hide();
+      ui->angleLabel->hide();
     }
   else
     {
-      ui.angle->show();
-      ui.angleLabel->show();
+      ui->angle->show();
+      ui->angleLabel->show();
     }
 }
 

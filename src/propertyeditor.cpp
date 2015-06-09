@@ -1,4 +1,4 @@
-//#include <QtGui>
+
 #include "propertyeditor.h"
 #include "dcolordialog.h"
 #include "gradienteditorwidget.h"
@@ -11,10 +11,11 @@
 #include <QGLViewer/vec.h>
 using namespace qglviewer;
 
-PropertyEditor::PropertyEditor(QWidget *parent) :
-  QDialog(parent)
+PropertyEditor::PropertyEditor(QWidget *parent)
+  : QDialog(parent)
+  , ui(new Ui::PropertyEditor)
 {
-  ui.setupUi(this);
+  ui->setupUi(this);
   resize(700, 400);
 
   m_signalMapper = new QSignalMapper(this);
@@ -27,7 +28,7 @@ PropertyEditor::PropertyEditor(QWidget *parent) :
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(m_hotkeymouse);
 
-  QSplitter *splitter = new QSplitter(Qt::Vertical, ui.commandHelp);
+  QSplitter *splitter = new QSplitter(Qt::Vertical, ui->commandHelp);
   m_helpList = new QListWidget;
   m_helpLabel = new QTextEdit;
   m_helpLabel->setReadOnly(true);
@@ -39,15 +40,15 @@ PropertyEditor::PropertyEditor(QWidget *parent) :
   splitter->setStretchFactor(1, 2);
 
   vbox->addWidget(splitter);
-  ui.commandHelp->setLayout(vbox);
+  ui->commandHelp->setLayout(vbox);
 
 
   connect(m_helpList, SIGNAL(currentRowChanged(int)),
 	  this, SLOT(helpItemSelected(int)));
 
   splitter->setStyleSheet("QSplitter::handle {image: url(:/images/sizegrip.png);}");
-  ui.splitter->setStyleSheet("QSplitter::handle {image: url(:/images/sizegrip.png);}");
-  ui.splitter_2->setStyleSheet("QSplitter::handle {image: url(:/images/sizegrip.png);}");
+  ui->splitter->setStyleSheet("QSplitter::handle {image: url(:/images/sizegrip.png);}");
+  ui->splitter_2->setStyleSheet("QSplitter::handle {image: url(:/images/sizegrip.png);}");
 }
 
 PropertyEditor::~PropertyEditor() { }
@@ -67,10 +68,10 @@ PropertyEditor::set(QString title,
   m_helpText.clear();
   m_helpCommandString.clear();
 
-  ui.propertyBox->hide();
-  ui.messageLabel->hide();
-  ui.commandString->hide();
-  ui.commandHelp->hide();
+  ui->propertyBox->hide();
+  ui->messageLabel->hide();
+  ui->commandString->hide();
+  ui->commandHelp->hide();
 
   m_hotkeymouse->hide();
   m_helpLabel->hide();
@@ -91,7 +92,7 @@ PropertyEditor::set(QString title,
 
   QVBoxLayout *vbox = new QVBoxLayout;
   vbox->addWidget(scrollArea);
-  ui.propertyBox->setLayout(vbox);
+  ui->propertyBox->setLayout(vbox);
 
   resize(700, qBound(1, keys.count(), 25)*30);
 
@@ -108,9 +109,9 @@ PropertyEditor::set(QString title,
 
       if (keys[i] == "command")
 	{
-	  ui.commandString->show();
+	  ui->commandString->show();
 	  if (vlist.count() > 0)
-	    ui.lineEdit->setText(vlist[0].toString());
+	    ui->lineEdit->setText(vlist[0].toString());
 	}
       else if (vlist.count() == 0) // enable command string
 	{
@@ -123,12 +124,12 @@ PropertyEditor::set(QString title,
       else if (keys[i] == "message")
 	{
 	  QString mesgText = vlist[0].toString();
- 	  ui.messageLabel->show();
-	  ui.messageLabel->setPlainText(mesgText);
+ 	  ui->messageLabel->show();
+	  ui->messageLabel->setPlainText(mesgText);
 	}
       else if (keys[i] == "commandhelp") // enable command help string
 	{
-	  ui.commandHelp->show();
+	  ui->commandHelp->show();
 	  m_helpLabel->show();
 
 	  if (vlist.count() == 1)
@@ -177,11 +178,11 @@ PropertyEditor::set(QString title,
 	}
       else
 	{
-	  ui.propertyBox->show();
+	  ui->propertyBox->show();
 	  QList<int> ss;
 	  ss << 1;
 	  ss << 1;
-	  ui.splitter_2->setSizes(ss);
+	  ui->splitter_2->setSizes(ss);
 
 	  QLabel *lbl = new QLabel(keys[i]);
 	  gridLayout->addWidget(lbl, i, 0);
@@ -312,18 +313,18 @@ PropertyEditor::set(QString title,
 	}
     }
 
-  if (ui.propertyBox->isHidden() &&
-      ui.commandString->isHidden() &&
-      ui.messageLabel->isHidden())
+  if (ui->propertyBox->isHidden() &&
+      ui->commandString->isHidden() &&
+      ui->messageLabel->isHidden())
     {
       QList<int> sz;
       sz << 0;
       sz << 1;
-      ui.splitter_2->setSizes(sz);
+      ui->splitter_2->setSizes(sz);
     }
 }
 
-QString PropertyEditor::getCommandString() { return ui.lineEdit->text(); }
+QString PropertyEditor::getCommandString() { return ui->lineEdit->text(); }
 
 QGradientStops
 PropertyEditor::getGradientStops(QString kstr)
@@ -496,7 +497,7 @@ PropertyEditor::helpItemSelected(int row)
       m_helpLabel->setText(m_helpText[r]);
 
       if (! m_hotkeymouse->isChecked())
-	ui.lineEdit->setText(cmd);
+	ui->lineEdit->setText(cmd);
     }
 }
 
