@@ -145,7 +145,7 @@ private:
   mutable int lastelement;
   
   void levelUp() const;  
-  int updateLastelement() const;
+  int lastElement() const;
   
 
 public:
@@ -156,7 +156,7 @@ public:
   bool write(const QString & fileName) const ;
   
   
-  int beginArray(const QString & key) const;  
+  int beginArray(const QString & key, bool toEnd=false) const;  
   int advanceArray() const;  
   void endArray() const;  
   int beginGroup(const QString & key) const;  

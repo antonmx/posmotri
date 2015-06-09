@@ -271,42 +271,7 @@ QDataStream &operator>>(QDataStream & stream, Quaternion & qn) {
 }
 
 
-/*
-QVariant toQVariant(const Vec & vec) {
-  return QVariant( QVecEdit::toString(vec) );
-}
 
-template <> Vec fromQVariant(const QVariant & var, bool * ok) {
-  QString str = fromQVariant<QString>(var, ok);
-  if (ok && ! *ok )
-    return Vec();
-  Vec vec = QVecEdit::toVec(str, ok);
-  return (ok && ! *ok ) ? Vec() : vec;
-}
-
-QVariant toQVariant(const Quaternion & qn) {
-  return QVariant( QVecEdit::toString(qn.axis()) + " " + QString::number(qn.angle()) );
-}
-
-template <> Quaternion fromQVariant(const QVariant & var, bool * ok) {
-  const QString str = fromQVariant<QString>(var, ok);
-  if (ok && ! *ok )
-    return Quaternion();
-  const int idx = str.lastIndexOf(' ');
-  if (idx < 0) {
-    if (ok)
-      *ok=false;
-    return Quaternion();    
-  }
-  QString tmp=str;
-  Vec axis = QVecEdit::toVec( tmp.remove(idx,str.length()), ok );
-  if (ok && ! *ok )
-    return Quaternion();
-  tmp=str;
-  qreal angle = tmp.remove(0, idx).toDouble(ok);
-  return (ok && ! *ok ) ? Quaternion() : Quaternion(axis, angle) ;
-}
-*/
 
 void QConfigMe::levelUp() const {
   if (cpath.isEmpty())
@@ -345,9 +310,8 @@ void QConfigMe::read(const QString & fileName) {
   }
   QDataStream stream(&file);
   while (!stream.atEnd()) {
-    QString key;
+    QString key, tmp;
     QByteArray val;
-    QChar tmp;
     stream >> key >> tmp >> val >> tmp;
     store[key] = val;
   }
@@ -362,41 +326,41 @@ bool QConfigMe::write(const QString & fileName) const {
   }
   QDataStream stream(&file);    
   foreach ( const QString & skey, store.keys() )
-    stream << skey << ' ' << store[skey] << '\n';
+    stream << skey << QString(" ") << store[skey] << QString("\n");
   file.close();
 }
 
-int QConfigMe::updateLastelement() const {
-  lastelement=0;
+int QConfigMe::lastElement() const {
+  int counter=0;
   if (idxelement.isEmpty())
-    return lastelement;
+    return counter;
   QString prefix = cpath;
   prefix.remove( idxelement.last(), cpath.length() );
   foreach (QString path, store.keys())
     if (path.indexOf(prefix)==0){
-      path.remove(0, prefix.length());
+      path.remove(0, prefix.length()+1);
       path.remove(path.indexOf(QRegExp("[\\D]")), path.length() );
       bool ok;
       const int el = path.toInt(&ok);
-      if ( ok && el>lastelement )
-        lastelement = el;        
+      if ( ok && el>counter )
+        counter = el;        
     }
-  return lastelement;
+  return counter;
 }
 
-int QConfigMe::beginArray(const QString & key) const {
+int QConfigMe::beginArray(const QString & key, bool toEnd) const {
   beginGroup(key);
-  if (idxelement.last() != cpath.size()+1)
-    idxelement.append(cpath.size()+1);
-  updateLastelement();
+  idxelement.append(cpath.size()+1);
+  const int counter = lastElement();
+  lastelement = toEnd ? counter : 0;
   advanceArray();
-  return lastelement - 1;
-}
+  return counter;
+} 
 
 int QConfigMe::advanceArray() const {
   if (idxelement.empty())
     return 0;
-  cpath.remove(idxelement.last()-1);
+  cpath.remove(idxelement.last()-1, cpath.length());
   beginGroup(QString::number(++lastelement));
   return lastelement;
 }
@@ -404,8 +368,9 @@ int QConfigMe::advanceArray() const {
 void QConfigMe::endArray() const {
   if (idxelement.empty())
     return;
-  cpath.remove(idxelement.takeLast()-1);    
+  cpath.remove(idxelement.takeLast()-1, cpath.length());
   levelUp();
+  lastelement = lastElement();
 }
 
 int QConfigMe::beginGroup(const QString & key) const {
@@ -426,40 +391,6 @@ bool QConfigMe::contains(const QString & key) const {
   endGroup();
   return ret;
 }
-
-/*
-void QConfigMe::_setValue(const QString & key, const QByteArray & val) {
-  store[cpath + "/" + modifyKey(key)] = val;
-}
-
-bool QConfigMe::_getValue(const QString & key, QByteArray & val) const {
-  const QString skey = cpath + "/" + modifyKey(key);
-  if ( ! store.contains(skey)  ||  ! store[skey].isValid() )
-    return false;    
-  val = store[skey];
-}
-
-
-
-void QConfigMe::setArrayValue(const QString & key, const QList<QVariant> & valarr) {
-  foreach (const QVariant val, valarr) {
-    store[cpath] = val;
-    advanceArray();
-  }
-  endArray();
-}
-
-int QConfigMe::getArrayValue(const QString & key, QList<QVariant> & valarr) const {
-  const int sz = beginArray(key);
-  for (int el=0; el<sz; el++) {
-    valarr.append(store[cpath]);
-    advanceArray();
-  }
-  endArray();
-  return valarr.size();
-}
-*/
-
 
 
 
