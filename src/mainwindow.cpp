@@ -91,7 +91,7 @@ MainWindow::createHiresLowresWindows()
   if (m_Lowres) delete m_Lowres;
   m_Lowres = new DrawLowresVolume(m_Viewer, m_Volume);
   connect(m_keyFrame, SIGNAL(updateVolumeBounds(qglviewer::Vec, qglviewer::Vec)),
-	  m_Lowres, SLOT(setSubvolumeBounds(qglviewer::Vec, qglviewer::Vec)));
+    m_Lowres, SLOT(setSubvolumeBounds(qglviewer::Vec, qglviewer::Vec)));
   //---
 
   //---
@@ -102,7 +102,7 @@ MainWindow::createHiresLowresWindows()
     }
   m_Hires = new DrawHiresVolume(m_Viewer, m_Volume);
   m_Hires->setBricks(m_bricks);
-  
+
   connect(m_Hires, SIGNAL(histogramUpdated(QImage, QImage)), m_tfEditor, SLOT(setHistogramImage(QImage, QImage)));
   connect(m_keyFrame, SIGNAL(updateLightInfo(LightingInformation)), m_Hires, SLOT(setLightInfo(LightingInformation)));
   connect(m_keyFrame, SIGNAL(updateVolumeBounds(int, qglviewer::Vec, qglviewer::Vec)), m_Hires, SLOT(updateSubvolume(int, qglviewer::Vec, qglviewer::Vec)));
@@ -234,7 +234,7 @@ MainWindow::MainWindow(QWidget *parent)
   //----------------------------------------------------------
   m_dockTF = new QDockWidget("Transfer Function Editor", this);
   m_dockTF->setAllowedAreas(Qt::LeftDockWidgetArea |
-			    Qt::RightDockWidgetArea);
+          Qt::RightDockWidgetArea);
   QSplitter *splitter = new QSplitter(Qt::Vertical, m_dockTF);
   splitter->addWidget(m_tfManager);
   splitter->addWidget(m_tfEditor);
@@ -245,7 +245,7 @@ MainWindow::MainWindow(QWidget *parent)
   m_lightingWidget = new LightingWidget();
   QDockWidget *dock2 = new QDockWidget("Shader Widget", this);
   dock2->setAllowedAreas(Qt::LeftDockWidgetArea |
-			 Qt::RightDockWidgetArea);
+       Qt::RightDockWidgetArea);
   dock2->setWidget(m_lightingWidget);
   dock2->hide();
   //----------------------------------------------------------
@@ -260,7 +260,7 @@ MainWindow::MainWindow(QWidget *parent)
   scrollArea->setMaximumSize(maxSize);
   QDockWidget *dock3 = new QDockWidget("Bricks Editor", this);
   dock3->setAllowedAreas(Qt::LeftDockWidgetArea |
-			 Qt::RightDockWidgetArea);
+       Qt::RightDockWidgetArea);
   dock3->setWidget(scrollArea);
   dock3->hide();
   //----------------------------------------------------------
@@ -275,7 +275,7 @@ MainWindow::MainWindow(QWidget *parent)
   scrollArea->setMaximumSize(maxSize);
   QDockWidget *dock4 = new QDockWidget("Volume Information", this);
   dock4->setAllowedAreas(Qt::LeftDockWidgetArea |
-			 Qt::RightDockWidgetArea);
+       Qt::RightDockWidgetArea);
   dock4->setWidget(scrollArea);
   dock4->hide();
   //----------------------------------------------------------
@@ -288,7 +288,7 @@ MainWindow::MainWindow(QWidget *parent)
                  m_Viewer->camera()->physicalScreenWidth());
   QDockWidget *dock5 = new QDockWidget("Preferences", this);
   dock5->setAllowedAreas(Qt::LeftDockWidgetArea |
-			 Qt::RightDockWidgetArea);
+       Qt::RightDockWidgetArea);
   dock5->setWidget(m_preferencesWidget);
   dock5->hide();
   //----------------------------------------------------------
@@ -296,7 +296,7 @@ MainWindow::MainWindow(QWidget *parent)
   //----------------------------------------------------------
   m_dockKeyframe = new QDockWidget("KeyFrame Editor", this);
   m_dockKeyframe->setAllowedAreas(Qt::BottomDockWidgetArea |
-				  Qt::TopDockWidgetArea);
+          Qt::TopDockWidgetArea);
   m_keyFrameEditor = new KeyFrameEditor();
   m_dockKeyframe->setWidget(m_keyFrameEditor);
   m_dockKeyframe->hide();
@@ -344,7 +344,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(m_keyFrame, SIGNAL(updateBrickInfo(QList<BrickInformation>)), m_bricks, SLOT(setBricks(QList<BrickInformation>)));
   connect(m_keyFrame, SIGNAL(addKeyFrameNumbers(QList<int>)), m_keyFrameEditor, SLOT(addKeyFrameNumbers(QList<int>)));
   connect(m_keyFrame, SIGNAL(setImage(int, QImage)), m_keyFrameEditor, SLOT(setImage(int, QImage)));
-  connect(m_keyFrame, SIGNAL(loadKeyframes(QList<int>, QList<QImage>)), m_keyFrameEditor, SLOT(loadKeyframes(QList<int>, QList<QImage>)));  
+  connect(m_keyFrame, SIGNAL(loadKeyframes(QList<int>, QList<QImage>)), m_keyFrameEditor, SLOT(loadKeyframes(QList<int>, QList<QImage>)));
   connect(m_keyFrame, SIGNAL(updateLightInfo(LightingInformation)), m_lightingWidget, SLOT(setLightInfo(LightingInformation)));
   connect(m_keyFrame, SIGNAL(updateVolInfo(int)), SLOT(updateVolInfo(int)));
   connect(m_keyFrame, SIGNAL(updateVolInfo(int, int)), SLOT(updateVolInfo(int, int)));
@@ -459,7 +459,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(m_gallery, SIGNAL(updateParameters(float, float,
                                              int, bool, bool, qglviewer::Vec,
                                              QString,
-                                             int, int, 
+                                             int, int,
                                              QString, QString, QString)),
           this, SLOT(updateParameters(float, float,
                                       int, bool, bool, qglviewer::Vec,
@@ -559,66 +559,66 @@ MainWindow::registerPlugins()
       QDir dir(cdir);
       dir.setNameFilters(filters);
       dir.setFilter(QDir::Files |
-		    QDir::AllDirs |
-		    QDir::NoSymLinks |
-		    QDir::NoDotAndDotDot);
+        QDir::AllDirs |
+        QDir::NoSymLinks |
+        QDir::NoDotAndDotDot);
 
       if (!ignore)
-	{
-	  cmenu = new QMenu(QFileInfo(cdir).fileName());
-	  menu->addMenu(cmenu);
-	  menu = cmenu;
-	}
+  {
+    cmenu = new QMenu(QFileInfo(cdir).fileName());
+    menu->addMenu(cmenu);
+    menu = cmenu;
+  }
       ignore = false;
 
       QFileInfoList list = dir.entryInfoList();
       if (list.size() > 0)
-	{
-	  for (int i=0; i<list.size(); i++)
-	    {
-	      QString flnm = list.at(i).absoluteFilePath();
-	      if (list.at(i).isDir())
-		{
-		  pair.first = menu;
-		  pair.second = flnm;
-		  stack.push(pair);
-		}
-	      else
-		{
-		  QString pluginflnm = list.at(i).absoluteFilePath();
-		  QPluginLoader pluginLoader(pluginflnm);
-		  QObject *plugin = pluginLoader.instance();
-		  if (plugin)
-		    {
-		      RenderPluginInterface *rpi = qobject_cast<RenderPluginInterface *>(plugin);
-		      if (rpi)
-			{
-			  QStringList rs = rpi->registerPlugin();
+  {
+    for (int i=0; i<list.size(); i++)
+      {
+        QString flnm = list.at(i).absoluteFilePath();
+        if (list.at(i).isDir())
+    {
+      pair.first = menu;
+      pair.second = flnm;
+      stack.push(pair);
+    }
+        else
+    {
+      QString pluginflnm = list.at(i).absoluteFilePath();
+      QPluginLoader pluginLoader(pluginflnm);
+      QObject *plugin = pluginLoader.instance();
+      if (plugin)
+        {
+          RenderPluginInterface *rpi = qobject_cast<RenderPluginInterface *>(plugin);
+          if (rpi)
+      {
+        QStringList rs = rpi->registerPlugin();
 
-			  m_pluginList << rs;
-			  m_pluginDll << pluginflnm;
+        m_pluginList << rs;
+        m_pluginDll << pluginflnm;
 
-			  QAction *action = new QAction(this);
-			  action->setText(m_pluginList[m_pluginList.count()-1][0]);
-			  action->setData(m_pluginList.count()-1);
-			  action->setVisible(true);
-			  connect(action, SIGNAL(triggered()),
-				  this, SLOT(loadPlugin()));
+        QAction *action = new QAction(this);
+        action->setText(m_pluginList[m_pluginList.count()-1][0]);
+        action->setData(m_pluginList.count()-1);
+        action->setVisible(true);
+        connect(action, SIGNAL(triggered()),
+          this, SLOT(loadPlugin()));
 
-			  if (cmenu)
-			    cmenu->addAction(action);
-			  else
-			    ui->menuPlugins->addAction(action);
-			}
-		    }
-		  else
-		    {
-		      QMessageBox::information(0, "Error", QString("Cannot load %1").arg(pluginflnm));
-		    }
-		}
+        if (cmenu)
+          cmenu->addAction(action);
+        else
+          ui->menuPlugins->addAction(action);
+      }
+        }
+      else
+        {
+          QMessageBox::information(0, "Error", QString("Cannot load %1").arg(pluginflnm));
+        }
+    }
 
-	    }
-	}
+      }
+  }
     }
 }
 
@@ -689,15 +689,15 @@ MainWindow::loadPlugin()
       if (m_Volume->pvlVoxelType(0) > 0) bpv = 2;
       int tms = Global::textureMemorySize(); // in Mb
       subsamplinglevel = StaticFunctions::getSubsamplingLevel(tms, bpv,
-							      dataMin, dataMax);
+                    dataMin, dataMax);
       QList<Vec> slabinfo = Global::getSlabs(subsamplinglevel,
-					     dataMin, dataMax,
-					     nrows, ncols);
+               dataMin, dataMax,
+               nrows, ncols);
 
       if (slabinfo.count() > 1)
-	dragTextureInfo = slabinfo[0];
+  dragTextureInfo = slabinfo[0];
       else
-	dragTextureInfo = Vec(ncols, nrows, subsamplinglevel);
+  dragTextureInfo = Vec(ncols, nrows, subsamplinglevel);
 
       subvolumeSize = dataMax-dataMin+Vec(1,1,1);
     }
@@ -711,9 +711,9 @@ MainWindow::loadPlugin()
   if (m_Hires->raised())
     {
       PruneHandler::getRaw(prune,
-			   -1, // get channels 0,1,2
-			   dragTextureInfo,
-			   subvolumeSize);
+         -1, // get channels 0,1,2
+         dragTextureInfo,
+         subvolumeSize);
     }
   else
     memset(prune, 255, 3*px*py*pz);
@@ -756,20 +756,20 @@ MainWindow::initTagColors()
     {
       float r,g,b,a;
       if (i > 0 && i < 254)
-	{
-	  r = (float)qrand()/(float)RAND_MAX;
-	  g = (float)qrand()/(float)RAND_MAX;
-	  b = (float)qrand()/(float)RAND_MAX;
-	  a = 0.5f;
-	}
+  {
+    r = (float)qrand()/(float)RAND_MAX;
+    g = (float)qrand()/(float)RAND_MAX;
+    b = (float)qrand()/(float)RAND_MAX;
+    a = 0.5f;
+  }
       else
-	{
-	  r = g = b = a = 0;
-	  if (i == 254)
-	    {
-	      r = 0; g = 0.1f; b = 0; a = 0.1f;
-	    }
-	}
+  {
+    r = g = b = a = 0;
+    if (i == 254)
+      {
+        r = 0; g = 0.1f; b = 0; a = 0.1f;
+      }
+  }
       colors[4*i+0] = 255*r;
       colors[4*i+1] = 255*g;
       colors[4*i+2] = 255*b;
@@ -801,10 +801,10 @@ MainWindow::setTextureMemory()
   texlist << "2.0 Gb";
   texlist << "4.0 Gb";
   QString texstr = QInputDialog::getItem(0,
-					 "Texture Memory",
-					 "Texture Memory Size",
-					 texlist, 0, false,
-					 &ok);
+           "Texture Memory",
+           "Texture Memory Size",
+           texlist, 0, false,
+           &ok);
   int texmem = 128;
   if (ok && !texstr.isEmpty())
     {
@@ -848,7 +848,7 @@ MainWindow::fromFile(QString flnm, BatchJob &bj)
   if (!fi.exists())
     {
       QMessageBox::information(0, "",
-			       QString("Cannot find %1").arg(flnm));
+             QString("Cannot find %1").arg(flnm));
       return false;
     }
 
@@ -856,7 +856,7 @@ MainWindow::fromFile(QString flnm, BatchJob &bj)
   if (!infile.open(QFile::ReadOnly))
     {
       QMessageBox::information(0, "",
-			       QString("Cannot open for reading %1").arg(flnm));
+             QString("Cannot open for reading %1").arg(flnm));
       return false;
     }
 
@@ -868,16 +868,16 @@ MainWindow::fromFile(QString flnm, BatchJob &bj)
     QStringList tokens = line.split("=");
     if (tokens.count() == 2)
       {
-	QString t0 = tokens[0].trimmed();
-	QString t1 = tokens[1].trimmed();
-	if (t0[0] != '#')
-	  arguments.append(t0+"="+t1);
+  QString t0 = tokens[0].trimmed();
+  QString t1 = tokens[1].trimmed();
+  if (t0[0] != '#')
+    arguments.append(t0+"="+t1);
       }
     else if (tokens.count() == 1)
       {
-	QString t0 = tokens[0].trimmed();
-	if (t0[0] != '#')
-	  arguments.append(t0);
+  QString t0 = tokens[0].trimmed();
+  if (t0[0] != '#')
+    arguments.append(t0);
       }
   } while(!line.isNull());
 
@@ -892,108 +892,108 @@ MainWindow::fromFile(QString flnm, BatchJob &bj)
 
 bool
 MainWindow::fromStringList(QStringList arguments,
-			   BatchJob &bj)
+         BatchJob &bj)
 {
   for(int i=0; i<arguments.count(); i++)
     {
       QString arg = arguments[i];
       if (arg.contains("project="))
-	{
-	  QStringList tokens = arg.split("=");
-	  QString projfile = tokens[1];
-	  QFileInfo fi(projfile);
-	  if (fi.exists())
-	    {
-	      bj.startProject = true;
-	      bj.projectFilename = projfile;
-	    }
-	  else
-	    {
-	      QMessageBox::information(0, "", QString("Cannot find %1").arg(projfile));
-	      return false;
-	    }
-	}
+  {
+    QStringList tokens = arg.split("=");
+    QString projfile = tokens[1];
+    QFileInfo fi(projfile);
+    if (fi.exists())
+      {
+        bj.startProject = true;
+        bj.projectFilename = projfile;
+      }
+    else
+      {
+        QMessageBox::information(0, "", QString("Cannot find %1").arg(projfile));
+        return false;
+      }
+  }
       else if (arg.contains("renderframes="))
-	{
-	  bj.renderFrames = true;
-	  QStringList tokens = arg.split("=");
-	  QString frames = tokens[1];
-	  tokens = frames.split(",");
-	  if (tokens.count() > 0) bj.startFrame = tokens[0].toInt();
-	  if (tokens.count() > 1) bj.endFrame = tokens[1].toInt();
-	  if (tokens.count() > 2) bj.stepFrame = tokens[2].toInt();
-	}
+  {
+    bj.renderFrames = true;
+    QStringList tokens = arg.split("=");
+    QString frames = tokens[1];
+    tokens = frames.split(",");
+    if (tokens.count() > 0) bj.startFrame = tokens[0].toInt();
+    if (tokens.count() > 1) bj.endFrame = tokens[1].toInt();
+    if (tokens.count() > 2) bj.stepFrame = tokens[2].toInt();
+  }
       else if (arg.contains("image="))
-	{
-	  bj.image = true;
-	  QStringList tokens = arg.split("=");
-	  bj.imageFilename = tokens[1];
-	}
+  {
+    bj.image = true;
+    QStringList tokens = arg.split("=");
+    bj.imageFilename = tokens[1];
+  }
       else if (arg.contains("movie="))
-	{
-	  bj.movie = true;
-	  QStringList tokens = arg.split("=");
-	  bj.movieFilename = tokens[1];
-	}
+  {
+    bj.movie = true;
+    QStringList tokens = arg.split("=");
+    bj.movieFilename = tokens[1];
+  }
       else if (arg.contains("framerate="))
-	{
-	  QStringList tokens = arg.split("=");
-	  bj.frameRate = tokens[1].toInt();
-	}
+  {
+    QStringList tokens = arg.split("=");
+    bj.frameRate = tokens[1].toInt();
+  }
       else if (arg.contains("imagemode="))
-	{
-	  QStringList tokens = arg.split("=");
-	  if (tokens[1]=="stereo")
-	    bj.imageMode = Enums::StereoImageMode;
-	  else if (tokens[1]=="cubic")
-	    bj.imageMode = Enums::CubicImageMode;
-	  else if (tokens[1]=="redcyan")
-	    bj.imageMode = Enums::RedCyanImageMode;
-	  else if (tokens[1]=="redblue")
-	    bj.imageMode = Enums::RedBlueImageMode;
-	  else if (tokens[1]=="crosseye")
-	    bj.imageMode = Enums::CrosseyeImageMode;
-	  else if (tokens[1]=="3dtv")
-	    bj.imageMode = Enums::ImageMode3DTV;
-	}
+  {
+    QStringList tokens = arg.split("=");
+    if (tokens[1]=="stereo")
+      bj.imageMode = Enums::StereoImageMode;
+    else if (tokens[1]=="cubic")
+      bj.imageMode = Enums::CubicImageMode;
+    else if (tokens[1]=="redcyan")
+      bj.imageMode = Enums::RedCyanImageMode;
+    else if (tokens[1]=="redblue")
+      bj.imageMode = Enums::RedBlueImageMode;
+    else if (tokens[1]=="crosseye")
+      bj.imageMode = Enums::CrosseyeImageMode;
+    else if (tokens[1]=="3dtv")
+      bj.imageMode = Enums::ImageMode3DTV;
+  }
       else if (arg.contains("nobackgroundrender"))
-	{
-	  bj.backgroundrender = false;
-	}
+  {
+    bj.backgroundrender = false;
+  }
       else if (arg.contains("shading"))
-	{
-	  bj.shading = true;
-	}
+  {
+    bj.shading = true;
+  }
       else if (arg.contains("depthcue"))
-	{
-	  bj.depthcue = true;
-	}
+  {
+    bj.depthcue = true;
+  }
       else if (arg.contains("skipemptyspace"))
-	{
-	  bj.skipEmptySpace = true;
-	}
+  {
+    bj.skipEmptySpace = true;
+  }
       else if (arg.contains("dragonlyforshadows"))
-	{
-	  bj.dragonlyforshadows = true;
-	}
+  {
+    bj.dragonlyforshadows = true;
+  }
       else if (arg.contains("dragonly"))
-	{
-	  bj.dragonly = true;
-	}
+  {
+    bj.dragonly = true;
+  }
       else if (arg.contains("imagesize="))
-	{
-	  bj.imagesize = true;
-	  QStringList tokens = arg.split("=");
-	  QString imgsz = tokens[1];
-	  tokens = imgsz.split(",");
-	  if (tokens.count() > 0) bj.imgWidth = tokens[0].toInt();
-	  if (tokens.count() > 1) bj.imgHeight = tokens[1].toInt();
-	}
+  {
+    bj.imagesize = true;
+    QStringList tokens = arg.split("=");
+    QString imgsz = tokens[1];
+    tokens = imgsz.split(",");
+    if (tokens.count() > 0) bj.imgWidth = tokens[0].toInt();
+    if (tokens.count() > 1) bj.imgHeight = tokens[1].toInt();
+  }
       else if (arg.contains("stepsize="))
-	{
-	  QStringList tokens = arg.split("=");
-	  if (tokens.count() > 0) bj.stepSize = tokens[1].toFloat();
-	}
+  {
+    QStringList tokens = arg.split("=");
+    if (tokens.count() > 0) bj.stepSize = tokens[1].toFloat();
+  }
     }
   return true;
 }
@@ -1042,114 +1042,114 @@ MainWindow::loadProjectRunKeyframesAndExit()
 //
 
       if (!bj.backgroundrender)
-	m_Viewer->setUseFBO(false);
+  m_Viewer->setUseFBO(false);
 
       if (bj.shading)
-	m_Hires->setRenderQuality(Enums::RenderHighQuality);
+  m_Hires->setRenderQuality(Enums::RenderHighQuality);
 
       if (bj.imageMode == Enums::CubicImageMode)
-	{
-	  bj.imgWidth = qMax(bj.imgWidth, bj.imgHeight);
-	  bj.imgHeight = bj.imgWidth;
-	}
+  {
+    bj.imgWidth = qMax(bj.imgWidth, bj.imgHeight);
+    bj.imgHeight = bj.imgWidth;
+  }
 
       if (bj.renderFrames &&
-	  bj.startFrame > 0 &&
-	  bj.endFrame > 0 &&
-	  bj.stepFrame > 0)
-	{
-	  bj.startFrame = qMax(1, bj.startFrame);
-	  bj.endFrame = qMin(bj.endFrame, m_keyFrameEditor->endFrame());
-	  bj.stepFrame = qMax(1, bj.stepFrame);
-	}
+    bj.startFrame > 0 &&
+    bj.endFrame > 0 &&
+    bj.stepFrame > 0)
+  {
+    bj.startFrame = qMax(1, bj.startFrame);
+    bj.endFrame = qMin(bj.endFrame, m_keyFrameEditor->endFrame());
+    bj.stepFrame = qMax(1, bj.stepFrame);
+  }
       else
-	{
-	  bj.startFrame = m_keyFrameEditor->startFrame();
-	  bj.endFrame = m_keyFrameEditor->endFrame();
-	  bj.stepFrame = 1;
-	}
+  {
+    bj.startFrame = m_keyFrameEditor->startFrame();
+    bj.endFrame = m_keyFrameEditor->endFrame();
+    bj.stepFrame = 1;
+  }
 
       m_Viewer->setImageSize(bj.imgWidth, bj.imgHeight);
 
       if (bj.imageMode == Enums::RedCyanImageMode)
-	{
-	  MainWindowUI::mainWindowUI()->actionRedCyan->setChecked(true);
-	  m_Viewer->setImageMode(Enums::MonoImageMode);
-	}
+  {
+    MainWindowUI::mainWindowUI()->actionRedCyan->setChecked(true);
+    m_Viewer->setImageMode(Enums::MonoImageMode);
+  }
       else if (bj.imageMode == Enums::RedBlueImageMode)
-	{
-	  MainWindowUI::mainWindowUI()->actionRedBlue->setChecked(true);
-	  m_Viewer->setImageMode(Enums::MonoImageMode);
-	}
+  {
+    MainWindowUI::mainWindowUI()->actionRedBlue->setChecked(true);
+    m_Viewer->setImageMode(Enums::MonoImageMode);
+  }
       else if (bj.imageMode == Enums::CrosseyeImageMode)
-	{
-	  MainWindowUI::mainWindowUI()->actionCrosseye->setChecked(true);
-	  m_Viewer->setImageMode(Enums::MonoImageMode);
-	}
+  {
+    MainWindowUI::mainWindowUI()->actionCrosseye->setChecked(true);
+    m_Viewer->setImageMode(Enums::MonoImageMode);
+  }
       else if (bj.imageMode == Enums::ImageMode3DTV)
-	{
-	  MainWindowUI::mainWindowUI()->actionFor3DTV->setChecked(true);
-	  m_Viewer->setImageMode(Enums::MonoImageMode);
-	}
+  {
+    MainWindowUI::mainWindowUI()->actionFor3DTV->setChecked(true);
+    m_Viewer->setImageMode(Enums::MonoImageMode);
+  }
       else
-	m_Viewer->setImageMode(bj.imageMode);
+  m_Viewer->setImageMode(bj.imageMode);
 
 
       if (!m_Viewer->drawToFBO())
-	{
-	  if (statusBar()->isVisible())
-	    resize(bj.imgWidth,
-		   bj.imgHeight + (menuBar()->size().height() +
-				   statusBar()->size().height()));
-	  else
-	    resize(bj.imgWidth,
-		   bj.imgHeight  + menuBar()->size().height());
-	}
+  {
+    if (statusBar()->isVisible())
+      resize(bj.imgWidth,
+       bj.imgHeight + (menuBar()->size().height() +
+           statusBar()->size().height()));
+    else
+      resize(bj.imgWidth,
+       bj.imgHeight  + menuBar()->size().height());
+  }
 
 
       Global::setBottomText(false);
       qApp->processEvents();
 
       if (bj.renderFrames)
-	{
-	  m_keyFrame->playFrameNumber(bj.startFrame);
+  {
+    m_keyFrame->playFrameNumber(bj.startFrame);
 
-	  if (bj.movie)
-	    {
-	      if (m_Viewer->startMovie(bj.movieFilename,
-				       bj.frameRate, 100,
-				       false) == false)
-		return;
-	      m_Viewer->setSaveSnapshots(false);
-	      m_Viewer->setSaveMovie(true);
-	    }
-	  else if (bj.image)
-	    {
-	      m_Viewer->setImageFileName(bj.imageFilename);
-	      m_Viewer->setSaveSnapshots(true);
-	    }
+    if (bj.movie)
+      {
+        if (m_Viewer->startMovie(bj.movieFilename,
+               bj.frameRate, 100,
+               false) == false)
+    return;
+        m_Viewer->setSaveSnapshots(false);
+        m_Viewer->setSaveMovie(true);
+      }
+    else if (bj.image)
+      {
+        m_Viewer->setImageFileName(bj.imageFilename);
+        m_Viewer->setSaveSnapshots(true);
+      }
 
-	  m_Viewer->dummydraw();
+    m_Viewer->dummydraw();
 
-	  connect(this, SIGNAL(playKeyFrames(int,int,int)),
-		  m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
-	  emit playKeyFrames(bj.startFrame,
-			     bj.endFrame,
-			     bj.stepFrame);
-	  qApp->processEvents();
-	  disconnect(this, SIGNAL(playKeyFrames(int,int,int)),
-		     m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
-	}
+    connect(this, SIGNAL(playKeyFrames(int,int,int)),
+      m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
+    emit playKeyFrames(bj.startFrame,
+           bj.endFrame,
+           bj.stepFrame);
+    qApp->processEvents();
+    disconnect(this, SIGNAL(playKeyFrames(int,int,int)),
+         m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
+  }
       else
-	{
-	  m_Viewer->setCurrentFrame(-1);
-	  m_Viewer->setImageFileName(bj.imageFilename);
-	  m_Viewer->setSaveSnapshots(true);
-	  m_Viewer->dummydraw();
-	  m_Viewer->updateGL();
-	  m_Viewer->endPlay();
-	  qApp->quit();
-	}
+  {
+    m_Viewer->setCurrentFrame(-1);
+    m_Viewer->setImageFileName(bj.imageFilename);
+    m_Viewer->setSaveSnapshots(true);
+    m_Viewer->dummydraw();
+    m_Viewer->updateGL();
+    m_Viewer->endPlay();
+    qApp->quit();
+  }
     }
 }
 
@@ -1170,10 +1170,10 @@ MainWindow::closeEvent(QCloseEvent *)
       Global::volumeType() != Global::DummyVolume)
     {
       int ok = QMessageBox::question(0, "Exit Drishti",
-				     QString("Would you like to save project before quiting ?"),
-				     QMessageBox::Yes | QMessageBox::No);
+             QString("Would you like to save project before quiting ?"),
+             QMessageBox::Yes | QMessageBox::No);
       if (ok == QMessageBox::Yes)
-	on_actionSave_Project_triggered();
+  on_actionSave_Project_triggered();
     }
 
   m_Volume->clearVolumes();
@@ -1291,9 +1291,9 @@ MainWindow::initializeRecentFiles()
       m_recentFileActions.append(new QAction(this));
       m_recentFileActions[i]->setVisible(false);
       connect(m_recentFileActions[i], SIGNAL(triggered()),
-	      this, SLOT(openRecentFile()));
+        this, SLOT(openRecentFile()));
       ui->menuFile->insertAction(ui->actionExit,
-				m_recentFileActions[i]);
+        m_recentFileActions[i]);
     }
 
   ui->menuFile->insertSeparator(ui->actionExit);
@@ -1338,15 +1338,15 @@ MainWindow::on_actionSave_ImageSequence_triggered()
     }
 
   QSize imgSize = StaticFunctions::getImageSize(m_Viewer->size().width(),
-						m_Viewer->size().height());
+            m_Viewer->size().height());
 
   m_Viewer->setImageSize(imgSize.width(), imgSize.height());
 
   SaveImageSeqDialog saveImg(0,
-			     Global::previousDirectory(),
-			     m_keyFrameEditor->startFrame(),
-			     m_keyFrameEditor->endFrame(),
-			     1);
+           Global::previousDirectory(),
+           m_keyFrameEditor->startFrame(),
+           m_keyFrameEditor->endFrame(),
+           1);
 
   saveImg.move(QCursor::pos());
 
@@ -1356,16 +1356,16 @@ MainWindow::on_actionSave_ImageSequence_triggered()
       int imgMode = saveImg.imageMode();
 
       if (imgMode == Enums::CubicImageMode)
-	{
-	  if (imgSize.width() != imgSize.height())
-	    {
-	      QMessageBox::critical(0, "Error",
-				    QString("Current image size is %1x%2.\nSquare image size required for cubic images.").\
-				    arg(imgSize.width()).\
-				    arg(imgSize.height()));
-	      return;
-	    }
-	}
+  {
+    if (imgSize.width() != imgSize.height())
+      {
+        QMessageBox::critical(0, "Error",
+            QString("Current image size is %1x%2.\nSquare image size required for cubic images.").\
+            arg(imgSize.width()).\
+            arg(imgSize.height()));
+        return;
+      }
+  }
 
       QFileInfo f(flnm);
       Global::setPreviousDirectory(f.absolutePath());
@@ -1377,13 +1377,13 @@ MainWindow::on_actionSave_ImageSequence_triggered()
       m_Viewer->dummydraw();
 
       connect(this, SIGNAL(playKeyFrames(int,int,int)),
-	      m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
+        m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
       emit playKeyFrames(saveImg.startFrame(),
-			 saveImg.endFrame(),
-			 saveImg.stepFrame());
+       saveImg.endFrame(),
+       saveImg.stepFrame());
       qApp->processEvents();
       disconnect(this, SIGNAL(playKeyFrames(int,int,int)),
-		 m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
+     m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
     }
 }
 
@@ -1404,7 +1404,7 @@ MainWindow::on_actionSave_Movie_triggered()
     }
 
   QSize imgSize = StaticFunctions::getImageSize(m_Viewer->size().width(),
-						m_Viewer->size().height());
+            m_Viewer->size().height());
 
   m_Viewer->setImageSize(imgSize.width(), imgSize.height());
 
@@ -1413,17 +1413,17 @@ MainWindow::on_actionSave_Movie_triggered()
       imgSize.height()%16 > 0)
     {
       emit showMessage(QString("For wmv movies, the image size must be multiple of 16. Current size is %1 x %2"). \
-		       arg(imgSize.width()).
-		       arg(imgSize.height()), true);
+           arg(imgSize.width()).
+           arg(imgSize.height()), true);
       return;
     }
 #endif
 
   SaveMovieDialog saveImg(0,
-			  Global::previousDirectory(),
-			  m_keyFrameEditor->startFrame(),
-			  m_keyFrameEditor->endFrame(),
-			  1);
+        Global::previousDirectory(),
+        m_keyFrameEditor->startFrame(),
+        m_keyFrameEditor->endFrame(),
+        1);
 
   saveImg.move(QCursor::pos());
 
@@ -1435,12 +1435,12 @@ MainWindow::on_actionSave_Movie_triggered()
       Global::setPreviousDirectory(f.absolutePath());
 
       if (movieMode)
-	m_Viewer->setImageMode(Enums::MonoImageMode);
+  m_Viewer->setImageMode(Enums::MonoImageMode);
       else
-	m_Viewer->setImageMode(Enums::StereoImageMode);
+  m_Viewer->setImageMode(Enums::StereoImageMode);
 
       if (m_Viewer->startMovie(flnm, 25, 100, true) == false)
-	return;
+  return;
 
       m_Viewer->setSaveSnapshots(false);
       m_Viewer->setSaveMovie(true);
@@ -1448,13 +1448,13 @@ MainWindow::on_actionSave_Movie_triggered()
       m_Viewer->dummydraw();
 
       connect(this, SIGNAL(playKeyFrames(int,int,int)),
-	      m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
+        m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
       emit playKeyFrames(saveImg.startFrame(),
-			 saveImg.endFrame(),
-			 saveImg.stepFrame());
+       saveImg.endFrame(),
+       saveImg.stepFrame());
       qApp->processEvents();
       disconnect(this, SIGNAL(playKeyFrames(int,int,int)),
-		 m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
+     m_keyFrameEditor, SLOT(playKeyFrames(int,int,int)));
     }
 }
 
@@ -1462,16 +1462,16 @@ void
 MainWindow::on_actionImage_Size_triggered()
 {
   QSize imgSize = StaticFunctions::getImageSize(m_Viewer->size().width(),
-						m_Viewer->size().height());
+            m_Viewer->size().height());
   int x = imgSize.width();
   int y = imgSize.height();
   if (statusBar()->isVisible())
     resize(x,
-	   y + (menuBar()->size().height() +
-		statusBar()->size().height()));
+     y + (menuBar()->size().height() +
+    statusBar()->size().height()));
   else
     resize(x,
-	   y + menuBar()->size().height());
+     y + menuBar()->size().height());
 }
 
 void
@@ -1480,41 +1480,41 @@ MainWindow::checkStateChanged(int i, int j, bool flag)
   if (Global::volumeType() == Global::DoubleVolume)
     {
       if (j == 1 && flag)
-	m_tfEditor->changeVol(0);
+  m_tfEditor->changeVol(0);
       else if (j == 2 && flag)
-	m_tfEditor->changeVol(1);
+  m_tfEditor->changeVol(1);
     }
   else if (Global::volumeType() == Global::TripleVolume)
     {
       if (j == 1 && flag)
-	m_tfEditor->changeVol(0);
+  m_tfEditor->changeVol(0);
       else if (j == 2 && flag)
-	m_tfEditor->changeVol(1);
+  m_tfEditor->changeVol(1);
       else if (j == 3 && flag)
-	m_tfEditor->changeVol(2);
+  m_tfEditor->changeVol(2);
     }
   else if (Global::volumeType() == Global::QuadVolume)
     {
       if (j == 1 && flag)
-	m_tfEditor->changeVol(0);
+  m_tfEditor->changeVol(0);
       else if (j == 2 && flag)
-	m_tfEditor->changeVol(1);
+  m_tfEditor->changeVol(1);
       else if (j == 3 && flag)
-	m_tfEditor->changeVol(2);
+  m_tfEditor->changeVol(2);
       else if (j == 4 && flag)
-	m_tfEditor->changeVol(3);
+  m_tfEditor->changeVol(3);
     }
   else if (Global::volumeType() == Global::RGBVolume ||
-	   Global::volumeType() == Global::RGBAVolume)
+     Global::volumeType() == Global::RGBAVolume)
     {
       if (j == 1 && flag)
-	m_tfEditor->changeVol(0);
+  m_tfEditor->changeVol(0);
       else if (j == 2 && flag)
-	m_tfEditor->changeVol(1);
+  m_tfEditor->changeVol(1);
       else if (j == 3 && flag)
-	m_tfEditor->changeVol(2);
+  m_tfEditor->changeVol(2);
       else if (j == 4 && flag)
-	m_tfEditor->changeVol(3);
+  m_tfEditor->changeVol(3);
     }
 
 
@@ -1548,56 +1548,56 @@ MainWindow::changeTransferFunctionDisplay(int tfnum, QList<bool> on)
       m_tfEditor->setTransferFunction(sptr);
 
       if (Global::volumeType() == Global::DoubleVolume)
-	{
-	  if (on.count() > 1)
-	    {
-	      if (on[0])
-		m_tfEditor->changeVol(0);
-	      else if (on[1])
-		m_tfEditor->changeVol(1);
-	    }
-	}
+  {
+    if (on.count() > 1)
+      {
+        if (on[0])
+    m_tfEditor->changeVol(0);
+        else if (on[1])
+    m_tfEditor->changeVol(1);
+      }
+  }
       else if (Global::volumeType() == Global::TripleVolume)
-	{
-	  if (on.count() > 1)
-	    {
-	      if (on[0])
-		m_tfEditor->changeVol(0);
-	      else if (on[1])
-		m_tfEditor->changeVol(1);
-	      else if (on[2])
-		m_tfEditor->changeVol(2);
-	    }
-	}
+  {
+    if (on.count() > 1)
+      {
+        if (on[0])
+    m_tfEditor->changeVol(0);
+        else if (on[1])
+    m_tfEditor->changeVol(1);
+        else if (on[2])
+    m_tfEditor->changeVol(2);
+      }
+  }
       else if (Global::volumeType() == Global::QuadVolume)
-	{
-	  if (on.count() > 1)
-	    {
-	      if (on[0])
-		m_tfEditor->changeVol(0);
-	      else if (on[1])
-		m_tfEditor->changeVol(1);
-	      else if (on[2])
-		m_tfEditor->changeVol(2);
-	      else if (on[3])
-		m_tfEditor->changeVol(3);
-	    }
-	}
+  {
+    if (on.count() > 1)
+      {
+        if (on[0])
+    m_tfEditor->changeVol(0);
+        else if (on[1])
+    m_tfEditor->changeVol(1);
+        else if (on[2])
+    m_tfEditor->changeVol(2);
+        else if (on[3])
+    m_tfEditor->changeVol(3);
+      }
+  }
       else if (Global::volumeType() == Global::RGBVolume ||
-	       Global::volumeType() == Global::RGBAVolume)
-	{
-	  if (on.count() > 1)
-	    {
-	      if (on[0])
-		m_tfEditor->changeVol(0);
-	      else if (on[1])
-		m_tfEditor->changeVol(1);
-	      else if (on[2])
-		m_tfEditor->changeVol(2);
-	      else if (on[3])
-		m_tfEditor->changeVol(3);
-	    }
-	}
+         Global::volumeType() == Global::RGBAVolume)
+  {
+    if (on.count() > 1)
+      {
+        if (on[0])
+    m_tfEditor->changeVol(0);
+        else if (on[1])
+    m_tfEditor->changeVol(1);
+        else if (on[2])
+    m_tfEditor->changeVol(2);
+        else if (on[3])
+    m_tfEditor->changeVol(3);
+      }
+  }
     }
   else
     m_tfEditor->setTransferFunction(NULL);
@@ -1620,11 +1620,11 @@ MainWindow::on_actionPoints_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load points file",
-				      Global::previousDirectory(),
-				      "Files (*.points | *.point)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load points file",
+              Global::previousDirectory(),
+              "Files (*.points | *.point)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
   if (flnm.isEmpty())
     return;
@@ -1635,7 +1635,7 @@ MainWindow::on_actionPoints_triggered()
     {
       GeometryObjects::hitpoints()->clear();
       QMessageBox::information(0, "Points",
-			       "Removing points data, invalid grid size");
+             "Removing points data, invalid grid size");
       return;
     }
 
@@ -1648,11 +1648,11 @@ MainWindow::on_actionGrids_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load grids file",
-				      Global::previousDirectory(),
-				      "Files (*.grids | *.grid)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load grids file",
+              Global::previousDirectory(),
+              "Files (*.grids | *.grid)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
   if (flnm.isEmpty())
     return;
@@ -1663,7 +1663,7 @@ MainWindow::on_actionGrids_triggered()
     {
       GeometryObjects::grids()->clear();
       QMessageBox::information(0, "Grids",
-			       "Removing grids data, invalid grid size");
+             "Removing grids data, invalid grid size");
       return;
     }
 
@@ -1676,11 +1676,11 @@ MainWindow::on_actionPaths_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load paths/vectors file",
-				      Global::previousDirectory(),
-				      "Files (*.paths | *.path | *.vec)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load paths/vectors file",
+              Global::previousDirectory(),
+              "Files (*.paths | *.path | *.vec)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
   if (flnm.isEmpty())
     return;
@@ -1694,17 +1694,17 @@ MainWindow::on_actionPaths_triggered()
       items << "Yes" << "No";
       bool ok;
       QString item = QInputDialog::getItem(this,
-					   "Load paths",
-					   "Load as individual paths",
-					   items,
-					   0,
-					   false,
-					   &ok);
+             "Load paths",
+             "Load as individual paths",
+             items,
+             0,
+             false,
+             &ok);
 
       if (!ok || item == "Yes")
-	GeometryObjects::paths()->addPath(flnm);
+  GeometryObjects::paths()->addPath(flnm);
       else
-	GeometryObjects::pathgroups()->addPath(flnm);
+  GeometryObjects::pathgroups()->addPath(flnm);
     }
 
   if (!haveGrid())
@@ -1712,7 +1712,7 @@ MainWindow::on_actionPaths_triggered()
       GeometryObjects::paths()->clear();
       GeometryObjects::pathgroups()->clear();
       QMessageBox::information(0, "Paths",
-			       "Removing paths data, invalid grid size");
+             "Removing paths data, invalid grid size");
       return;
     }
 
@@ -1724,11 +1724,11 @@ MainWindow::on_actionNetwork_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load Network File",
-				      Global::previousDirectory(),
-				      "Network Files (*porethroat.nc | *.nc | *.graphml | *.network)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load Network File",
+              Global::previousDirectory(),
+              "Network Files (*porethroat.nc | *.nc | *.graphml | *.network)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
   if (flnm.isEmpty())
     return;
@@ -1751,11 +1751,11 @@ MainWindow::on_actionTriset_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load Triset/PLY File",
-				      Global::previousDirectory(),
-				      "Triset/PLY Files (*.triset | *.ply)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load Triset/PLY File",
+              Global::previousDirectory(),
+              "Triset/PLY Files (*.triset | *.ply)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
   if (flnm.isEmpty())
     return;
@@ -1826,17 +1826,17 @@ MainWindow::on_actionLoad_1_Volume_triggered()
   QStringList flnm;
 #ifndef Q_OS_MACX
   flnm = QFileDialog::getOpenFileNames(0,
-				      "Load volume files",
-				       Global::previousDirectory(),
-				       "NetCDF Files (*.pvl.nc)",
-				       0,
-				       QFileDialog::DontUseNativeDialog);
+              "Load volume files",
+               Global::previousDirectory(),
+               "NetCDF Files (*.pvl.nc)",
+               0,
+               QFileDialog::DontUseNativeDialog);
 #else
   flnm = QFileDialog::getOpenFileNames(0,
-				      "Load volume files",
-				       Global::previousDirectory(),
-				       "NetCDF Files (*.pvl.nc)",
-				       0);
+              "Load volume files",
+               Global::previousDirectory(),
+               "NetCDF Files (*.pvl.nc)",
+               0);
 #endif
 
   if (flnm.isEmpty())
@@ -1884,13 +1884,13 @@ MainWindow::on_actionLoad_2_Volumes_triggered()
   if (vol1.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 1");
+             "No volume listed for Volume 1");
       return;
     }
   if (vol2.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 2");
+             "No volume listed for Volume 2");
       return;
     }
 
@@ -1933,19 +1933,19 @@ MainWindow::on_actionLoad_3_Volumes_triggered()
   if (vol1.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 1");
+             "No volume listed for Volume 1");
       return;
     }
   if (vol2.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 2");
+             "No volume listed for Volume 2");
       return;
     }
   if (vol3.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 3");
+             "No volume listed for Volume 3");
       return;
     }
 
@@ -1989,25 +1989,25 @@ MainWindow::on_actionLoad_4_Volumes_triggered()
   if (vol1.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 1");
+             "No volume listed for Volume 1");
       return;
     }
   if (vol2.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 2");
+             "No volume listed for Volume 2");
       return;
     }
   if (vol3.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 3");
+             "No volume listed for Volume 3");
       return;
     }
   if (vol4.isEmpty())
     {
       QMessageBox::information(0, "Empty List",
-			       "No volume listed for Volume 4");
+             "No volume listed for Volume 4");
       return;
     }
 
@@ -2039,52 +2039,52 @@ MainWindow::dragEnterEvent(QDragEnterEvent *event)
     {
       const QMimeData *md = event->mimeData();
       if (md->hasUrls())
-	{
-	  QList<QUrl> urls = md->urls();
-	  if (StaticFunctions::checkURLs(urls, ".pvl.nc"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, ".xml"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, ".keyframes"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, ".triset"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, ".ply"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, "porethroat.nc"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, "graphml"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, "network"))
-	    {
-	      event->acceptProposedAction();
-	    }
-	  else if (StaticFunctions::checkURLs(urls, ".points") ||
-		   StaticFunctions::checkURLs(urls, ".point") ||
-		   StaticFunctions::checkURLs(urls, ".paths") ||
-		   StaticFunctions::checkURLs(urls, ".path") ||
-		   StaticFunctions::checkURLs(urls, ".vec") ||
-		   StaticFunctions::checkURLs(urls, ".grids") ||
-		   StaticFunctions::checkURLs(urls, ".grid"))
-	    {
-	      event->acceptProposedAction();
-	    }
+  {
+    QList<QUrl> urls = md->urls();
+    if (StaticFunctions::checkURLs(urls, ".pvl.nc"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, ".xml"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, ".keyframes"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, ".triset"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, ".ply"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, "porethroat.nc"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, "graphml"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, "network"))
+      {
+        event->acceptProposedAction();
+      }
+    else if (StaticFunctions::checkURLs(urls, ".points") ||
+       StaticFunctions::checkURLs(urls, ".point") ||
+       StaticFunctions::checkURLs(urls, ".paths") ||
+       StaticFunctions::checkURLs(urls, ".path") ||
+       StaticFunctions::checkURLs(urls, ".vec") ||
+       StaticFunctions::checkURLs(urls, ".grids") ||
+       StaticFunctions::checkURLs(urls, ".grid"))
+      {
+        event->acceptProposedAction();
+      }
 //	  else // ignore the drag
-	}
+  }
     }
 }
 
@@ -2097,13 +2097,13 @@ MainWindow::openRecentFile()
       QString filename = action->data().toString();
       QFileInfo fileInfo(filename);
       if (! fileInfo.exists())
-	{
-	  QMessageBox::information(0, "Error",
-				   QString("Cannot locate ") +
-				   filename +
-				   QString(" for loading"));
-	  return;
-	}
+  {
+    QMessageBox::information(0, "Error",
+           QString("Cannot locate ") +
+           filename +
+           QString(" for loading"));
+    return;
+  }
 
       if (StaticFunctions::checkExtension(filename, ".pvl.nc")) {
         on_actionLoad_Volumes_triggered(QStringList(filename));
@@ -2147,7 +2147,7 @@ void MainWindow::dropEvent(QDropEvent *event)  {
           if (StaticFunctions::checkExtension(url.toLocalFile(), ".triset"))
             GeometryObjects::trisets()->addTriset(url.toLocalFile());
           else
-		        GeometryObjects::trisets()->addPLY(url.toLocalFile());
+            GeometryObjects::trisets()->addPLY(url.toLocalFile());
           if (Global::volumeType() == Global::DummyVolume) {
             int nx, ny, nz;
             GeometryObjects::trisets()->allGridSize(nx, ny, nz);
@@ -2157,98 +2157,98 @@ void MainWindow::dropEvent(QDropEvent *event)  {
           QFileInfo f(url.toLocalFile());
           Global::setPreviousDirectory(f.absolutePath());
         }  else if (StaticFunctions::checkExtension(url.toLocalFile(), "porethroat.nc") ||
-		       StaticFunctions::checkExtension(url.toLocalFile(), "graphml") ||
-		       StaticFunctions::checkExtension(url.toLocalFile(), "network"))
-		{
-		  GeometryObjects::networks()->addNetwork(url.toLocalFile());
-		  if (Global::volumeType() == Global::DummyVolume)
-		    {
-		      int nx, ny, nz;
-		      GeometryObjects::networks()->allGridSize(nx, ny, nz);
-		      loadDummyVolume(nx, ny, nz);
-		    }
+           StaticFunctions::checkExtension(url.toLocalFile(), "graphml") ||
+           StaticFunctions::checkExtension(url.toLocalFile(), "network"))
+    {
+      GeometryObjects::networks()->addNetwork(url.toLocalFile());
+      if (Global::volumeType() == Global::DummyVolume)
+        {
+          int nx, ny, nz;
+          GeometryObjects::networks()->allGridSize(nx, ny, nz);
+          loadDummyVolume(nx, ny, nz);
+        }
 
-		  QFileInfo f(url.toLocalFile());
-		  Global::setPreviousDirectory(f.absolutePath());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".points") ||
-		       StaticFunctions::checkExtension(url.toLocalFile(), ".point"))
-		{
-		  GeometryObjects::hitpoints()->addPoints(url.toLocalFile());
+      QFileInfo f(url.toLocalFile());
+      Global::setPreviousDirectory(f.absolutePath());
+    }
+        else if (StaticFunctions::checkExtension(url.toLocalFile(), ".points") ||
+           StaticFunctions::checkExtension(url.toLocalFile(), ".point"))
+    {
+      GeometryObjects::hitpoints()->addPoints(url.toLocalFile());
 
-		  if (!haveGrid())
-		    {
-		      GeometryObjects::hitpoints()->clear();
-		      QMessageBox::information(0, "Points",
-					       "Removing points data, invalid grid size");
-		      return;
-		    }
+      if (!haveGrid())
+        {
+          GeometryObjects::hitpoints()->clear();
+          QMessageBox::information(0, "Points",
+                 "Removing points data, invalid grid size");
+          return;
+        }
 
-		  QFileInfo f(url.toLocalFile());
-		  Global::setPreviousDirectory(f.absolutePath());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".grids") ||
-		       StaticFunctions::checkExtension(url.toLocalFile(), ".grid"))
-		{
-		  GeometryObjects::grids()->addGrid(url.toLocalFile());
-		  if (!haveGrid())
-		    {
-		      GeometryObjects::grids()->clear();
-		      QMessageBox::information(0, "Grids",
-					       "Removing grid data, invalid grid size");
-		      return;
-		    }
-		  QFileInfo f(url.toLocalFile());
-		  Global::setPreviousDirectory(f.absolutePath());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".paths") ||
-		       StaticFunctions::checkExtension(url.toLocalFile(), ".path"))
-		{
-		  QStringList items;
-		  items << "Yes" << "No";
-		  bool ok;
-		  QString item = QInputDialog::getItem(this,
-						       "Load paths",
-						       "Load as individual paths",
-						       items,
-						       0,
-						       false,
-						       &ok);
-		  if (!ok || item == "Yes")
-		    GeometryObjects::paths()->addPath(url.toLocalFile());
-		  else
-		    GeometryObjects::pathgroups()->addPath(url.toLocalFile());
+      QFileInfo f(url.toLocalFile());
+      Global::setPreviousDirectory(f.absolutePath());
+    }
+        else if (StaticFunctions::checkExtension(url.toLocalFile(), ".grids") ||
+           StaticFunctions::checkExtension(url.toLocalFile(), ".grid"))
+    {
+      GeometryObjects::grids()->addGrid(url.toLocalFile());
+      if (!haveGrid())
+        {
+          GeometryObjects::grids()->clear();
+          QMessageBox::information(0, "Grids",
+                 "Removing grid data, invalid grid size");
+          return;
+        }
+      QFileInfo f(url.toLocalFile());
+      Global::setPreviousDirectory(f.absolutePath());
+    }
+        else if (StaticFunctions::checkExtension(url.toLocalFile(), ".paths") ||
+           StaticFunctions::checkExtension(url.toLocalFile(), ".path"))
+    {
+      QStringList items;
+      items << "Yes" << "No";
+      bool ok;
+      QString item = QInputDialog::getItem(this,
+                   "Load paths",
+                   "Load as individual paths",
+                   items,
+                   0,
+                   false,
+                   &ok);
+      if (!ok || item == "Yes")
+        GeometryObjects::paths()->addPath(url.toLocalFile());
+      else
+        GeometryObjects::pathgroups()->addPath(url.toLocalFile());
 
-		  if (!haveGrid())
-		    {
-		      GeometryObjects::paths()->clear();
-		      GeometryObjects::pathgroups()->clear();
-		      QMessageBox::information(0, "Paths",
-					       "Removing paths data, invalid grid size");
-		      return;
-		    }
+      if (!haveGrid())
+        {
+          GeometryObjects::paths()->clear();
+          GeometryObjects::pathgroups()->clear();
+          QMessageBox::information(0, "Paths",
+                 "Removing paths data, invalid grid size");
+          return;
+        }
 
-		  QFileInfo f(url.toLocalFile());
-		  Global::setPreviousDirectory(f.absolutePath());
-		}
-	      else if (StaticFunctions::checkExtension(url.toLocalFile(), ".vec"))
-		{
-		  GeometryObjects::pathgroups()->addVector(url.toLocalFile());
+      QFileInfo f(url.toLocalFile());
+      Global::setPreviousDirectory(f.absolutePath());
+    }
+        else if (StaticFunctions::checkExtension(url.toLocalFile(), ".vec"))
+    {
+      GeometryObjects::pathgroups()->addVector(url.toLocalFile());
 
-		  if (!haveGrid())
-		    {
-		      GeometryObjects::paths()->clear();
-		      GeometryObjects::pathgroups()->clear();
-		      QMessageBox::information(0, "Paths",
-					       "Removing paths data, invalid grid size");
-		      return;
-		    }
+      if (!haveGrid())
+        {
+          GeometryObjects::paths()->clear();
+          GeometryObjects::pathgroups()->clear();
+          QMessageBox::information(0, "Paths",
+                 "Removing paths data, invalid grid size");
+          return;
+        }
 
-		  QFileInfo f(url.toLocalFile());
-		  Global::setPreviousDirectory(f.absolutePath());
-		}
-	    }
-	}
+      QFileInfo f(url.toLocalFile());
+      Global::setPreviousDirectory(f.absolutePath());
+    }
+      }
+  }
     }
 }
 
@@ -2261,11 +2261,11 @@ MainWindow::haveGrid()
   // ask user for the grid size
   bool ok;
   QString text = QInputDialog::getText(0,
-				       "Please enter grid size",
-				       "Grid Size",
-				       QLineEdit::Normal,
-				       "0 0 0",
-				       &ok);
+               "Please enter grid size",
+               "Grid Size",
+               QLineEdit::Normal,
+               "0 0 0",
+               &ok);
   if (ok && !text.isEmpty())
     {
       int nx=0;
@@ -2277,10 +2277,10 @@ MainWindow::haveGrid()
       if (gs.count() > 1) ny = gs[1].toInt();
       if (gs.count() > 2) nz = gs[2].toInt();
       if (nx > 0 && ny > 0 && nz > 0)
-	{
-	  loadDummyVolume(nx, ny, nz);
-	  return true;
-	}
+  {
+    loadDummyVolume(nx, ny, nz);
+    return true;
+  }
     }
 
   return false;
@@ -2324,18 +2324,18 @@ MainWindow::loadVolumeFromUrls(QList<QUrl> urls)
     {
       QList<QString> files;
       for(int i=0; i<urls.count(); i++)
-	files.append(urls[i].toLocalFile());
+  files.append(urls[i].toLocalFile());
 
       bool ok;
       VolumeInformation pvlInfo1;
       ok = VolumeInformation::volInfo(files[0], pvlInfo1);
       if (ok)
-	loadVolumeList(files, false);
+  loadVolumeList(files, false);
       else
-	QMessageBox::critical(0, "Loading Volume",
-			      QString("Cannot load volume : ") +
-			      files[0] +
-			      QString(" is invalid"));
+  QMessageBox::critical(0, "Loading Volume",
+            QString("Cannot load volume : ") +
+            files[0] +
+            QString(" is invalid"));
     }
 }
 
@@ -2345,49 +2345,49 @@ MainWindow::loadVolumeList(QList<QString> files, bool flag)
   if (flag)
     {
       if (m_Volume->valid())
-	{
-	  if (Global::volumeType() == Global::SingleVolume)
-	    {
-	      QList<QString> files1 = m_Volume->volumeFiles();
+  {
+    if (Global::volumeType() == Global::SingleVolume)
+      {
+        QList<QString> files1 = m_Volume->volumeFiles();
 
-	      if (VolumeInformation::checkForDoubleVolume(files1,
-							  files))
-		{
-		  loadVolume2List(files1, files, true);
-		  return;
-		}
-	    }
-	  if (Global::volumeType() == Global::DoubleVolume)
-	    {
-	      QList<QString> files1 = m_Volume->volumeFiles();
-	      QList<QString> files2 = m_Volume->volumeFiles(1);
+        if (VolumeInformation::checkForDoubleVolume(files1,
+                files))
+    {
+      loadVolume2List(files1, files, true);
+      return;
+    }
+      }
+    if (Global::volumeType() == Global::DoubleVolume)
+      {
+        QList<QString> files1 = m_Volume->volumeFiles();
+        QList<QString> files2 = m_Volume->volumeFiles(1);
 
-	      if (VolumeInformation::checkForTripleVolume(files1,
-							  files2,
-							  files))
-		{
-		  loadVolume3List(files1, files2,
-				  files, true);
-		  return;
-		}
-	    }
-	  if (Global::volumeType() == Global::TripleVolume)
-	    {
-	      QList<QString> files1 = m_Volume->volumeFiles();
-	      QList<QString> files2 = m_Volume->volumeFiles(1);
-	      QList<QString> files3 = m_Volume->volumeFiles(2);
+        if (VolumeInformation::checkForTripleVolume(files1,
+                files2,
+                files))
+    {
+      loadVolume3List(files1, files2,
+          files, true);
+      return;
+    }
+      }
+    if (Global::volumeType() == Global::TripleVolume)
+      {
+        QList<QString> files1 = m_Volume->volumeFiles();
+        QList<QString> files2 = m_Volume->volumeFiles(1);
+        QList<QString> files3 = m_Volume->volumeFiles(2);
 
-	      if (VolumeInformation::checkForQuadVolume(files1,
-							files2,
-							files3,
-							files))
-		{
-		  loadVolume4List(files1, files2,
-				  files3, files, true);
-		  return;
-		}
-	    }
-	}
+        if (VolumeInformation::checkForQuadVolume(files1,
+              files2,
+              files3,
+              files))
+    {
+      loadVolume4List(files1, files2,
+          files3, files, true);
+      return;
+    }
+      }
+  }
     }
 
   Global::setSaveImageType(Global::NoImage);
@@ -2395,12 +2395,12 @@ MainWindow::loadVolumeList(QList<QString> files, bool flag)
   if (flag)
     {
       if (files.count() > 1)
-	{
-	  FilesListDialog fld(files);
-	  fld.exec();
-	  if (fld.result() == QDialog::Rejected)
-	    return;
-	}
+  {
+    FilesListDialog fld(files);
+    fld.exec();
+    if (fld.result() == QDialog::Rejected)
+      return;
+  }
     }
 
   loadVolume(files);
@@ -2480,10 +2480,10 @@ MainWindow::postLoadVolume()
       m_tfEditor->setMapping(fmap);
 
       if (m_Volume->pvlVoxelType(0) == 0)
-	m_tfEditor->setHistogramImage(m_Lowres->histogramImage1D(),
-				      m_Lowres->histogramImage2D());
+  m_tfEditor->setHistogramImage(m_Lowres->histogramImage1D(),
+              m_Lowres->histogramImage2D());
       else
-	m_tfEditor->setHistogram2D(m_Lowres->histogram2D());
+  m_tfEditor->setHistogram2D(m_Lowres->histogram2D());
     }
 
   m_Lowres->raise();
@@ -2520,7 +2520,7 @@ MainWindow::loadVolumeRGBFromUrls(QList<QUrl> urls)
     {
       QList<QString> files;
       for(int i=0; i<urls.count(); i++)
-	files.append(urls[i].toLocalFile());
+  files.append(urls[i].toLocalFile());
 
       loadVolumeRGB(files[0].toLatin1().data());
     }
@@ -2553,9 +2553,9 @@ MainWindow::loadVolumeRGB(char *flnm)
   if (!Global::batchMode())
     {
       if (Global::volumeType() == Global::RGBVolume)
-	emit showMessage("RGB Volume loaded", false);
+  emit showMessage("RGB Volume loaded", false);
       else
-	emit showMessage("RGBA Volume loaded", false);
+  emit showMessage("RGBA Volume loaded", false);
     }
 }
 
@@ -2587,17 +2587,17 @@ MainWindow::loadVolume(QList<QString> flnm)
   if (!Global::batchMode())
     {
       if (Global::use1D())
-	emit showMessage("Volume loaded. Currently in 1D Transfer Function mode", false);
+  emit showMessage("Volume loaded. Currently in 1D Transfer Function mode", false);
       else
-	emit showMessage("Volume loaded", false);
+  emit showMessage("Volume loaded", false);
 
     }
 }
 
 void
 MainWindow::loadVolume2List(QList<QString> files1,
-			    QList<QString> files2,
-			    bool flag)
+          QList<QString> files2,
+          bool flag)
 {
   Global::setSaveImageType(Global::NoImage);
 
@@ -2606,12 +2606,12 @@ MainWindow::loadVolume2List(QList<QString> files1,
       FilesListDialog fld1(files1);
       fld1.exec();
       if (fld1.result() == QDialog::Rejected)
-	return;
+  return;
 
       FilesListDialog fld2(files2);
       fld2.exec();
       if (fld2.result() == QDialog::Rejected)
-	return;
+  return;
     }
 
   if (!loadVolume2(files1, files2))
@@ -2639,7 +2639,7 @@ MainWindow::loadVolume2List(QList<QString> files1,
 
 bool
 MainWindow::loadVolume2(QList<QString> flnm1,
-			QList<QString> flnm2)
+      QList<QString> flnm2)
 {
   Global::setSaveImageType(Global::NoImage);
 
@@ -2670,9 +2670,9 @@ MainWindow::loadVolume2(QList<QString> flnm1,
   if (!Global::batchMode())
     {
       if (Global::use1D())
-	emit showMessage("Volumes loaded. Currently in 1D Transfer Function mode", false);
+  emit showMessage("Volumes loaded. Currently in 1D Transfer Function mode", false);
       else
-	emit showMessage("Volumes loaded", false);
+  emit showMessage("Volumes loaded", false);
     }
 
   return true;
@@ -2680,9 +2680,9 @@ MainWindow::loadVolume2(QList<QString> flnm1,
 
 void
 MainWindow::loadVolume3List(QList<QString> files1,
-			    QList<QString> files2,
-			    QList<QString> files3,
-			    bool flag)
+          QList<QString> files2,
+          QList<QString> files3,
+          bool flag)
 {
   Global::setSaveImageType(Global::NoImage);
 
@@ -2691,17 +2691,17 @@ MainWindow::loadVolume3List(QList<QString> files1,
       FilesListDialog fld1(files1);
       fld1.exec();
       if (fld1.result() == QDialog::Rejected)
-	return;
+  return;
 
       FilesListDialog fld2(files2);
       fld2.exec();
       if (fld2.result() == QDialog::Rejected)
-	return;
+  return;
 
       FilesListDialog fld3(files3);
       fld3.exec();
       if (fld3.result() == QDialog::Rejected)
-	return;
+  return;
     }
 
   if (!loadVolume3(files1, files2, files3))
@@ -2740,8 +2740,8 @@ MainWindow::loadVolume3List(QList<QString> files1,
 
 bool
 MainWindow::loadVolume3(QList<QString> flnm1,
-			QList<QString> flnm2,
-			QList<QString> flnm3)
+      QList<QString> flnm2,
+      QList<QString> flnm3)
 {
   Global::setSaveImageType(Global::NoImage);
 
@@ -2781,9 +2781,9 @@ MainWindow::loadVolume3(QList<QString> flnm1,
   if (!Global::batchMode())
     {
       if (Global::use1D())
-	emit showMessage("3 Volumes loaded. Using only 1D Transfer Functions", false);
+  emit showMessage("3 Volumes loaded. Using only 1D Transfer Functions", false);
       else
-	emit showMessage("3 Volumes loaded", false);
+  emit showMessage("3 Volumes loaded", false);
     }
 
   return true;
@@ -2792,10 +2792,10 @@ MainWindow::loadVolume3(QList<QString> flnm1,
 
 void
 MainWindow::loadVolume4List(QList<QString> files1,
-			    QList<QString> files2,
-			    QList<QString> files3,
-			    QList<QString> files4,
-			    bool flag)
+          QList<QString> files2,
+          QList<QString> files3,
+          QList<QString> files4,
+          bool flag)
 {
   Global::setSaveImageType(Global::NoImage);
 
@@ -2804,22 +2804,22 @@ MainWindow::loadVolume4List(QList<QString> files1,
       FilesListDialog fld1(files1);
       fld1.exec();
       if (fld1.result() == QDialog::Rejected)
-	return;
+  return;
 
       FilesListDialog fld2(files2);
       fld2.exec();
       if (fld2.result() == QDialog::Rejected)
-	return;
+  return;
 
       FilesListDialog fld3(files3);
       fld3.exec();
       if (fld3.result() == QDialog::Rejected)
-	return;
+  return;
 
       FilesListDialog fld4(files4);
       fld4.exec();
       if (fld4.result() == QDialog::Rejected)
-	return;
+  return;
     }
 
   if (!loadVolume4(files1, files2, files3, files4))
@@ -2866,9 +2866,9 @@ MainWindow::loadVolume4List(QList<QString> files1,
 
 bool
 MainWindow::loadVolume4(QList<QString> flnm1,
-			QList<QString> flnm2,
-			QList<QString> flnm3,
-			QList<QString> flnm4)
+      QList<QString> flnm2,
+      QList<QString> flnm3,
+      QList<QString> flnm4)
 {
   Global::setSaveImageType(Global::NoImage);
 
@@ -2912,9 +2912,9 @@ MainWindow::loadVolume4(QList<QString> flnm1,
   if (!Global::batchMode())
     {
       if (Global::use1D())
-	emit showMessage("4 Volumes loaded. Using only 1D Transfer Functions", false);
+  emit showMessage("4 Volumes loaded. Using only 1D Transfer Functions", false);
       else
-	emit showMessage("4 Volumes loaded", false);
+  emit showMessage("4 Volumes loaded", false);
     }
 
   return true;
@@ -2966,11 +2966,11 @@ MainWindow::saveSettings()
     QStringList rf = Global::recentFiles();
     for (int i=0; i<rf.count(); i++)
       {
-	QDomElement de0 = doc.createElement("recentfile");
-	QDomText tn0;
-	tn0 = doc.createTextNode(rf[i]);
-	de0.appendChild(tn0);
-	topElement.appendChild(de0);
+  QDomElement de0 = doc.createElement("recentfile");
+  QDomText tn0;
+  tn0 = doc.createTextNode(rf[i]);
+  de0.appendChild(tn0);
+  topElement.appendChild(de0);
       }
   }
 
@@ -3033,39 +3033,39 @@ MainWindow::loadSettings()
   for(int i=0; i<dlist.count(); i++)
     {
       if (dlist.at(i).nodeName() == "texturememory")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::setTextureMemorySize(str.toInt());
-	  Global::calculate3dTextureSize();
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    Global::setTextureMemorySize(str.toInt());
+    Global::calculate3dTextureSize();
+  }
       else if (dlist.at(i).nodeName() == "tempdirectory")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::setTempDir(str);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    Global::setTempDir(str);
+  }
       else if (dlist.at(i).nodeName() == "previousdirectory")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::setPreviousDirectory(str);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    Global::setPreviousDirectory(str);
+  }
       else if (dlist.at(i).nodeName() == "recentfile")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::addRecentFile(str);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    Global::addRecentFile(str);
+  }
       else if (dlist.at(i).nodeName() == "replacetf")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  if (str == "true")
-	    m_tfManager->updateReplace(true);
-	  else
-	    m_tfManager->updateReplace(false);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    if (str == "true")
+      m_tfManager->updateReplace(true);
+    else
+      m_tfManager->updateReplace(false);
+  }
       else if (dlist.at(i).nodeName() == "floatprecision")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::setFloatPrecision(str.toInt());
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    Global::setFloatPrecision(str.toInt());
+  }
     }
   //m_preferencesWidget->updateTextureMemory();
   //m_preferencesWidget->load(flnm.toLatin1().data());
@@ -3128,7 +3128,7 @@ void MainWindow::loadProject(const QString & flnm) {
 
   if (!Global::batchMode())
     emit showMessage("Volume loaded. Loading Project ....", false);
-  
+
   m_Lowres->load(flnm+".low");
   if (projectType == Global::DummyVolume)  {
     Vec bmin, bmax;
@@ -3250,11 +3250,11 @@ MainWindow::on_actionLoad_Project_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load Project",
-				      Global::previousDirectory(),
-				      "xml Files (*.xml)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load Project",
+              Global::previousDirectory(),
+              "xml Files (*.xml)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
 
   if (flnm.isEmpty())
@@ -3270,11 +3270,11 @@ MainWindow::on_actionLoad_TFfromproject_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Load Project",
-				      Global::previousDirectory(),
-				      "xml Files (*.xml)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Load Project",
+              Global::previousDirectory(),
+              "xml Files (*.xml)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
 
   if (flnm.isEmpty())
@@ -3289,18 +3289,18 @@ MainWindow::on_actionImport_Keyframes_triggered()
   if (m_keyFrame->numberOfKeyFrames() == 0)
     {
       QMessageBox::information(0,
-			       "Import KeyFrames",
-			       "Need atleast one keyframe in the keyframe editor before import can take place");
+             "Import KeyFrames",
+             "Need atleast one keyframe in the keyframe editor before import can take place");
       return;
     }
 
   QString flnm;
   flnm = QFileDialog::getOpenFileName(0,
-				      "Import Keyframes",
-				      Global::previousDirectory(),
-				      "keyframes Files (*.keyframes)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Import Keyframes",
+              Global::previousDirectory(),
+              "keyframes Files (*.keyframes)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
 
   if (flnm.isEmpty())
@@ -3317,11 +3317,11 @@ MainWindow::on_actionSave_Project_triggered()
 
   if (flnm.isEmpty())
     flnm = QFileDialog::getSaveFileName(0,
-					"Save Project",
-					Global::previousDirectory(),
-					"xml Files (*.xml)",
-					0,
-					QFileDialog::DontUseNativeDialog);
+          "Save Project",
+          Global::previousDirectory(),
+          "xml Files (*.xml)",
+          0,
+          QFileDialog::DontUseNativeDialog);
 
 
   if (flnm.isEmpty())
@@ -3337,11 +3337,11 @@ MainWindow::on_actionSave_ProjectAs_triggered()
 {
   QString flnm;
   flnm = QFileDialog::getSaveFileName(0,
-				      "Save Project As",
-				      Global::previousDirectory(),
-				      "xml Files (*.xml)",
-				      0,
-				      QFileDialog::DontUseNativeDialog);
+              "Save Project As",
+              Global::previousDirectory(),
+              "xml Files (*.xml)",
+              0,
+              QFileDialog::DontUseNativeDialog);
 
 
   if (flnm.isEmpty())
@@ -3556,9 +3556,9 @@ MainWindow::moveToKeyframe(int frm)
 
 void
 MainWindow::setKeyFrame(Vec pos, Quaternion rot,
-			int fno, float focus, float es,
-			unsigned char *lut,
-			QImage image)
+      int fno, float focus, float es,
+      unsigned char *lut,
+      QImage image)
 {
   QList<SplineInformation> splineInfo;
   for(int i=0; i<m_tfContainer->count(); i++)
@@ -3580,32 +3580,32 @@ MainWindow::setKeyFrame(Vec pos, Quaternion rot,
   m_Hires->getMix(mixvol, mixColor, mixOpacity, mixTag);
 
   m_keyFrame->setKeyFrame(pos, rot,
-			  focus, es,
-			  fno,
-			  lut,
-			  m_Hires->lightInfo(),
-			  m_Hires->bricks(),
-			  bmin, bmax,
-			  image,
-			  splineInfo,
-			  sz, st, xl, yl, zl,
-			  mixvol, mixColor, mixOpacity, mixTag);
+        focus, es,
+        fno,
+        lut,
+        m_Hires->lightInfo(),
+        m_Hires->bricks(),
+        bmin, bmax,
+        image,
+        splineInfo,
+        sz, st, xl, yl, zl,
+        mixvol, mixColor, mixOpacity, mixTag);
 
   if (m_savePathAnimation > 0)
     {
       m_savePathAnimation ++;
       if (m_savePathAnimation <= m_pathAnimationPoints.count())
-	{
-	  int currentFrame = m_keyFrameEditor->currentFrame();
-	  m_keyFrameEditor->moveTo(currentFrame+10);
-	  m_Viewer->camera()->setPosition(m_pathAnimationPoints[m_savePathAnimation-1]);
+  {
+    int currentFrame = m_keyFrameEditor->currentFrame();
+    m_keyFrameEditor->moveTo(currentFrame+10);
+    m_Viewer->camera()->setPosition(m_pathAnimationPoints[m_savePathAnimation-1]);
 
-	  m_Viewer->camera()->lookAt(m_pathAnimationPoints[m_savePathAnimation-1] +
-					10*m_pathAnimationTang[m_savePathAnimation-1] );
-	  m_Viewer->camera()->setUpVector(m_pathAnimationSaxis[m_savePathAnimation-1]);
+    m_Viewer->camera()->lookAt(m_pathAnimationPoints[m_savePathAnimation-1] +
+          10*m_pathAnimationTang[m_savePathAnimation-1] );
+    m_Viewer->camera()->setUpVector(m_pathAnimationSaxis[m_savePathAnimation-1]);
 
-	  m_keyFrameEditor->setKeyFrame();
-	}
+    m_keyFrameEditor->setKeyFrame();
+  }
     }
   else if (m_saveRotationAnimation == 1)
     {
@@ -3619,13 +3619,13 @@ MainWindow::setKeyFrame(Vec pos, Quaternion rot,
     {
       m_saveRotationAnimation = 0;
       QMessageBox::information(0, "Save Rotation Animation",
-	       "Rotation animation frames created in Keyframe Editor.");
+         "Rotation animation frames created in Keyframe Editor.");
     }
 }
 
 void
 MainWindow::setView(Vec pos, Quaternion rot,
-		    QImage image, float focus)
+        QImage image, float focus)
 {
   QList<SplineInformation> splineInfo;
   for(int i=0; i<m_tfContainer->count(); i++)
@@ -3642,18 +3642,18 @@ MainWindow::setView(Vec pos, Quaternion rot,
   m_preferencesWidget->getTick(sz, st, xl, yl, zl);
 
   emit addView(Global::stepsizeStill(),
-	       Global::stepsizeDrag(),
-	       Global::drawBox(), Global::drawAxis(),
-	       Global::backgroundColor(),
-	       pos, rot,
-	       focus,
-	       image,
-	       m_Hires->renderQuality(),
-	       m_Hires->lightInfo(),
-	       m_Hires->bricks(),
-	       bmin, bmax,
-	       splineInfo,
-	       sz, st, xl, yl, zl);
+         Global::stepsizeDrag(),
+         Global::drawBox(), Global::drawAxis(),
+         Global::backgroundColor(),
+         pos, rot,
+         focus,
+         image,
+         m_Hires->renderQuality(),
+         m_Hires->lightInfo(),
+         m_Hires->bricks(),
+         bmin, bmax,
+         splineInfo,
+         sz, st, xl, yl, zl);
 }
 
 void
@@ -3667,18 +3667,18 @@ void
 MainWindow::updateFocus(float focusDistance, float es)
 {
   m_preferencesWidget->setStereoSettings(focusDistance, es,
-					    m_Viewer->camera()->physicalScreenWidth());
+              m_Viewer->camera()->physicalScreenWidth());
 }
 
 // called from viewseditor
 void
 MainWindow::updateParameters(float stepStill, float stepDrag,
-			     int renderQuality,
-			     bool drawBox, bool drawAxis,
-			     Vec bgColor,
-			     QString bgImage,
-			     int sz, int st,
-			     QString xl, QString yl, QString zl)
+           int renderQuality,
+           bool drawBox, bool drawAxis,
+           Vec bgColor,
+           QString bgImage,
+           int sz, int st,
+           QString xl, QString yl, QString zl)
 {
   Global::setStepsizeStill(stepStill);
   Global::setStepsizeDrag(stepDrag);
@@ -3703,12 +3703,12 @@ MainWindow::updateParameters(float stepStill, float stepDrag,
 // called from keyframeeditor
 void
 MainWindow::updateParameters(bool drawBox, bool drawAxis,
-			     Vec bgColor,
-			     QString bgImage,
-			     int sz, int st,
-			     QString xl, QString yl, QString zl,
-			     int mv, bool mc, bool mo, float iv, bool mt,
-			     bool pruneblend)
+           Vec bgColor,
+           QString bgImage,
+           int sz, int st,
+           QString xl, QString yl, QString zl,
+           int mv, bool mc, bool mo, float iv, bool mt,
+           bool pruneblend)
 {
   m_preferencesWidget->setTick(sz, st, xl, yl, zl);
   Global::setBackgroundColor(bgColor);
@@ -3856,64 +3856,64 @@ MainWindow::saveVolumeIntoProject(const QString & flnm)
     QList<QString> files = m_Volume->volumeFiles();
     for(int i=0; i<files.count(); i++)
       {
-	QDomElement de0 = doc.createElement("name");
-	// saving volume filenames relative to the project file path
-	QString relFile = direc.relativeFilePath(files[i]);
-	QDomText tn0 = doc.createTextNode(relFile);
-	de0.appendChild(tn0);
-	dev.appendChild(de0);
+  QDomElement de0 = doc.createElement("name");
+  // saving volume filenames relative to the project file path
+  QString relFile = direc.relativeFilePath(files[i]);
+  QDomText tn0 = doc.createTextNode(relFile);
+  de0.appendChild(tn0);
+  dev.appendChild(de0);
       }
     topElement.appendChild(dev);
 
     if (Global::volumeType() == Global::DoubleVolume ||
-	Global::volumeType() == Global::TripleVolume ||
-	Global::volumeType() == Global::QuadVolume)
+  Global::volumeType() == Global::TripleVolume ||
+  Global::volumeType() == Global::QuadVolume)
       {
-	QDomElement dev = doc.createElement("volumefiles2");
-	QList<QString> files = m_Volume->volumeFiles(1);
-	for(int i=0; i<files.count(); i++)
-	  {
-	    QDomElement de0 = doc.createElement("name");
-	    // saving volume filenames relative to the project file path
-	    QString relFile = direc.relativeFilePath(files[i]);
-	    QDomText tn0 = doc.createTextNode(relFile);
-	    de0.appendChild(tn0);
-	    dev.appendChild(de0);
-	  }
-	topElement.appendChild(dev);
+  QDomElement dev = doc.createElement("volumefiles2");
+  QList<QString> files = m_Volume->volumeFiles(1);
+  for(int i=0; i<files.count(); i++)
+    {
+      QDomElement de0 = doc.createElement("name");
+      // saving volume filenames relative to the project file path
+      QString relFile = direc.relativeFilePath(files[i]);
+      QDomText tn0 = doc.createTextNode(relFile);
+      de0.appendChild(tn0);
+      dev.appendChild(de0);
+    }
+  topElement.appendChild(dev);
       }
 
     if (Global::volumeType() == Global::TripleVolume ||
-	Global::volumeType() == Global::QuadVolume)
+  Global::volumeType() == Global::QuadVolume)
       {
-	QDomElement dev = doc.createElement("volumefiles3");
-	QList<QString> files = m_Volume->volumeFiles(2);
-	for(int i=0; i<files.count(); i++)
-	  {
-	    QDomElement de0 = doc.createElement("name");
-	    // saving volume filenames relative to the project file path
-	    QString relFile = direc.relativeFilePath(files[i]);
-	    QDomText tn0 = doc.createTextNode(relFile);
-	    de0.appendChild(tn0);
-	    dev.appendChild(de0);
-	  }
-	topElement.appendChild(dev);
+  QDomElement dev = doc.createElement("volumefiles3");
+  QList<QString> files = m_Volume->volumeFiles(2);
+  for(int i=0; i<files.count(); i++)
+    {
+      QDomElement de0 = doc.createElement("name");
+      // saving volume filenames relative to the project file path
+      QString relFile = direc.relativeFilePath(files[i]);
+      QDomText tn0 = doc.createTextNode(relFile);
+      de0.appendChild(tn0);
+      dev.appendChild(de0);
+    }
+  topElement.appendChild(dev);
       }
 
     if (Global::volumeType() == Global::QuadVolume)
       {
-	QDomElement dev = doc.createElement("volumefiles4");
-	QList<QString> files = m_Volume->volumeFiles(3);
-	for(int i=0; i<files.count(); i++)
-	  {
-	    QDomElement de0 = doc.createElement("name");
-	    // saving volume filenames relative to the project file path
-	    QString relFile = direc.relativeFilePath(files[i]);
-	    QDomText tn0 = doc.createTextNode(relFile);
-	    de0.appendChild(tn0);
-	    dev.appendChild(de0);
-	  }
-	topElement.appendChild(dev);
+  QDomElement dev = doc.createElement("volumefiles4");
+  QList<QString> files = m_Volume->volumeFiles(3);
+  for(int i=0; i<files.count(); i++)
+    {
+      QDomElement de0 = doc.createElement("name");
+      // saving volume filenames relative to the project file path
+      QString relFile = direc.relativeFilePath(files[i]);
+      QDomText tn0 = doc.createTextNode(relFile);
+      de0.appendChild(tn0);
+      dev.appendChild(de0);
+    }
+  topElement.appendChild(dev);
       }
   }
 
@@ -3949,136 +3949,136 @@ MainWindow::loadVolumeFromProject(const QString &flnm)
   for(int i=0; i<dlist.count(); i++)
     {
       if (dlist.at(i).nodeName() == "texsizereducefraction")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  float rlod = str.toFloat();
-	  Global::setTexSizeReduceFraction(rlod);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    float rlod = str.toFloat();
+    Global::setTexSizeReduceFraction(rlod);
+  }
       else if (dlist.at(i).nodeName() == "floatprecision")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  Global::setFloatPrecision(str.toInt());
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    Global::setFloatPrecision(str.toInt());
+  }
       else if (dlist.at(i).nodeName() == "fieldofview")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  m_Viewer->setFieldOfView(str.toFloat());
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    m_Viewer->setFieldOfView(str.toFloat());
+  }
       else if (dlist.at(i).nodeName() == "drawbox")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  if (str == "true")
-	    Global::setDrawBox(true);
-	  else
-	    Global::setDrawBox(false);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    if (str == "true")
+      Global::setDrawBox(true);
+    else
+      Global::setDrawBox(false);
+  }
       else if (dlist.at(i).nodeName() == "drawaxis")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  if (str == "true")
-	    Global::setDrawAxis(true);
-	  else
-	    Global::setDrawAxis(false);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    if (str == "true")
+      Global::setDrawAxis(true);
+    else
+      Global::setDrawAxis(false);
+  }
       else if (dlist.at(i).nodeName() == "using1d")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  if (str == "true")
-	    Global::setUse1D(true);
-	  else
-	    Global::setUse1D(false);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    if (str == "true")
+      Global::setUse1D(true);
+    else
+      Global::setUse1D(false);
+  }
       else if (dlist.at(i).nodeName() == "volrepeattype")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  QStringList words = str.split(" ", QString::SkipEmptyParts);
-	  QList<bool> rt;
-	  for(int i=0; i<words.count(); i++)
-	    {
-	      if (words[i] == "true")
-		rt << true;
-	      else
-		rt << false;
-	    }
-	  m_volInfoWidget->setRepeatType(rt);
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    QStringList words = str.split(" ", QString::SkipEmptyParts);
+    QList<bool> rt;
+    for(int i=0; i<words.count(); i++)
+      {
+        if (words[i] == "true")
+    rt << true;
+        else
+    rt << false;
+      }
+    m_volInfoWidget->setRepeatType(rt);
+  }
       else if (dlist.at(i).nodeName() == "volumetype")
-	{
-	  QString str = dlist.at(i).toElement().text();
-	  if (str == "single")
-	    volType = Global::SingleVolume;
-	  else if (str == "double")
-	    volType = Global::DoubleVolume;
-	  else if (str == "triple")
-	    volType = Global::TripleVolume;
-	  else if (str == "quad")
-	    volType = Global::QuadVolume;
-	  else if (str == "rgb")
-	    volType = Global::RGBVolume;
-	  else if (str == "rgba")
-	    volType = Global::RGBAVolume;
-	  else
-	    {
-	      showMessage(QString("VolumeType : %1 ??").arg(str), true);
-	      return volType;
-	    }
-	}
+  {
+    QString str = dlist.at(i).toElement().text();
+    if (str == "single")
+      volType = Global::SingleVolume;
+    else if (str == "double")
+      volType = Global::DoubleVolume;
+    else if (str == "triple")
+      volType = Global::TripleVolume;
+    else if (str == "quad")
+      volType = Global::QuadVolume;
+    else if (str == "rgb")
+      volType = Global::RGBVolume;
+    else if (str == "rgba")
+      volType = Global::RGBAVolume;
+    else
+      {
+        showMessage(QString("VolumeType : %1 ??").arg(str), true);
+        return volType;
+      }
+  }
       else if (dlist.at(i).nodeName() == "volumefiles")
-	{
-	  // for loading volume file names with relative path
-	  QFileInfo fileInfo(flnm);
-	  QDir direc = fileInfo.absoluteDir();
+  {
+    // for loading volume file names with relative path
+    QFileInfo fileInfo(flnm);
+    QDir direc = fileInfo.absoluteDir();
 
-	  QDomNodeList vlist = dlist.at(i).childNodes();
-	  for(int vi=0; vi<vlist.count(); vi++)
-	    {
-	      QString str = vlist.at(vi).toElement().text();
-	      QString vfile = direc.absoluteFilePath(str);
-	      m_volFiles1.append(vfile);
-	    }
-	}
+    QDomNodeList vlist = dlist.at(i).childNodes();
+    for(int vi=0; vi<vlist.count(); vi++)
+      {
+        QString str = vlist.at(vi).toElement().text();
+        QString vfile = direc.absoluteFilePath(str);
+        m_volFiles1.append(vfile);
+      }
+  }
       else if (dlist.at(i).nodeName() == "volumefiles2")
-	{
-	  // for loading volume file names with relative path
-	  QFileInfo fileInfo(flnm);
-	  QDir direc = fileInfo.absoluteDir();
+  {
+    // for loading volume file names with relative path
+    QFileInfo fileInfo(flnm);
+    QDir direc = fileInfo.absoluteDir();
 
-	  QDomNodeList vlist = dlist.at(i).childNodes();
-	  for(int vi=0; vi<vlist.count(); vi++)
-	    {
-	      QString str = vlist.at(vi).toElement().text();
-	      QString vfile = direc.absoluteFilePath(str);
-	      m_volFiles2.append(vfile);
-	    }
-	}
+    QDomNodeList vlist = dlist.at(i).childNodes();
+    for(int vi=0; vi<vlist.count(); vi++)
+      {
+        QString str = vlist.at(vi).toElement().text();
+        QString vfile = direc.absoluteFilePath(str);
+        m_volFiles2.append(vfile);
+      }
+  }
       else if (dlist.at(i).nodeName() == "volumefiles3")
-	{
-	  // for loading volume file names with relative path
-	  QFileInfo fileInfo(flnm);
-	  QDir direc = fileInfo.absoluteDir();
+  {
+    // for loading volume file names with relative path
+    QFileInfo fileInfo(flnm);
+    QDir direc = fileInfo.absoluteDir();
 
-	  QDomNodeList vlist = dlist.at(i).childNodes();
-	  for(int vi=0; vi<vlist.count(); vi++)
-	    {
-	      QString str = vlist.at(vi).toElement().text();
-	      QString vfile = direc.absoluteFilePath(str);
-	      m_volFiles3.append(vfile);
-	    }
-	}
+    QDomNodeList vlist = dlist.at(i).childNodes();
+    for(int vi=0; vi<vlist.count(); vi++)
+      {
+        QString str = vlist.at(vi).toElement().text();
+        QString vfile = direc.absoluteFilePath(str);
+        m_volFiles3.append(vfile);
+      }
+  }
       else if (dlist.at(i).nodeName() == "volumefiles4")
-	{
-	  // for loading volume file names with relative path
-	  QFileInfo fileInfo(flnm);
-	  QDir direc = fileInfo.absoluteDir();
+  {
+    // for loading volume file names with relative path
+    QFileInfo fileInfo(flnm);
+    QDir direc = fileInfo.absoluteDir();
 
-	  QDomNodeList vlist = dlist.at(i).childNodes();
-	  for(int vi=0; vi<vlist.count(); vi++)
-	    {
-	      QString str = vlist.at(vi).toElement().text();
-	      QString vfile = direc.absoluteFilePath(str);
-	      m_volFiles4.append(vfile);
-	    }
-	}
+    QDomNodeList vlist = dlist.at(i).childNodes();
+    for(int vi=0; vi<vlist.count(); vi++)
+      {
+        QString str = vlist.at(vi).toElement().text();
+        QString vfile = direc.absoluteFilePath(str);
+        m_volFiles4.append(vfile);
+      }
+  }
     }
 
 //  // for 3 or 4 volumes always use 1D transfer functions
@@ -4119,18 +4119,18 @@ MainWindow::changeHistogram(int volnum)
   if (m_Lowres->raised())
     {
       if (m_Volume->pvlVoxelType(0) == 0)
-	emit histogramUpdated(m_Lowres->histogramImage1D(),
-			      m_Lowres->histogramImage2D());
+  emit histogramUpdated(m_Lowres->histogramImage1D(),
+            m_Lowres->histogramImage2D());
       else
-	emit histogramUpdated(m_Lowres->histogram2D());
+  emit histogramUpdated(m_Lowres->histogram2D());
     }
   else
     {
       if (m_Volume->pvlVoxelType(0) == 0)
-	emit histogramUpdated(m_Hires->histogramImage1D(),
-			      m_Hires->histogramImage2D());
+  emit histogramUpdated(m_Hires->histogramImage1D(),
+            m_Hires->histogramImage2D());
       else
-	emit histogramUpdated(m_Hires->histogram2D());
+  emit histogramUpdated(m_Hires->histogram2D());
     }
 
 }
@@ -4193,8 +4193,8 @@ MainWindow::on_actionEnable_Mask_triggered()
     {
       Global::setUseMask(false);
       QMessageBox::information(0,
-			       "Error",
-			       "Use of masks allowed only for SingleVolumes");
+             "Error",
+             "Use of masks allowed only for SingleVolumes");
     }
 
   ui->actionEnable_Mask->setChecked(Global::useMask());
@@ -4240,7 +4240,7 @@ MainWindow::searchCaption(QStringList str)
     m_keyFrameEditor->moveTo(fno);
   else
     QMessageBox::information(0, "Not Found",
-			     QString("Search term [%1] not found").arg(str.join(" ")));
+           QString("Search term [%1] not found").arg(str.join(" ")));
 }
 
 void
@@ -4261,8 +4261,8 @@ void
 MainWindow::quitDrishti()
 {
   int ok = QMessageBox::question(0, "Exit Drishti",
-				 QString("Sure ?"),
-				 QMessageBox::Yes | QMessageBox::No);
+         QString("Sure ?"),
+         QMessageBox::Yes | QMessageBox::No);
   if (ok == QMessageBox::No)
     return;
 
@@ -4331,9 +4331,9 @@ MainWindow::paintPathPatch(QList<Vec> ppos, int thick, int tag)
 
 void
 MainWindow::addToCameraPath(QList<Vec> points,
-			    QList<Vec> tang,
-			    QList<Vec> saxis,
-			    QList<Vec> taxis)
+          QList<Vec> tang,
+          QList<Vec> saxis,
+          QList<Vec> taxis)
 {
   m_savePathAnimation = 1;
   m_pathAnimationPoints = points;
@@ -4347,7 +4347,7 @@ MainWindow::addToCameraPath(QList<Vec> points,
   m_Viewer->camera()->setPosition(m_pathAnimationPoints[m_savePathAnimation-1]);
 
   m_Viewer->camera()->lookAt(m_pathAnimationPoints[m_savePathAnimation-1] +
-				10*m_pathAnimationTang[m_savePathAnimation-1] );
+        10*m_pathAnimationTang[m_savePathAnimation-1] );
   m_Viewer->camera()->setUpVector(m_pathAnimationSaxis[m_savePathAnimation-1]);
 
   m_keyFrameEditor->setKeyFrame();
@@ -4400,9 +4400,9 @@ MainWindow::saveVolume()
   m_Hires->getClipForMask(clipPos, clipNormal);
 
   m_Volume->saveVolume(m_Viewer->lookupTable(),
-		       clipPos, clipNormal,
-		       GeometryObjects::crops()->crops(),
-		       GeometryObjects::paths()->paths());
+           clipPos, clipNormal,
+           GeometryObjects::crops()->crops(),
+           GeometryObjects::paths()->paths());
 }
 void
 MainWindow::maskRawVolume()
@@ -4415,23 +4415,23 @@ MainWindow::maskRawVolume()
       Global::volumeType() == Global::RGBAVolume)
     {
       m_Volume->maskRawVolume(m_Viewer->lookupTable(),
-			      clipPos, clipNormal,
-			      GeometryObjects::crops()->crops(),
-			      GeometryObjects::paths()->paths());
+            clipPos, clipNormal,
+            GeometryObjects::crops()->crops(),
+            GeometryObjects::paths()->paths());
       return;
     }
 
   Vec bmin = m_Hires->volumeMin();
   Vec bmax = m_Hires->volumeMax();
   QBitArray bitmask = m_Volume->getBitmask(m_Viewer->lookupTable(),
-					   clipPos, clipNormal,
-					   GeometryObjects::crops()->crops(),
-					   GeometryObjects::paths()->paths());
+             clipPos, clipNormal,
+             GeometryObjects::crops()->crops(),
+             GeometryObjects::paths()->paths());
 
   RawVolume::maskRawVolume((int)bmin.x, (int)bmax.x,
-			   (int)bmin.y, (int)bmax.y,
-			   (int)bmin.z, (int)bmax.z,
-			   bitmask);
+         (int)bmin.y, (int)bmax.y,
+         (int)bmin.z, (int)bmax.z,
+         bitmask);
 }
 
 void
@@ -4442,9 +4442,9 @@ MainWindow::countIsolatedRegions()
   m_Hires->getClipForMask(clipPos, clipNormal);
 
   m_Volume->countIsolatedRegions(m_Viewer->lookupTable(),
-				 clipPos, clipNormal,
-				 GeometryObjects::crops()->crops(),
-				 GeometryObjects::paths()->paths());
+         clipPos, clipNormal,
+         GeometryObjects::crops()->crops(),
+         GeometryObjects::paths()->paths());
 }
 
 void
@@ -4455,9 +4455,9 @@ MainWindow::getSurfaceArea()
   m_Hires->getClipForMask(clipPos, clipNormal);
 
   m_Volume->getSurfaceArea(m_Viewer->lookupTable(),
-			   clipPos, clipNormal,
-			   GeometryObjects::crops()->crops(),
-			   GeometryObjects::paths()->paths());
+         clipPos, clipNormal,
+         GeometryObjects::crops()->crops(),
+         GeometryObjects::paths()->paths());
 }
 
 void MainWindow::getSurfaceArea(unsigned char tag) { }
@@ -4499,14 +4499,14 @@ MainWindow::extractClip(int clipIdx, int subsample, int tagvalue)
   int tfSet = clipInfo.tfSet[clipIdx];
 
   m_Hires->resliceUsingClipPlane(cpos, rot, thickness,
-				 vp, viewportScale, tfSet,
-				 subsample, tagvalue);
+         vp, viewportScale, tfSet,
+         subsample, tagvalue);
 }
 
 void
 MainWindow::viewProfile(int segments,
-			int radius,
-			QList<Vec> pathPoints)
+      int radius,
+      QList<Vec> pathPoints)
 {
   VoxelizedPath voxPath = StaticFunctions::voxelizePath(pathPoints);
   QMap<QString, QList<QVariant> > valueMap;
@@ -4534,13 +4534,13 @@ MainWindow::viewProfile(int segments,
     {
       QVariant qv = rawValues[i];
       if (qv.type() == QVariant::UInt)
-	values << qv.toUInt();
+  values << qv.toUInt();
       else if (qv.type() == QVariant::Int)
-	values << qv.toInt();
+  values << qv.toInt();
       else if (qv.type() == QVariant::Double)
-	values << qv.toDouble();
+  values << qv.toDouble();
       else
-	values << 0;
+  values << 0;
     }
 
 
@@ -4548,38 +4548,38 @@ MainWindow::viewProfile(int segments,
   //------
   QString pflnm;
   pflnm = QFileDialog::getSaveFileName(0,
-				       "Save profile to text file ?",
-				       Global::previousDirectory(),
-				       "Files (*.txt)",
-				       0,
-				       QFileDialog::DontUseNativeDialog);
+               "Save profile to text file ?",
+               Global::previousDirectory(),
+               "Files (*.txt)",
+               0,
+               QFileDialog::DontUseNativeDialog);
 
 
   if (! pflnm.isEmpty())
     {
       if (!StaticFunctions::checkExtension(pflnm, ".txt"))
-	pflnm += ".txt";
+  pflnm += ".txt";
 
       QFile pfile(pflnm);
       if (!pfile.open(QIODevice::WriteOnly | QIODevice::Text))
-	{
-	  QMessageBox::information(0, "Error",
-				   QString("Cannot open %1 for writing").arg(pflnm));
-	}
+  {
+    QMessageBox::information(0, "Error",
+           QString("Cannot open %1 for writing").arg(pflnm));
+  }
       else
-	{
-	  QTextStream out(&pfile);
-	  out << "Index   X    Y    Z    Value\n";
-	  for(int i=0; i<values.count(); i++)
-	    {
-	      out << i << "     ";
-	      out << voxPath.voxels[i].x << "     ";
-	      out << voxPath.voxels[i].y << "     ";
-	      out << voxPath.voxels[i].z << "     ";
-	      out << values[i];
-	      out << "\n";
-	    }
-	}
+  {
+    QTextStream out(&pfile);
+    out << "Index   X    Y    Z    Value\n";
+    for(int i=0; i<values.count(); i++)
+      {
+        out << i << "     ";
+        out << voxPath.voxels[i].x << "     ";
+        out << voxPath.voxels[i].y << "     ";
+        out << voxPath.voxels[i].z << "     ";
+        out << values[i];
+        out << "\n";
+      }
+  }
     }
   //------
   //------
@@ -4590,30 +4590,30 @@ MainWindow::viewProfile(int segments,
   if (radius > 0) // we need min and max bounds
     {
       for(int i=0; i<rawMin.count(); i++)
-	{
-	  QVariant qv = rawMin[i];
-	  if (qv.type() == QVariant::UInt)
-	    valMin << qv.toUInt();
-	  else if (qv.type() == QVariant::Int)
-	    valMin << qv.toInt();
-	  else if (qv.type() == QVariant::Double)
-	    valMin << qv.toDouble();
-	  else
-	    valMin << 0;
-	}
+  {
+    QVariant qv = rawMin[i];
+    if (qv.type() == QVariant::UInt)
+      valMin << qv.toUInt();
+    else if (qv.type() == QVariant::Int)
+      valMin << qv.toInt();
+    else if (qv.type() == QVariant::Double)
+      valMin << qv.toDouble();
+    else
+      valMin << 0;
+  }
 
       for(int i=0; i<rawMax.count(); i++)
-	{
-	  QVariant qv = rawMax[i];
-	  if (qv.type() == QVariant::UInt)
-	    valMax << qv.toUInt();
-	  else if (qv.type() == QVariant::Int)
-	    valMax << qv.toInt();
-	  else if (qv.type() == QVariant::Double)
-	    valMax << qv.toDouble();
-	  else
-	    valMax << 0;
-	}
+  {
+    QVariant qv = rawMax[i];
+    if (qv.type() == QVariant::UInt)
+      valMax << qv.toUInt();
+    else if (qv.type() == QVariant::Int)
+      valMax << qv.toInt();
+    else if (qv.type() == QVariant::Double)
+      valMax << qv.toDouble();
+    else
+      valMax << 0;
+  }
     }
 
   float vmin, vmax;
@@ -4621,39 +4621,39 @@ MainWindow::viewProfile(int segments,
     {
       vmin = vmax = values[0];
       for(int i=1; i<values.count(); i++)
-	{
-	  vmin = qMin(vmin, values[i]);
-	  vmax = qMax(vmax, values[i]);
-	}
+  {
+    vmin = qMin(vmin, values[i]);
+    vmax = qMax(vmax, values[i]);
+  }
     }
   else
     {
       vmin = valMin[0];
       for(int i=1; i<valMin.count(); i++)
-	vmin = qMin(vmin, valMin[i]);
+  vmin = qMin(vmin, valMin[i]);
 
       vmax = valMax[0];
       for(int i=1; i<valMax.count(); i++)
-	vmax = qMax(vmax, valMax[i]);
+  vmax = qMax(vmax, valMax[i]);
     }
 
   QList<uint> index;
   for(int i=0; i<voxPath.index.size(); i++)
     {
       if (i%segments == 0)
-	index.append(voxPath.index[i]);
+  index.append(voxPath.index[i]);
     }
   index.append(voxPath.index[voxPath.index.size()-1]);
 
   ProfileViewer *profileViewer = new ProfileViewer();
   if (radius == 0)
     profileViewer->setGraphValues(vmin, vmax,
-				  index,
-				  values);
+          index,
+          values);
   else
     profileViewer->setGraphValues(vmin, vmax,
-				  index,
-				  values, valMin, valMax);
+          index,
+          values, valMin, valMax);
 
   profileViewer->generateScene();
   profileViewer->show();
@@ -4661,47 +4661,47 @@ MainWindow::viewProfile(int segments,
 
 void
 MainWindow::viewThicknessProfile(int searchType,
-				 int segments,
-				 QList< QPair<Vec, Vec> > pathPoints)
+         int segments,
+         QList< QPair<Vec, Vec> > pathPoints)
 {
   VoxelizedPath voxPath = StaticFunctions::voxelizePath(pathPoints);
   QList<float> thickness;
   thickness = m_Volume->getThicknessProfile(searchType,
-					    m_Viewer->lookupTable(),
-					    voxPath.voxels,
-					    voxPath.normals);
+              m_Viewer->lookupTable(),
+              voxPath.voxels,
+              voxPath.normals);
 
   QString pflnm;
   pflnm = QFileDialog::getSaveFileName(0,
-				       "Save thickness profile to text file ?",
-				       Global::previousDirectory(),
-				       "Files (*.txt)",
-				       0,
-				       QFileDialog::DontUseNativeDialog);
+               "Save thickness profile to text file ?",
+               Global::previousDirectory(),
+               "Files (*.txt)",
+               0,
+               QFileDialog::DontUseNativeDialog);
 
   //------
   if (! pflnm.isEmpty())
     {
       if (!StaticFunctions::checkExtension(pflnm, ".txt"))
-	pflnm += ".txt";
+  pflnm += ".txt";
 
       QFile pfile(pflnm);
       if (!pfile.open(QIODevice::WriteOnly | QIODevice::Text))
-	{
-	  QMessageBox::information(0, "Error",
-				   QString("Cannot open %1 for writing").arg(pflnm));
-	}
+  {
+    QMessageBox::information(0, "Error",
+           QString("Cannot open %1 for writing").arg(pflnm));
+  }
       else
-	{
-	  QTextStream out(&pfile);
-	  out << "Index    Value\n";
-	  for(int i=0; i<thickness.count(); i++)
-	    {
-	      out << i << "     ";
-	      out << thickness[i];
-	      out << "\n";
-	    }
-	}
+  {
+    QTextStream out(&pfile);
+    out << "Index    Value\n";
+    for(int i=0; i<thickness.count(); i++)
+      {
+        out << i << "     ";
+        out << thickness[i];
+        out << "\n";
+      }
+  }
     }
   //------
 
@@ -4717,14 +4717,14 @@ MainWindow::viewThicknessProfile(int searchType,
   for(int i=0; i<voxPath.index.size(); i++)
     {
       if (i%segments == 0)
-	index.append(voxPath.index[i]);
+  index.append(voxPath.index[i]);
     }
   index.append(voxPath.index[voxPath.index.size()-1]);
 
   ProfileViewer *profileViewer = new ProfileViewer();
   profileViewer->setGraphValues(vmin, vmax,
-				index,
-				thickness);
+        index,
+        thickness);
 
   profileViewer->generateScene();
   profileViewer->show();
@@ -4732,12 +4732,12 @@ MainWindow::viewThicknessProfile(int searchType,
 
 void
 MainWindow::gridStickToSurface(int gidx, int rad,
-			       QList< QPair<Vec, Vec> > pn)
+             QList< QPair<Vec, Vec> > pn)
 {
   QList<Vec> pts;
   pts = m_Volume->stickToSurface(m_Viewer->lookupTable(),
-				 rad,
-				 pn);
+         rad,
+         pn);
 
   if (pts.count() > 0)
     GeometryObjects::grids()->setPoints(gidx, pts);
@@ -4873,15 +4873,15 @@ MainWindow::on_actionVisibility_triggered()
       bool flag = GeometryObjects::crops()->show(i);
       QString name;
       if (co[i].cropType() < CropObject::Tear_Tear)
-	name = QString("crop %1").arg(i);
+  name = QString("crop %1").arg(i);
       else if (co[i].cropType() < CropObject::Displace_Displace)
-	name = QString("dissect %1").arg(i);
+  name = QString("dissect %1").arg(i);
       else if (co[i].cropType() < CropObject::View_Tear)
-	name = QString("displace %1").arg(i);
+  name = QString("displace %1").arg(i);
       else if (co[i].cropType() < CropObject::Glow_Ball)
-	name = QString("blend %1").arg(i);
+  name = QString("blend %1").arg(i);
       else
-	name = QString("glow %1").arg(i);
+  name = QString("glow %1").arg(i);
 
       vlist.clear();
       vlist << QVariant("checkbox");
@@ -4912,20 +4912,20 @@ MainWindow::on_actionVisibility_triggered()
       QString name = slist[0];
       int idx = slist[1].toInt();
       if (pair.second)
-	{
-	  if (name == "light")
-	    LightHandler::giLights()->setShow(idx, pair.first.toBool());
-	  else if (name == "network")
-	    GeometryObjects::networks()->setShow(idx, pair.first.toBool());
-	  else if (name == "clipplane")
-	    GeometryObjects::clipplanes()->setShow(idx, pair.first.toBool());
-	  else if (name == "crop" ||
-		   name == "dissect" ||
-		   name == "displace" ||
-		   name == "blend" ||
-		   name == "glow")
-	    GeometryObjects::crops()->setShow(idx, pair.first.toBool());
-	}
+  {
+    if (name == "light")
+      LightHandler::giLights()->setShow(idx, pair.first.toBool());
+    else if (name == "network")
+      GeometryObjects::networks()->setShow(idx, pair.first.toBool());
+    else if (name == "clipplane")
+      GeometryObjects::clipplanes()->setShow(idx, pair.first.toBool());
+    else if (name == "crop" ||
+       name == "dissect" ||
+       name == "displace" ||
+       name == "blend" ||
+       name == "glow")
+      GeometryObjects::crops()->setShow(idx, pair.first.toBool());
+  }
     }
 }
 
@@ -5048,15 +5048,15 @@ MainWindow::on_actionMouse_Grab_triggered()
       bool flag = GeometryObjects::crops()->isInMouseGrabberPool(i);
       QString name;
       if (co[i].cropType() < CropObject::Tear_Tear)
-	name = QString("crop %1").arg(i);
+  name = QString("crop %1").arg(i);
       else if (co[i].cropType() < CropObject::Displace_Displace)
-	name = QString("dissect %1").arg(i);
+  name = QString("dissect %1").arg(i);
       else if (co[i].cropType() < CropObject::View_Tear)
-	name = QString("displace %1").arg(i);
+  name = QString("displace %1").arg(i);
       else if (co[i].cropType() < CropObject::Glow_Ball)
-	name = QString("blend %1").arg(i);
+  name = QString("blend %1").arg(i);
       else
-	name = QString("glow %1").arg(i);
+  name = QString("glow %1").arg(i);
 
       vlist.clear();
       vlist << QVariant("checkbox");
@@ -5088,67 +5088,67 @@ MainWindow::on_actionMouse_Grab_triggered()
       QString name = slist[0];
       int idx = slist[1].toInt();
       if (pair.second)
-	{
-	  if (name == "light")
-	    {
-	      if (pair.first.toBool())
-		LightHandler::giLights()->addInMouseGrabberPool(idx);
-	      else
-		LightHandler::giLights()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "triset")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::trisets()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::trisets()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "network")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::networks()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::networks()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "path")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::paths()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::paths()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "grid")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::grids()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::grids()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "crop" ||
-		   name == "dissect" ||
-		   name == "displace" ||
-		   name == "blend" ||
-		   name == "glow")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::crops()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::crops()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "pathgroup")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::pathgroups()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::pathgroups()->removeFromMouseGrabberPool(idx);
-	    }
-	  else if (name == "clipplane")
-	    {
-	      if (pair.first.toBool())
-		GeometryObjects::clipplanes()->addInMouseGrabberPool(idx);
-	      else
-		GeometryObjects::clipplanes()->removeFromMouseGrabberPool(idx);
-	    }
-	}
+  {
+    if (name == "light")
+      {
+        if (pair.first.toBool())
+    LightHandler::giLights()->addInMouseGrabberPool(idx);
+        else
+    LightHandler::giLights()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "triset")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::trisets()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::trisets()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "network")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::networks()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::networks()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "path")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::paths()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::paths()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "grid")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::grids()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::grids()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "crop" ||
+       name == "dissect" ||
+       name == "displace" ||
+       name == "blend" ||
+       name == "glow")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::crops()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::crops()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "pathgroup")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::pathgroups()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::pathgroups()->removeFromMouseGrabberPool(idx);
+      }
+    else if (name == "clipplane")
+      {
+        if (pair.first.toBool())
+    GeometryObjects::clipplanes()->addInMouseGrabberPool(idx);
+        else
+    GeometryObjects::clipplanes()->removeFromMouseGrabberPool(idx);
+      }
+  }
     }
 }

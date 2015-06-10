@@ -71,7 +71,7 @@ SplineInformation::operator=(const SplineInformation& splineInfo)
 }
 
 void SplineInformation::load ( const QConfigMe & cfg) {
-  
+
   m_name.clear();
   m_on.clear();
   m_points.clear();
@@ -91,9 +91,10 @@ void SplineInformation::load ( const QConfigMe & cfg) {
   cfg.getArrayValue("normalrotations", m_normalRotations);
   int sz = cfg.beginArray("GradientStops");
   for (int i=0; i<sz; i++) {
-    QGradientStop st;    
+    QGradientStop st;
     cfg.getValue("pos", st.first);
     cfg.getValue("col", st.second);
+    cfg.advanceArray();
     m_gradientStops.append(st);
   }
   cfg.endArray();
@@ -116,6 +117,7 @@ void SplineInformation::save ( QConfigMe & cfg) const {
   foreach(QGradientStop st, m_gradientStops) {
     cfg.setValue("pos", st.first);
     cfg.setValue("col", st.second);
+    cfg.advanceArray();
   }
   cfg.endArray();
   cfg.setValue("gbot", m_gbot);
@@ -127,8 +129,8 @@ void SplineInformation::save ( QConfigMe & cfg) const {
 
 SplineInformation
 SplineInformation::interpolate(SplineInformation& splineInfo1,
-			       SplineInformation& splineInfo2,
-			       float frc)
+             SplineInformation& splineInfo2,
+             float frc)
 {
   SplineInformation splineInfo;
   QPolygonF points, points1, points2;
@@ -146,25 +148,25 @@ SplineInformation::interpolate(SplineInformation& splineInfo1,
     {
       float x1, y1, x2, y2;
       if (i < m1)
-	{
-	  x1 = points1[i].x();
-	  y1 = points1[i].y();
-	}
+  {
+    x1 = points1[i].x();
+    y1 = points1[i].y();
+  }
       else
-	{
-	  x1 = points1[m1-1].x();
-	  y1 = points1[m1-1].y();
-	}
+  {
+    x1 = points1[m1-1].x();
+    y1 = points1[m1-1].y();
+  }
       if (i < m2)
-	{
-	  x2 = points2[i].x();
-	  y2 = points2[i].y();
-	}
+  {
+    x2 = points2[i].x();
+    y2 = points2[i].y();
+  }
       else
-	{
-	  x2 = points2[m2-1].x();
-	  y2 = points2[m2-1].y();
-	}
+  {
+    x2 = points2[m2-1].x();
+    y2 = points2[m2-1].y();
+  }
 
       float x, y;
       x = x1 + frc*(x2-x1);
@@ -181,25 +183,25 @@ SplineInformation::interpolate(SplineInformation& splineInfo1,
     {
       float x1, y1, x2, y2;
       if (i < m1)
-	{
-	  x1 = normalWidths1[i].x();
-	  y1 = normalWidths1[i].y();
-	}
+  {
+    x1 = normalWidths1[i].x();
+    y1 = normalWidths1[i].y();
+  }
       else
-	{
-	  x1 = normalWidths1[m1-1].x();
-	  y1 = normalWidths1[m1-1].y();
-	}
+  {
+    x1 = normalWidths1[m1-1].x();
+    y1 = normalWidths1[m1-1].y();
+  }
       if (i < m2)
-	{
-	  x2 = normalWidths2[i].x();
-	  y2 = normalWidths2[i].y();
-	}
+  {
+    x2 = normalWidths2[i].x();
+    y2 = normalWidths2[i].y();
+  }
       else
-	{
-	  x2 = normalWidths2[m2-1].x();
-	  y2 = normalWidths2[m2-1].y();
-	}
+  {
+    x2 = normalWidths2[m2-1].x();
+    y2 = normalWidths2[m2-1].y();
+  }
 
       float x, y;
       x = x1 + frc*(x2-x1);
@@ -232,8 +234,8 @@ SplineInformation::interpolate(SplineInformation& splineInfo1,
 
 
   gradStops = interpolateGradientStops(splineInfo1.gradientStops(),
-				       splineInfo2.gradientStops(),
-				       frc);
+               splineInfo2.gradientStops(),
+               frc);
 
 
   int bot1, top1, bot2, top2;
@@ -265,18 +267,18 @@ SplineInformation::interpolate(SplineInformation& splineInfo1,
 
 QList<SplineInformation>
 SplineInformation::interpolate(QList<SplineInformation> splineInfo1,
-			       QList<SplineInformation> splineInfo2,
-			       float frc)
+             QList<SplineInformation> splineInfo2,
+             float frc)
 {
 
   QList<SplineInformation> splineInfo;
 
   for(int i=0; i<qMin(splineInfo1.size(),
-		      splineInfo2.size()); i++)
+          splineInfo2.size()); i++)
     {
       splineInfo.append(interpolate(splineInfo1[i],
-				    splineInfo2[i],
-				    frc));
+            splineInfo2[i],
+            frc));
     }
 
   int st = splineInfo.size();
@@ -285,18 +287,18 @@ SplineInformation::interpolate(QList<SplineInformation> splineInfo1,
       QGradientStops stops = splineInfo1[i].gradientStops();
       QGradientStops newStops;
       for(int j=0; j<stops.size(); j++)
-	{
-	  float pos = stops[j].first;
-	  QColor col = stops[j].second;
-	  float r,g,b,a;
-	  r = col.red();
-	  g = col.green();
-	  b = col.blue();
-	  a = (1-frc)*col.alpha();
-	  col = QColor(r,g,b,a);
+  {
+    float pos = stops[j].first;
+    QColor col = stops[j].second;
+    float r,g,b,a;
+    r = col.red();
+    g = col.green();
+    b = col.blue();
+    a = (1-frc)*col.alpha();
+    col = QColor(r,g,b,a);
 
-	  newStops << QGradientStop(pos, col);
-	}
+    newStops << QGradientStop(pos, col);
+  }
 
       SplineInformation sinfo;
       sinfo.setName(splineInfo1[i].name());
@@ -322,18 +324,18 @@ SplineInformation::interpolate(QList<SplineInformation> splineInfo1,
       QGradientStops stops = splineInfo2[i].gradientStops();
       QGradientStops newStops;
       for(int j=0; j<stops.size(); j++)
-	{
-	  float pos = stops[j].first;
-	  QColor col = stops[j].second;
-	  float r,g,b,a;
-	  r = col.red();
-	  g = col.green();
-	  b = col.blue();
-	  a = frc*col.alpha();
-	  col = QColor(r,g,b,a);
+  {
+    float pos = stops[j].first;
+    QColor col = stops[j].second;
+    float r,g,b,a;
+    r = col.red();
+    g = col.green();
+    b = col.blue();
+    a = frc*col.alpha();
+    col = QColor(r,g,b,a);
 
-	  newStops << QGradientStop(pos, col);
-	}
+    newStops << QGradientStop(pos, col);
+  }
 
       SplineInformation sinfo;
       sinfo.setName(splineInfo2[i].name());
@@ -359,8 +361,8 @@ SplineInformation::interpolate(QList<SplineInformation> splineInfo1,
 
 QGradientStops
 SplineInformation::interpolateGradientStops(QGradientStops stops1,
-					    QGradientStops stops2,
-					    float frc)
+              QGradientStops stops2,
+              float frc)
 {
   QVector<float> pos;
 
@@ -372,15 +374,15 @@ SplineInformation::interpolateGradientStops(QGradientStops stops1,
       float pos2 = stops2[i].first;
       bool flag = true;
       for(int j=0; j<stops1.size(); j++)
-	{
-	  if (fabs(pos[j] - pos2) < 0.0001)
-	    {
-	      flag = false;
-	      break;
-	    }
-	}
+  {
+    if (fabs(pos[j] - pos2) < 0.0001)
+      {
+        flag = false;
+        break;
+      }
+  }
       if (flag)
-	pos.append(pos2);
+  pos.append(pos2);
     }
 
   qSort(pos.begin(), pos.end());

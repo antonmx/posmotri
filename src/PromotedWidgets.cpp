@@ -266,7 +266,7 @@ QDataStream &operator<<(QDataStream & stream, const Quaternion & qn) {
 QDataStream &operator>>(QDataStream & stream, Quaternion & qn) {
   qreal angle;
   Vec axis;
-  stream >> axis << angle;
+  stream >> axis >> angle;
   qn=Quaternion(axis, angle);
 }
 
@@ -276,7 +276,7 @@ QDataStream &operator>>(QDataStream & stream, Quaternion & qn) {
 void QConfigMe::levelUp() const {
   if (cpath.isEmpty())
     return;
-  int curpos = cpath.length()-1;   
+  int curpos = cpath.length()-1;
   int startpos=0;
   QString ret;
   while ( curpos && ! startpos ) {
@@ -318,59 +318,59 @@ void QConfigMe::read(const QString & fileName) {
   file.close();
 }
 
-bool QConfigMe::write(const QString & fileName) const {    
+bool QConfigMe::write(const QString & fileName) const {
   QFile file(fileName);
   if ( ! file.open(QIODevice::WriteOnly) ) {
     qDebug() << "Could not save configMe into file" << fileName;
     return false;
   }
-  QDataStream stream(&file);    
+  QDataStream stream(&file);
   foreach ( const QString & skey, store.keys() )
     stream << skey << QString(" ") << store[skey] << QString("\n");
   file.close();
 }
 
-int QConfigMe::lastElement() const {
+
+int QConfigMe::beginArray(const QString & key, bool toEnd) const {
+
+  beginGroup(key);
+
   int counter=0;
-  if (idxelement.isEmpty())
-    return counter;
-  QString prefix = cpath;
-  prefix.remove( idxelement.last(), cpath.length() );
+  QString prefix = cpath+"/";
   foreach (QString path, store.keys())
     if (path.indexOf(prefix)==0){
-      path.remove(0, prefix.length()+1);
-      path.remove(path.indexOf(QRegExp("[\\D]")), path.length() );
+      path.remove(0, prefix.length());
+      const int tr=path.indexOf(QRegExp("[\\D]"));
+      if (tr>=0)
+        path.truncate(tr);
       bool ok;
       const int el = path.toInt(&ok);
       if ( ok && el>counter )
-        counter = el;        
+        counter = el;
     }
-  return counter;
-}
 
-int QConfigMe::beginArray(const QString & key, bool toEnd) const {
-  beginGroup(key);
-  idxelement.append(cpath.size()+1);
-  const int counter = lastElement();
-  lastelement = toEnd ? counter : 0;
+  idxelement.append( qMakePair( cpath.length()+1,  toEnd ? counter : 0 ) );
   advanceArray();
+
   return counter;
-} 
+
+}
 
 int QConfigMe::advanceArray() const {
   if (idxelement.empty())
     return 0;
-  cpath.remove(idxelement.last()-1, cpath.length());
-  beginGroup(QString::number(++lastelement));
-  return lastelement;
+  QPair<int,int> & idxl = idxelement.last();
+  cpath.truncate(idxl.first-1);
+  idxl.second++;
+  beginGroup( QString::number( idxl.second ) );
+  return idxl.second;
 }
 
 void QConfigMe::endArray() const {
   if (idxelement.empty())
     return;
-  cpath.remove(idxelement.takeLast()-1, cpath.length());
+  cpath.truncate( idxelement.takeLast().first - 1 );
   levelUp();
-  lastelement = lastElement();
 }
 
 int QConfigMe::beginGroup(const QString & key) const {

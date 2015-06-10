@@ -134,43 +134,40 @@ QDataStream &operator>>(QDataStream &, qglviewer::Quaternion &);
 
 
 class QConfigMe {
-  
-private:  
-  
+
+private:
+
   static QString modifyKey(const QString &skey);
-  
+
   QMap <QString, QByteArray> store;
   mutable QString cpath;
-  mutable QList<int> idxelement;
-  mutable int lastelement;
-  
-  void levelUp() const;  
-  int lastElement() const;
-  
+  mutable QList< QPair<int,int> > idxelement;
+
+  void levelUp() const;
 
 public:
-  
+
   QConfigMe() {};
 
-  void read(const QString & fileName);  
+  void read(const QString & fileName);
   bool write(const QString & fileName) const ;
-  
-  
-  int beginArray(const QString & key, bool toEnd=false) const;  
-  int advanceArray() const;  
-  void endArray() const;  
-  int beginGroup(const QString & key) const;  
+
+
+  int beginArray(const QString & key, bool toEnd=false) const;
+  int advanceArray() const;
+  void endArray() const;
+  int beginGroup(const QString & key) const;
   void endGroup() const;
-  
+
   bool contains(const QString & key) const;
-  
+
   template <class Ecl> void setValue(const QString & key, const Ecl & val) {
     QByteArray bval;
     QDataStream sval(&bval, QIODevice::WriteOnly);
     sval << val;
     store[cpath + "/" + modifyKey(key)] = bval;
   }
-  
+
   template <class Ecl> bool getValue(const QString & key, Ecl & val) const {
     const QString skey = cpath + "/" + modifyKey(key);
     if ( ! store.contains(skey) )
@@ -179,7 +176,7 @@ public:
     sval >> val;
     return true;
   }
-  
+
   template <class Ecl> Ecl getValue(const QString & key) const {
     Ecl el;
     if ( ! getValue<Ecl>(key, el) )
@@ -199,7 +196,7 @@ public:
     }
     endArray();
   }
-  
+
   template <class Ecl> int getArrayValue(const QString & key, QList<Ecl> & valarr) const {
     const int sz = beginArray(key);
     QByteArray bval;
@@ -214,7 +211,7 @@ public:
     }
     endArray();
   }
-  
+
   template <class Ecl>
   void setClassArray(const QString & key, const QList<Ecl> & list) {
     beginArray(key);
@@ -224,7 +221,7 @@ public:
     }
     endArray();
   }
-  
+
   template <class Ecl>
   void getClassArray(const QString & key, QList<Ecl> & list) const {
     const int size = beginArray(key);
@@ -236,7 +233,7 @@ public:
     }
     endArray();
   }
-  
+
   template <class Ecl>
   void setClassArray(const QString & key, const QList<Ecl*> & list) {
     beginArray(key);
@@ -246,7 +243,7 @@ public:
     }
     endArray();
   }
-  
+
   template <class Ecl>
   void getClassArray(const QString & key, QList<Ecl*> & list) const {
     const int size = beginArray(key);
@@ -258,7 +255,7 @@ public:
     }
     endArray();
   }
-  
+
 };
 
 
