@@ -12,6 +12,7 @@
 
 using namespace qglviewer;
 
+
 int KeyFrame::numberOfKeyFrames() { return m_keyFrameInfo.count(); }
 
 KeyFrame::KeyFrame()
@@ -58,7 +59,7 @@ void
 KeyFrame::draw(float widgetSize)
 {
   for (QList<CameraPathNode*>::const_iterator it=m_cameraList.begin(),
-	 end=m_cameraList.end();
+   end=m_cameraList.end();
        it != end;
        ++it)
     {
@@ -72,7 +73,7 @@ KeyFrame::searchCaption(QStringList str)
   for(int i=0; i<m_keyFrameInfo.size(); i++)
     {
       if (m_keyFrameInfo[i]->hasCaption(str))
-	return m_keyFrameInfo[i]->frameNumber();
+  return m_keyFrameInfo[i]->frameNumber();
     }
   return -1;
 }
@@ -119,21 +120,21 @@ KeyFrame::reorder(QList<int> sorted)
 
 void
 KeyFrame::saveProject(Vec pos, Quaternion rot,
-		      float focusDistance,
-		      float eyeSeparation,
-		      int volumeNumber,
-		      int volumeNumber2,
-		      int volumeNumber3,
-		      int volumeNumber4,
-		      unsigned char *lut,
-		      LightingInformation lightInfo,
-		      QList<BrickInformation> brickInfo,
-		      Vec bmin, Vec bmax,
-		      QImage image,
-		      int sz, int st,
-		      QString xl, QString yl, QString zl,
-		      int mixvol, bool mixColor, bool mixOpacity, bool mixTag,
-		      QByteArray pb)
+          float focusDistance,
+          float eyeSeparation,
+          int volumeNumber,
+          int volumeNumber2,
+          int volumeNumber3,
+          int volumeNumber4,
+          unsigned char *lut,
+          LightingInformation lightInfo,
+          QList<BrickInformation> brickInfo,
+          Vec bmin, Vec bmax,
+          QImage image,
+          int sz, int st,
+          QString xl, QString yl, QString zl,
+          int mixvol, bool mixColor, bool mixOpacity, bool mixTag,
+          QByteArray pb)
 {
   m_savedKeyFrame.clear();
   m_savedKeyFrame.setFrameNumber(-1);
@@ -162,9 +163,9 @@ KeyFrame::saveProject(Vec pos, Quaternion rot,
   m_savedKeyFrame.setColorBars(GeometryObjects::colorbars()->colorbars());
   m_savedKeyFrame.setScaleBars(GeometryObjects::scalebars()->scalebars());
   m_savedKeyFrame.setPoints(GeometryObjects::hitpoints()->points(),
-			    GeometryObjects::hitpoints()->barePoints(),
-			    GeometryObjects::hitpoints()->pointSize(),
-			    GeometryObjects::hitpoints()->pointColor());
+          GeometryObjects::hitpoints()->barePoints(),
+          GeometryObjects::hitpoints()->pointSize(),
+          GeometryObjects::hitpoints()->pointColor());
   m_savedKeyFrame.setPaths(GeometryObjects::paths()->paths());
   m_savedKeyFrame.setGrids(GeometryObjects::grids()->grids());
   m_savedKeyFrame.setCrops(GeometryObjects::crops()->crops());
@@ -180,64 +181,64 @@ KeyFrame::saveProject(Vec pos, Quaternion rot,
 
 void
 KeyFrame::setKeyFrame(Vec pos, Quaternion rot,
-		      float focusDistance,
-		      float eyeSeparation,
-		      int frameNumber,
-		      unsigned char *lut,
-		      LightingInformation lightInfo,
-		      QList<BrickInformation> brickInfo,
-		      Vec bmin, Vec bmax,
-		      QImage image,
-		      QList<SplineInformation> splineInfo,
-		      int sz, int st,
-		      QString xl, QString yl, QString zl,
-		      int mixvol, bool mixColor, bool mixOpacity, bool mixTag)
+          float focusDistance,
+          float eyeSeparation,
+          int frameNumber,
+          unsigned char *lut,
+          LightingInformation lightInfo,
+          QList<BrickInformation> brickInfo,
+          Vec bmin, Vec bmax,
+          QImage image,
+          QList<SplineInformation> splineInfo,
+          int sz, int st,
+          QString xl, QString yl, QString zl,
+          int mixvol, bool mixColor, bool mixOpacity, bool mixTag)
 {
   int volumeNumber=0, volumeNumber2=0, volumeNumber3=0, volumeNumber4=0;
   volumeNumber = Global::volumeNumber();
   if (Global::volumeType() < Global::RGBVolume)
     {
       if (Global::volumeType() >= Global::DoubleVolume)
-	{
-	  volumeNumber2 = Global::volumeNumber(1);
-	  if (Global::volumeType() >= Global::TripleVolume)
-	    {
-	      volumeNumber3 = Global::volumeNumber(2);
-	      if (Global::volumeType() == Global::QuadVolume)
-		volumeNumber4 = Global::volumeNumber(3);
-	    }
-	}
+  {
+    volumeNumber2 = Global::volumeNumber(1);
+    if (Global::volumeType() >= Global::TripleVolume)
+      {
+        volumeNumber3 = Global::volumeNumber(2);
+        if (Global::volumeType() == Global::QuadVolume)
+    volumeNumber4 = Global::volumeNumber(3);
+      }
+  }
     }
 
   QByteArray pb = PruneHandler::getPruneBuffer();
 
   // -- save keyframe first into a m_savedKeyFrame
   saveProject(pos, rot,
-	      focusDistance,
-	      eyeSeparation,
-	      volumeNumber,
-	      volumeNumber2,
-	      volumeNumber3,
-	      volumeNumber4,
-	      lut,
-	      lightInfo,
-	      brickInfo,
-	      bmin, bmax,
-	      image,
-	      sz, st, xl, yl, zl,
-	      mixvol, mixColor, mixOpacity, mixTag,
-	      pb);
+        focusDistance,
+        eyeSeparation,
+        volumeNumber,
+        volumeNumber2,
+        volumeNumber3,
+        volumeNumber4,
+        lut,
+        lightInfo,
+        brickInfo,
+        bmin, bmax,
+        image,
+        sz, st, xl, yl, zl,
+        mixvol, mixColor, mixOpacity, mixTag,
+        pb);
 
   bool found = false;
   int kfn = -1;
   for(int i=0; i<m_keyFrameInfo.size(); i++)
     {
       if (m_keyFrameInfo[i]->frameNumber() == frameNumber)
-	{
-	  kfn= i;
-	  found = true;
-	  break;
-	}
+  {
+    kfn= i;
+    found = true;
+    break;
+  }
     }
 
   CameraPathNode *cam;
@@ -250,7 +251,7 @@ KeyFrame::setKeyFrame(Vec pos, Quaternion rot,
       cam = new CameraPathNode(pos, rot);
       m_cameraList.append(cam);
       connect(cam, SIGNAL(modified()),
-	      this, SLOT(updateKeyFrameInterpolator()));
+        this, SLOT(updateKeyFrameInterpolator()));
 
       kfi = new KeyFrameInformation();
       m_keyFrameInfo.append(kfi);
@@ -290,9 +291,9 @@ KeyFrame::setKeyFrame(Vec pos, Quaternion rot,
   kfi->setColorBars(GeometryObjects::colorbars()->colorbars());
   kfi->setScaleBars(GeometryObjects::scalebars()->scalebars());
   kfi->setPoints(GeometryObjects::hitpoints()->points(),
-		 GeometryObjects::hitpoints()->barePoints(),
-		 GeometryObjects::hitpoints()->pointSize(),
-		 GeometryObjects::hitpoints()->pointColor());
+     GeometryObjects::hitpoints()->barePoints(),
+     GeometryObjects::hitpoints()->pointSize(),
+     GeometryObjects::hitpoints()->pointColor());
   kfi->setPaths(GeometryObjects::paths()->paths());
   kfi->setGrids(GeometryObjects::grids()->grids());
   kfi->setCrops(GeometryObjects::crops()->crops());
@@ -367,9 +368,9 @@ KeyFrame::removeKeyFrames(int f0, int f1)
 
 void
 KeyFrame::interpolateAt(int kf, float frc,
-			Vec &pos, Quaternion &rot,
-			KeyFrameInformation &kfi,
-			float &volInterp)
+      Vec &pos, Quaternion &rot,
+      KeyFrameInformation &kfi,
+      float &volInterp)
 {
   volInterp = 0.0f;
 
@@ -432,10 +433,10 @@ KeyFrame::interpolateAt(int kf, float frc,
   rfrc = StaticFunctions::remapKeyframe(m_keyFrameInfo[kf]->interpFocus(), frc);
   float focusDistance = m_keyFrameInfo[kf]->focusDistance() +
                         rfrc*(m_keyFrameInfo[kf+1]->focusDistance() -
-			      m_keyFrameInfo[kf]->focusDistance());
+            m_keyFrameInfo[kf]->focusDistance());
   float es = m_keyFrameInfo[kf]->eyeSeparation() +
                         rfrc*(m_keyFrameInfo[kf+1]->eyeSeparation() -
-			      m_keyFrameInfo[kf]->eyeSeparation());
+            m_keyFrameInfo[kf]->eyeSeparation());
   kfi.setFocusDistance(focusDistance, es);
   //-------------------------------
 
@@ -445,23 +446,23 @@ KeyFrame::interpolateAt(int kf, float frc,
   if (volnum != m_keyFrameInfo[kf+1]->volumeNumber())
     {
       volInterp = volnum +
-	          frc*(m_keyFrameInfo[kf+1]->volumeNumber() - volnum);
+            frc*(m_keyFrameInfo[kf+1]->volumeNumber() - volnum);
 
       if (volnum < m_keyFrameInfo[kf+1]->volumeNumber())
-	{
-	  volnum = volInterp;
-	  volInterp -= volnum; // get fractional part
-	  if (volInterp > 0.999)
-	    {
-	      volnum++;
-	      volInterp = 0.0;
-	    }
-	}
+  {
+    volnum = volInterp;
+    volInterp -= volnum; // get fractional part
+    if (volInterp > 0.999)
+      {
+        volnum++;
+        volInterp = 0.0;
+      }
+  }
       else
-	{
-	  volnum = ceil(volInterp);
-	  volInterp = volnum - volInterp; // get fractional part
-	}
+  {
+    volnum = ceil(volInterp);
+    volInterp = volnum - volInterp; // get fractional part
+  }
     }
   kfi.setVolumeNumber(volnum);
 
@@ -471,15 +472,15 @@ KeyFrame::interpolateAt(int kf, float frc,
   if (volnum != m_keyFrameInfo[kf+1]->volumeNumber2())
     {
       float vi = volnum +
-	          frc*(m_keyFrameInfo[kf+1]->volumeNumber2() - volnum);
+            frc*(m_keyFrameInfo[kf+1]->volumeNumber2() - volnum);
       if (volnum < m_keyFrameInfo[kf+1]->volumeNumber2())
-	{
-	  volnum = vi;
-	  if (vi-volnum > 0.999)
-	    volnum++;
-	}
+  {
+    volnum = vi;
+    if (vi-volnum > 0.999)
+      volnum++;
+  }
       else
-	volnum = ceil(vi);
+  volnum = ceil(vi);
     }
   kfi.setVolumeNumber2(volnum);
 
@@ -487,15 +488,15 @@ KeyFrame::interpolateAt(int kf, float frc,
   if (volnum != m_keyFrameInfo[kf+1]->volumeNumber3())
     {
       float vi = volnum +
-	          frc*(m_keyFrameInfo[kf+1]->volumeNumber3() - volnum);
+            frc*(m_keyFrameInfo[kf+1]->volumeNumber3() - volnum);
       if (volnum < m_keyFrameInfo[kf+1]->volumeNumber3())
-	{
-	  volnum = vi;
-	  if (vi-volnum > 0.999)
-	    volnum++;
-	}
+  {
+    volnum = vi;
+    if (vi-volnum > 0.999)
+      volnum++;
+  }
       else
-	volnum = ceil(vi);
+  volnum = ceil(vi);
     }
   kfi.setVolumeNumber3(volnum);
 
@@ -503,15 +504,15 @@ KeyFrame::interpolateAt(int kf, float frc,
   if (volnum != m_keyFrameInfo[kf+1]->volumeNumber4())
     {
       float vi = volnum +
-	          frc*(m_keyFrameInfo[kf+1]->volumeNumber4() - volnum);
+            frc*(m_keyFrameInfo[kf+1]->volumeNumber4() - volnum);
       if (volnum < m_keyFrameInfo[kf+1]->volumeNumber4())
-	{
-	  volnum = vi;
-	  if (vi-volnum > 0.999)
-	    volnum++;
-	}
+  {
+    volnum = vi;
+    if (vi-volnum > 0.999)
+      volnum++;
+  }
       else
-	volnum = ceil(vi);
+  volnum = ceil(vi);
     }
   kfi.setVolumeNumber4(volnum);
   //-------------------------------
@@ -527,7 +528,7 @@ KeyFrame::interpolateAt(int kf, float frc,
 
 //#ifdef MAC_OS_X_VERSION_10_8
       for(int j=0; j<Global::lutSize()*256*256*4; j++)
-	lut[j] = (1.0-rfrc)*lut1[j] + rfrc*lut2[j];
+  lut[j] = (1.0-rfrc)*lut1[j] + rfrc*lut2[j];
 //#else
 //      // convert into HSV space and then interpolate
 //      for (int j=0; j<Global::lutSize()*256*256; j++)
@@ -719,8 +720,8 @@ KeyFrame::interpolateAt(int kf, float frc,
   Vec ptcol1 = m_keyFrameInfo[kf+1]->pointColor();
   Vec ptcol = ptcol0 + frc*(ptcol1-ptcol0);
   kfi.setPoints(m_keyFrameInfo[kf]->points(),
-		m_keyFrameInfo[kf]->barepoints(),
-		ptsz, ptcol);
+    m_keyFrameInfo[kf]->barepoints(),
+    ptsz, ptcol);
   kfi.setGrids(m_keyFrameInfo[kf]->grids());
 
   //kfi.setPaths(m_keyFrameInfo[kf]->paths());
@@ -876,11 +877,11 @@ KeyFrame::playSavedKeyFrame()
   m_savedKeyFrame.getMix(mv, mc, mo, mt);
 
   emit updateParameters(drawBox, drawAxis,
-			backgroundColor,
-			backgroundImage,
-			sz, st, xl, yl, zl,
-			mv, mc, mo, 0.0f, mt,
-			m_savedKeyFrame.pruneBlend());
+      backgroundColor,
+      backgroundImage,
+      sz, st, xl, yl, zl,
+      mv, mc, mo, 0.0f, mt,
+      m_savedKeyFrame.pruneBlend());
 
   QByteArray pb = m_savedKeyFrame.pruneBuffer();
   if (! pb.isEmpty())
@@ -915,130 +916,130 @@ KeyFrame::playFrameNumber(int fno)
   for(int kf=0; kf<numberOfKeyFrames(); kf++)
     {
       if (fno == m_keyFrameInfo[kf]->frameNumber())
-	{
-	  Global::disableViewerUpdate();
-	  MainWindowUI::changeDrishtiIcon(false);
+  {
+    Global::disableViewerUpdate();
+    MainWindowUI::changeDrishtiIcon(false);
 
-	  Vec pos;
-	  Quaternion rot;
-	  pos = m_keyFrameInfo[kf]->position();
-	  rot = m_keyFrameInfo[kf]->orientation();
-	  float focusDistance = m_keyFrameInfo[kf]->focusDistance();
-	  float es = m_keyFrameInfo[kf]->eyeSeparation();
-	  emit updateFocus(focusDistance, es);
-	  emit updateLookFrom(pos, rot, focusDistance, es);
+    Vec pos;
+    Quaternion rot;
+    pos = m_keyFrameInfo[kf]->position();
+    rot = m_keyFrameInfo[kf]->orientation();
+    float focusDistance = m_keyFrameInfo[kf]->focusDistance();
+    float es = m_keyFrameInfo[kf]->eyeSeparation();
+    emit updateFocus(focusDistance, es);
+    emit updateLookFrom(pos, rot, focusDistance, es);
 
-	  Vec bmin, bmax;
-	  m_keyFrameInfo[kf]->volumeBounds(bmin, bmax);
+    Vec bmin, bmax;
+    m_keyFrameInfo[kf]->volumeBounds(bmin, bmax);
 
-	  emit updateVolumeBounds(bmin, bmax);
+    emit updateVolumeBounds(bmin, bmax);
 
-	  if (Global::volumeType() == Global::SingleVolume)
-	    {
-	      int volnum = m_keyFrameInfo[kf]->volumeNumber();
-	      emit updateVolInfo(volnum);
-	      emit updateVolumeBounds(volnum, bmin, bmax);
-	    }
-	  else if (Global::volumeType() == Global::DoubleVolume)
-	    {
-	      int volnum1 = m_keyFrameInfo[kf]->volumeNumber();
-	      int volnum2 = m_keyFrameInfo[kf]->volumeNumber2();
-	      emit updateVolInfo(volnum1);
-	      emit updateVolInfo(1, volnum2);
-	      emit updateVolumeBounds(volnum1, volnum2, bmin, bmax);
-	    }
-	  else if (Global::volumeType() == Global::TripleVolume)
-	    {
-	      int volnum1 = m_keyFrameInfo[kf]->volumeNumber();
-	      int volnum2 = m_keyFrameInfo[kf]->volumeNumber2();
-	      int volnum3 = m_keyFrameInfo[kf]->volumeNumber3();
-	      emit updateVolInfo(volnum1);
-	      emit updateVolInfo(1, volnum2);
-	      emit updateVolInfo(2, volnum3);
-	      emit updateVolumeBounds(volnum1, volnum2, volnum3, bmin, bmax);
-	    }
-	  else if (Global::volumeType() == Global::QuadVolume)
-	    {
-	      int volnum1 = m_keyFrameInfo[kf]->volumeNumber();
-	      int volnum2 = m_keyFrameInfo[kf]->volumeNumber2();
-	      int volnum3 = m_keyFrameInfo[kf]->volumeNumber3();
-	      int volnum4 = m_keyFrameInfo[kf]->volumeNumber4();
-	      emit updateVolInfo(volnum1);
-	      emit updateVolInfo(1, volnum2);
-	      emit updateVolInfo(2, volnum3);
-	      emit updateVolInfo(3, volnum4);
-	      emit updateVolumeBounds(volnum1, volnum2, volnum3, volnum4, bmin, bmax);
-	    }
+    if (Global::volumeType() == Global::SingleVolume)
+      {
+        int volnum = m_keyFrameInfo[kf]->volumeNumber();
+        emit updateVolInfo(volnum);
+        emit updateVolumeBounds(volnum, bmin, bmax);
+      }
+    else if (Global::volumeType() == Global::DoubleVolume)
+      {
+        int volnum1 = m_keyFrameInfo[kf]->volumeNumber();
+        int volnum2 = m_keyFrameInfo[kf]->volumeNumber2();
+        emit updateVolInfo(volnum1);
+        emit updateVolInfo(1, volnum2);
+        emit updateVolumeBounds(volnum1, volnum2, bmin, bmax);
+      }
+    else if (Global::volumeType() == Global::TripleVolume)
+      {
+        int volnum1 = m_keyFrameInfo[kf]->volumeNumber();
+        int volnum2 = m_keyFrameInfo[kf]->volumeNumber2();
+        int volnum3 = m_keyFrameInfo[kf]->volumeNumber3();
+        emit updateVolInfo(volnum1);
+        emit updateVolInfo(1, volnum2);
+        emit updateVolInfo(2, volnum3);
+        emit updateVolumeBounds(volnum1, volnum2, volnum3, bmin, bmax);
+      }
+    else if (Global::volumeType() == Global::QuadVolume)
+      {
+        int volnum1 = m_keyFrameInfo[kf]->volumeNumber();
+        int volnum2 = m_keyFrameInfo[kf]->volumeNumber2();
+        int volnum3 = m_keyFrameInfo[kf]->volumeNumber3();
+        int volnum4 = m_keyFrameInfo[kf]->volumeNumber4();
+        emit updateVolInfo(volnum1);
+        emit updateVolInfo(1, volnum2);
+        emit updateVolInfo(2, volnum3);
+        emit updateVolInfo(3, volnum4);
+        emit updateVolumeBounds(volnum1, volnum2, volnum3, volnum4, bmin, bmax);
+      }
 
-	  GeometryObjects::captions()->setCaptions(m_keyFrameInfo[kf]->captions());
-	  GeometryObjects::colorbars()->setColorBars(m_keyFrameInfo[kf]->colorbars());
-	  GeometryObjects::scalebars()->setScaleBars(m_keyFrameInfo[kf]->scalebars());
-	  GeometryObjects::hitpoints()->setPoints(m_keyFrameInfo[kf]->points());
-	  GeometryObjects::hitpoints()->setBarePoints(m_keyFrameInfo[kf]->barepoints());
-	  GeometryObjects::hitpoints()->setPointSize(m_keyFrameInfo[kf]->pointSize());
-	  GeometryObjects::hitpoints()->setPointColor(m_keyFrameInfo[kf]->pointColor());
-	  GeometryObjects::paths()->setPaths(m_keyFrameInfo[kf]->paths());
-	  GeometryObjects::grids()->setGrids(m_keyFrameInfo[kf]->grids());
-	  GeometryObjects::crops()->setCrops(m_keyFrameInfo[kf]->crops());
-	  GeometryObjects::pathgroups()->setPaths(m_keyFrameInfo[kf]->pathgroups());
-	  GeometryObjects::trisets()->set(m_keyFrameInfo[kf]->trisets());
-	  GeometryObjects::networks()->set(m_keyFrameInfo[kf]->networks());
-	  GeometryObjects::clipplanes()->set(m_keyFrameInfo[kf]->clipInfo());
+    GeometryObjects::captions()->setCaptions(m_keyFrameInfo[kf]->captions());
+    GeometryObjects::colorbars()->setColorBars(m_keyFrameInfo[kf]->colorbars());
+    GeometryObjects::scalebars()->setScaleBars(m_keyFrameInfo[kf]->scalebars());
+    GeometryObjects::hitpoints()->setPoints(m_keyFrameInfo[kf]->points());
+    GeometryObjects::hitpoints()->setBarePoints(m_keyFrameInfo[kf]->barepoints());
+    GeometryObjects::hitpoints()->setPointSize(m_keyFrameInfo[kf]->pointSize());
+    GeometryObjects::hitpoints()->setPointColor(m_keyFrameInfo[kf]->pointColor());
+    GeometryObjects::paths()->setPaths(m_keyFrameInfo[kf]->paths());
+    GeometryObjects::grids()->setGrids(m_keyFrameInfo[kf]->grids());
+    GeometryObjects::crops()->setCrops(m_keyFrameInfo[kf]->crops());
+    GeometryObjects::pathgroups()->setPaths(m_keyFrameInfo[kf]->pathgroups());
+    GeometryObjects::trisets()->set(m_keyFrameInfo[kf]->trisets());
+    GeometryObjects::networks()->set(m_keyFrameInfo[kf]->networks());
+    GeometryObjects::clipplanes()->set(m_keyFrameInfo[kf]->clipInfo());
 
-	  LightHandler::setGiLightInfo(m_keyFrameInfo[kf]->giLightInfo());
+    LightHandler::setGiLightInfo(m_keyFrameInfo[kf]->giLightInfo());
 
-	  emit updateBrickInfo(m_keyFrameInfo[kf]->brickInfo());
-	  emit updateLightInfo(m_keyFrameInfo[kf]->lightInfo());
+    emit updateBrickInfo(m_keyFrameInfo[kf]->brickInfo());
+    emit updateLightInfo(m_keyFrameInfo[kf]->lightInfo());
 
-	  emit updateMorph(m_keyFrameInfo[kf]->morphTF());
+    emit updateMorph(m_keyFrameInfo[kf]->morphTF());
 
-	  if (m_keyFrameInfo[kf]->splineInfo().size() == 0 ||
-	      Global::replaceTF() == false)
-	    {
-	      // update lookup tables only
-	      if (m_keyFrameInfo[kf]->lut())
-		emit updateLookupTable(m_keyFrameInfo[kf]->lut());
-	    }
-	  else
-	    {
-	      // update transfer functions which in turn will update lookup tables
-	      emit updateTransferFunctionManager(m_keyFrameInfo[kf]->splineInfo());
-	    }
+    if (m_keyFrameInfo[kf]->splineInfo().size() == 0 ||
+        Global::replaceTF() == false)
+      {
+        // update lookup tables only
+        if (m_keyFrameInfo[kf]->lut())
+    emit updateLookupTable(m_keyFrameInfo[kf]->lut());
+      }
+    else
+      {
+        // update transfer functions which in turn will update lookup tables
+        emit updateTransferFunctionManager(m_keyFrameInfo[kf]->splineInfo());
+      }
 
-	  Global::setTagColors(m_keyFrameInfo[kf]->tagColors());
-	  emit updateTagColors();
+    Global::setTagColors(m_keyFrameInfo[kf]->tagColors());
+    emit updateTagColors();
 
-	  bool drawBox = m_keyFrameInfo[kf]->drawBox();
-	  bool drawAxis = m_keyFrameInfo[kf]->drawAxis();
-	  Vec backgroundColor = m_keyFrameInfo[kf]->backgroundColor();
-	  QString backgroundImage = m_keyFrameInfo[kf]->backgroundImageFile();
-	  int sz, st;
-	  QString xl, yl, zl;
-	  m_keyFrameInfo[kf]->getTick(sz, st, xl, yl, zl);
-	  int mv;
-	  bool mc, mo, mt;
-	  m_keyFrameInfo[kf]->getMix(mv, mc, mo, mt);
+    bool drawBox = m_keyFrameInfo[kf]->drawBox();
+    bool drawAxis = m_keyFrameInfo[kf]->drawAxis();
+    Vec backgroundColor = m_keyFrameInfo[kf]->backgroundColor();
+    QString backgroundImage = m_keyFrameInfo[kf]->backgroundImageFile();
+    int sz, st;
+    QString xl, yl, zl;
+    m_keyFrameInfo[kf]->getTick(sz, st, xl, yl, zl);
+    int mv;
+    bool mc, mo, mt;
+    m_keyFrameInfo[kf]->getMix(mv, mc, mo, mt);
 
-	  emit updateParameters(drawBox, drawAxis,
-				backgroundColor,
-				backgroundImage,
-				sz, st, xl, yl, zl,
-				mv, mc, mo, 0.0f, mt,
-				m_keyFrameInfo[kf]->pruneBlend());
+    emit updateParameters(drawBox, drawAxis,
+        backgroundColor,
+        backgroundImage,
+        sz, st, xl, yl, zl,
+        mv, mc, mo, 0.0f, mt,
+        m_keyFrameInfo[kf]->pruneBlend());
 
-	  QByteArray pb = m_keyFrameInfo[kf]->pruneBuffer();
-	  if (! pb.isEmpty())
-	    PruneHandler::setPruneBuffer(pb);
+    QByteArray pb = m_keyFrameInfo[kf]->pruneBuffer();
+    if (! pb.isEmpty())
+      PruneHandler::setPruneBuffer(pb);
 
-	  Global::enableViewerUpdate();
-	  MainWindowUI::changeDrishtiIcon(true);
-	  Global::setPlayFrames(true);
+    Global::enableViewerUpdate();
+    MainWindowUI::changeDrishtiIcon(true);
+    Global::setPlayFrames(true);
 
-	  emit updateGL();
-	  qApp->processEvents();
+    emit updateGL();
+    qApp->processEvents();
 
-	  return;
-	}
+    return;
+  }
     }
 
 
@@ -1047,19 +1048,19 @@ KeyFrame::playFrameNumber(int fno)
   for(int kf=1; kf<numberOfKeyFrames(); kf++)
     {
       if (fno <= m_keyFrameInfo[kf]->frameNumber())
-	{
-	  i = kf-1;
+  {
+    i = kf-1;
 
-	  if ( m_keyFrameInfo[i+1]->frameNumber() >
-	       m_keyFrameInfo[i]->frameNumber())
-	    frc = ((float)(fno-m_keyFrameInfo[i]->frameNumber()) /
-		   (float)(m_keyFrameInfo[i+1]->frameNumber() -
-			   m_keyFrameInfo[i]->frameNumber()));
-	  else
-	    frc = 1;
+    if ( m_keyFrameInfo[i+1]->frameNumber() >
+         m_keyFrameInfo[i]->frameNumber())
+      frc = ((float)(fno-m_keyFrameInfo[i]->frameNumber()) /
+       (float)(m_keyFrameInfo[i+1]->frameNumber() -
+         m_keyFrameInfo[i]->frameNumber()));
+    else
+      frc = 1;
 
-	  break;
-	}
+    break;
+  }
     }
 
   Global::disableViewerUpdate();
@@ -1070,10 +1071,10 @@ KeyFrame::playFrameNumber(int fno)
   KeyFrameInformation keyFrameInfo;
   float volInterp;
   interpolateAt(i, frc,
-		pos, rot,
-		keyFrameInfo,
+    pos, rot,
+    keyFrameInfo,
 
-		volInterp);
+    volInterp);
 
   float focusDistance = keyFrameInfo.focusDistance();
   float es = keyFrameInfo.eyeSeparation();
@@ -1149,7 +1150,7 @@ KeyFrame::playFrameNumber(int fno)
     {
       // update lookup tables only
       if (keyFrameInfo.lut())
-	emit updateLookupTable(keyFrameInfo.lut());
+  emit updateLookupTable(keyFrameInfo.lut());
     }
   else
     {
@@ -1171,11 +1172,11 @@ KeyFrame::playFrameNumber(int fno)
   bool mc, mo, mt;
   keyFrameInfo.getMix(mv, mc, mo, mt);
   emit updateParameters(drawBox, drawAxis,
-			backgroundColor,
-			backgroundImage,
-			sz, st, xl, yl, zl,
-			mv, mc, mo, volInterp, mt,
-			keyFrameInfo.pruneBlend());
+      backgroundColor,
+      backgroundImage,
+      sz, st, xl, yl, zl,
+      mv, mc, mo, volInterp, mt,
+      keyFrameInfo.pruneBlend());
 
   QByteArray pb = keyFrameInfo.pruneBuffer();
   if (! pb.isEmpty())
@@ -1207,10 +1208,10 @@ KeyFrame::computeTangents()
     {
       Quaternion currQ = m_keyFrameInfo[kf]->orientation();
       if (Quaternion::dot(prevQ, currQ) < 0.0)
-	{
-	  currQ.negate();
-	  m_keyFrameInfo[kf]->setOrientation(currQ);
-	}
+  {
+    currQ.negate();
+    m_keyFrameInfo[kf]->setOrientation(currQ);
+  }
       prevQ = currQ;
     }
   // ------------------------------------
@@ -1227,10 +1228,10 @@ KeyFrame::computeTangents()
   for(int kf=0; kf<nkf; kf++)
     {
       if (kf < nkf-1)
-	{
-	  nextP = m_keyFrameInfo[kf+1]->position();
-	  nextQ = m_keyFrameInfo[kf+1]->orientation();
-	}
+  {
+    nextP = m_keyFrameInfo[kf+1]->position();
+    nextQ = m_keyFrameInfo[kf+1]->orientation();
+  }
       Vec tgP = 0.5*(nextP - prevP);
       Quaternion tgQ = Quaternion::squadTangent(prevQ, currQ, nextQ);
 
@@ -1251,20 +1252,20 @@ KeyFrame::interpolatePosition(int kf1, int kf2, float frc)
   Vec pos = m_keyFrameInfo[kf1]->position();
 
   Vec diff = m_keyFrameInfo[kf2]->position() -
-	     m_keyFrameInfo[kf1]->position();
+       m_keyFrameInfo[kf1]->position();
 
   float len = diff.squaredNorm();
   if (len > 0.1)
     {
       if (Global::interpolationType(Global::CameraPositionInterpolation))
-	{ // spline interpolation of position
-	  Vec v1 = 3*diff - 2*m_tgP[kf1] - m_tgP[kf2];
-	  Vec v2 = -2*diff + m_tgP[kf1] + m_tgP[kf2];
+  { // spline interpolation of position
+    Vec v1 = 3*diff - 2*m_tgP[kf1] - m_tgP[kf2];
+    Vec v2 = -2*diff + m_tgP[kf1] + m_tgP[kf2];
 
-	  pos += frc*(m_tgP[kf1] + frc*(v1+frc*v2));
-	}
+    pos += frc*(m_tgP[kf1] + frc*(v1+frc*v2));
+  }
       else // linear interpolation of position
-	pos += frc*diff;
+  pos += frc*diff;
     }
 
   return pos;
@@ -1293,10 +1294,10 @@ KeyFrame::interpolateOrientation(int kf1, int kf2, float frc)
     {
       Quaternion q;
       q = Quaternion::squad(q1,
-			    m_tgQ[kf1],
-			    m_tgQ[kf2],
-			    q2,
-			    frc);
+          m_tgQ[kf1],
+          m_tgQ[kf2],
+          q2,
+          frc);
       return q;
     }
   else
@@ -1310,7 +1311,7 @@ KeyFrame::copyFrame(int kfn)
     m_copyKeyFrame = *m_keyFrameInfo[kfn];
   else
     QMessageBox::information(0, "Error",
-			     QString("KeyFrame %1 not present for copying").arg(kfn));
+           QString("KeyFrame %1 not present for copying").arg(kfn));
 }
 void
 KeyFrame::pasteFrame(int frameNumber)
@@ -1319,10 +1320,10 @@ KeyFrame::pasteFrame(int frameNumber)
   KeyFrameInformation *kfi;
 
   cam = new CameraPathNode(m_copyKeyFrame.position(),
-			   m_copyKeyFrame.orientation());
+         m_copyKeyFrame.orientation());
   m_cameraList.append(cam);
   connect(cam, SIGNAL(modified()),
-	  this, SLOT(updateKeyFrameInterpolator()));
+    this, SLOT(updateKeyFrameInterpolator()));
 
   kfi = new KeyFrameInformation();
   *kfi = m_copyKeyFrame;
@@ -1332,113 +1333,55 @@ KeyFrame::pasteFrame(int frameNumber)
   updateKeyFrameInterpolator();
 }
 
-void
-KeyFrame::editFrameInterpolation(int kfn)
-{
+
+
+
+
+void KeyFrame::editFrameInterpolation(int kfn) {
+
+  QDialog dial;
+  Ui::Interpolation * ui = new Ui::Interpolation;
+  ui->setupUi(&dial);
+
   KeyFrameInformation *kfi = m_keyFrameInfo[kfn];
 
-  PropertyEditor propertyEditor;
-  QMap<QString, QVariantList> plist;
+  ui->backgroundColor->setCurrentIndex(kfi->interpBGColor());
+  ui->captions->setCurrentIndex(kfi->interpCaptions());
+  ui->focus->setCurrentIndex(kfi->interpFocus());
+  ui->tagColors->setCurrentIndex(kfi->interpTagColors());
+  ui->tickInformation->setCurrentIndex(kfi->interpTickInfo());
+  ui->volumeBounds->setCurrentIndex(kfi->interpVolumeBounds());
+  ui->cameraPosition->setCurrentIndex(kfi->interpCameraPosition());
+  ui->cameraOrientation->setCurrentIndex(kfi->interpCameraOrientation());
+  ui->brickInformation->setCurrentIndex(kfi->interpBrickInfo());
+  ui->clipPlanes->setCurrentIndex(kfi->interpClipInfo());
+  ui->lighting->setCurrentIndex(kfi->interpLightInfo());
+  ui->giLighting->setCurrentIndex(kfi->interpGiLightInfo());
+  ui->transferFunctions->setCurrentIndex(kfi->interpTF());
+  ui->cdbd->setCurrentIndex(kfi->interpCrop());
+  ui->mop->setCurrentIndex(kfi->interpMop());
 
-  QStringList keys;
-  keys << "background color";
-  keys << "captions";
-  keys << "focus";
-  keys << "tag colors";
-  keys << "tick information";
-  keys << "volume bounds";
-  keys << "separator";
-  keys << "camera position";
-  keys << "camera orientation";
-  keys << "separator";
-  keys << "brick information";
-  keys << "clip planes";
-  keys << "lighting";
-  keys << "gi lighting";
-  keys << "transfer functions";
-  keys << "crop/dissect/blend/displace";
-  keys << "mop";
+  if ( dial.exec() != QDialog::Accepted )
+    return;
 
-  for(int ik=0; ik<keys.count(); ik++)
-    {
-      if (keys[ik] != "separator")
-	{
-	  QVariantList vlist;
-	  vlist.clear();
-	  vlist << QVariant("combobox");
+  kfi->setInterpBGColor(ui->backgroundColor->currentIndex());
+  kfi->setInterpCaptions(ui->captions->currentIndex());
+  kfi->setInterpFocus(ui->focus->currentIndex());
+  kfi->setInterpTagColors(ui->tagColors->currentIndex());
+  kfi->setInterpTickInfo(ui->tickInformation->currentIndex());
+  kfi->setInterpVolumeBounds(ui->volumeBounds->currentIndex());
+  kfi->setInterpCameraPosition(ui->cameraPosition->currentIndex());
+  kfi->setInterpCameraOrientation(ui->cameraOrientation->currentIndex());
+  kfi->setInterpBrickInfo(ui->brickInformation->currentIndex());
+  kfi->setInterpClipInfo(ui->clipPlanes->currentIndex());
+  kfi->setInterpLightInfo(ui->lighting->currentIndex());
+  kfi->setInterpGiLightInfo(ui->giLighting->currentIndex());
+  kfi->setInterpTF(ui->transferFunctions->currentIndex());
+  kfi->setInterpCrop(ui->cdbd->currentIndex());
+  kfi->setInterpMop(ui->mop->currentIndex());
 
-	  if (keys[ik] == "background color") vlist << kfi->interpBGColor();
-	  else if (keys[ik] == "captions") vlist << kfi->interpCaptions();
-	  else if (keys[ik] == "focus") vlist << kfi->interpFocus();
-	  else if (keys[ik] == "tag colors") vlist << kfi->interpTagColors();
-	  else if (keys[ik] == "tick information") vlist << kfi->interpTickInfo();
-	  else if (keys[ik] == "volume bounds") vlist << kfi->interpVolumeBounds();
-	  else if (keys[ik] == "camera position") vlist << kfi->interpCameraPosition();
-	  else if (keys[ik] == "camera orientation") vlist << kfi->interpCameraOrientation();
-	  else if (keys[ik] == "brick information") vlist << kfi->interpBrickInfo();
-	  else if (keys[ik] == "clip planes") vlist << kfi->interpClipInfo();
-	  else if (keys[ik] == "lighting") vlist << kfi->interpLightInfo();
-	  else if (keys[ik] == "gi lighting") vlist << kfi->interpGiLightInfo();
-	  else if (keys[ik] == "transfer functions") vlist << kfi->interpTF();
-	  else if (keys[ik] == "crop/dissect/blend/displace") vlist << kfi->interpCrop();
-	  else if (keys[ik] == "mop") vlist << kfi->interpMop();
+  return;
 
-	  vlist << QVariant("linear");
-	  vlist << QVariant("smoothstep");
-	  vlist << QVariant("easein");
-	  vlist << QVariant("easeout");
-	  vlist << QVariant("none");
-
-	  plist[keys[ik]] = vlist;
-	}
-    }
-
-  propertyEditor.set("Keyframe Interpolation Parameters",
-		     plist, keys,
-		     false); // do not add reset buttons
-  propertyEditor.resize(300, 500);
-
-  QMap<QString, QPair<QVariant, bool> > vmap;
-
-  if (propertyEditor.exec() == QDialog::Accepted)
-    vmap = propertyEditor.get();
-  else
-    {
-//      QMessageBox::information(0,
-//			       "Keyframe Interpolation Parameters",
-//			       "No interpolation parameter changed");
-      return;
-    }
-
-  keys = vmap.keys();
-
-  for(int ik=0; ik<keys.count(); ik++)
-    {
-      QPair<QVariant, bool> pair = vmap.value(keys[ik]);
-
-
-      if (pair.second)
-	{
-	  int flag = pair.first.toInt();
-	  if (keys[ik] == "background color") kfi->setInterpBGColor(flag);
-	  else if (keys[ik] == "captions") kfi->setInterpCaptions(flag);
-	  else if (keys[ik] == "focus") kfi->setInterpFocus(flag);
-	  else if (keys[ik] == "tag colors") kfi->setInterpTagColors(flag);
-	  else if (keys[ik] == "tick information") kfi->setInterpTickInfo(flag);
-	  else if (keys[ik] == "volume bounds") kfi->setInterpVolumeBounds(flag);
-	  else if (keys[ik] == "camera position") kfi->setInterpCameraPosition(flag);
-	  else if (keys[ik] == "camera orientation") kfi->setInterpCameraOrientation(flag);
-	  else if (keys[ik] == "brick information") kfi->setInterpBrickInfo(flag);
-	  else if (keys[ik] == "clip planes") kfi->setInterpClipInfo(flag);
-	  else if (keys[ik] == "lighting") kfi->setInterpLightInfo(flag);
-	  else if (keys[ik] == "gi lighting") kfi->setInterpGiLightInfo(flag);
-	  else if (keys[ik] == "transfer functions") kfi->setInterpTF(flag);
-	  else if (keys[ik] == "crop/dissect/blend/displace") kfi->setInterpCrop(flag);
-	  else if (keys[ik] == "mop") kfi->setInterpMop(flag);
-	}
-    }
-
-//  QMessageBox::information(0, "Parameters", "Changed");
 }
 
 void
@@ -1449,13 +1392,13 @@ KeyFrame::pasteFrameOnTop(int keyFrameNumber)
       keyFrameNumber >= m_cameraList.count())
     {
       QMessageBox::information(0, "",
-	  QString("%1 keyframe does not exist").arg(keyFrameNumber));
+    QString("%1 keyframe does not exist").arg(keyFrameNumber));
       return;
     }
 
   QMap<QString, QPair<QVariant, bool> > vmap;
   vmap = copyProperties(QString("Paste Parameters to keyframe on %1").\
-			arg(m_keyFrameInfo[keyFrameNumber]->frameNumber()));
+      arg(m_keyFrameInfo[keyFrameNumber]->frameNumber()));
 
   QStringList keys = vmap.keys();
   if (keys.count() == 0)
@@ -1471,96 +1414,96 @@ KeyFrame::pasteFrameOnTop(int keyFrameNumber)
       QPair<QVariant, bool> pair = vmap.value(keys[ik]);
 
       if (pair.second)
-	{
-	  if (keys[ik] == "axis")
-	    kfi->setDrawAxis(m_copyKeyFrame.drawAxis());
-	  else if (keys[ik] == "background color")
-	    kfi->setBackgroundColor(m_copyKeyFrame.backgroundColor());
-	  else if (keys[ik] == "bounding box")
-	    kfi->setDrawBox(m_copyKeyFrame.drawBox());
-	  else if (keys[ik] == "brick information")
-	    kfi->setBrickInfo(m_copyKeyFrame.brickInfo());
-	  else if (keys[ik] == "camera position")
-	    {
-	      kfi->setPosition(m_copyKeyFrame.position());
-	      cam->setPosition(m_copyKeyFrame.position());
-	    }
-	  else if (keys[ik] == "camera orientation")
-	    {
-	      kfi->setOrientation(m_copyKeyFrame.orientation());
-	      cam->setOrientation(m_copyKeyFrame.orientation());
-	    }
-	  else if (keys[ik] == "captions")
-	    kfi->setCaptions(m_copyKeyFrame.captions());
-	  else if (keys[ik] == "colorbars")
-	    kfi->setColorBars(m_copyKeyFrame.colorbars());
-	  else if (keys[ik] == "scalebars")
-	    kfi->setScaleBars(m_copyKeyFrame.scalebars());
-	  else if (keys[ik] == "clip planes")
-	    kfi->setClipInfo(m_copyKeyFrame.clipInfo());
-	  else if (keys[ik] == "focus")
-	    {
-	      kfi->setFocusDistance(m_copyKeyFrame.focusDistance(),
-				    m_copyKeyFrame.eyeSeparation());
-	    }
-	  else if (keys[ik] == "lighting")
-	    kfi->setLightInfo(m_copyKeyFrame.lightInfo());
-	  else if (keys[ik] == "gi lighting")
-	    kfi->setGiLightInfo(m_copyKeyFrame.giLightInfo());
-	  else if (keys[ik] == "paths")
-	    {
-	      kfi->setPaths(m_copyKeyFrame.paths());
-	      kfi->setPathGroups(m_copyKeyFrame.pathgroups());
-	    }
-	  else if (keys[ik] == "grids")
-	    kfi->setGrids(m_copyKeyFrame.grids());
-	  else if (keys[ik] == "crop/dissect/blend/displace")
-	    kfi->setCrops(m_copyKeyFrame.crops());
-	  else if (keys[ik] == "mop")
-	    {
-	      kfi->setPruneBuffer(m_copyKeyFrame.pruneBuffer());
-	      kfi->setPruneBlend(m_copyKeyFrame.pruneBlend());
-	    }
-	  else if (keys[ik] == "points")
-	    {
-	      kfi->setPoints(m_copyKeyFrame.points(),
-			     m_copyKeyFrame.barepoints(),
-			     m_copyKeyFrame.pointSize(),
-			     m_copyKeyFrame.pointColor());
-	    }
-	  else if (keys[ik] == "tag colors")
-	    kfi->setTagColors(m_copyKeyFrame.tagColors());
-	  else if (keys[ik] == "tick information")
-	    {
-	      int t0, t1;
-	      QString s0, s1, s2;
-	      m_copyKeyFrame.getTick(t0, t1, s0, s1, s2);
-	      kfi->setTick(t0, t1, s0, s1, s2);
-	    }
-	  else if (keys[ik] == "mix information")
-	    {
-	      int mv;
-	      bool mc, mo, mt;
-	      m_copyKeyFrame.getMix(mv, mc, mo, mt);
-	      kfi->setMix(mv, mc, mo, mt);
-	    }
-	  else if (keys[ik] == "transfer functions")
-	    {
-	      kfi->setLut(m_copyKeyFrame.lut());
-	      kfi->setSplineInfo(m_copyKeyFrame.splineInfo());
-	      kfi->setMorphTF(m_copyKeyFrame.morphTF());
-	    }
-	  else if (keys[ik] == "trisets")
-	    kfi->setTrisets(m_copyKeyFrame.trisets());
-	  else if (keys[ik] == "networks")
-	    kfi->setNetworks(m_copyKeyFrame.networks());
-	  else if (keys[ik] == "volume bounds")
-	    {
-	      Vec bmin, bmax;
-	      m_copyKeyFrame.volumeBounds(bmin, bmax);
-	      kfi->setVolumeBounds(bmin, bmax);
-	    }
-	}
+  {
+    if (keys[ik] == "axis")
+      kfi->setDrawAxis(m_copyKeyFrame.drawAxis());
+    else if (keys[ik] == "background color")
+      kfi->setBackgroundColor(m_copyKeyFrame.backgroundColor());
+    else if (keys[ik] == "bounding box")
+      kfi->setDrawBox(m_copyKeyFrame.drawBox());
+    else if (keys[ik] == "brick information")
+      kfi->setBrickInfo(m_copyKeyFrame.brickInfo());
+    else if (keys[ik] == "camera position")
+      {
+        kfi->setPosition(m_copyKeyFrame.position());
+        cam->setPosition(m_copyKeyFrame.position());
+      }
+    else if (keys[ik] == "camera orientation")
+      {
+        kfi->setOrientation(m_copyKeyFrame.orientation());
+        cam->setOrientation(m_copyKeyFrame.orientation());
+      }
+    else if (keys[ik] == "captions")
+      kfi->setCaptions(m_copyKeyFrame.captions());
+    else if (keys[ik] == "colorbars")
+      kfi->setColorBars(m_copyKeyFrame.colorbars());
+    else if (keys[ik] == "scalebars")
+      kfi->setScaleBars(m_copyKeyFrame.scalebars());
+    else if (keys[ik] == "clip planes")
+      kfi->setClipInfo(m_copyKeyFrame.clipInfo());
+    else if (keys[ik] == "focus")
+      {
+        kfi->setFocusDistance(m_copyKeyFrame.focusDistance(),
+            m_copyKeyFrame.eyeSeparation());
+      }
+    else if (keys[ik] == "lighting")
+      kfi->setLightInfo(m_copyKeyFrame.lightInfo());
+    else if (keys[ik] == "gi lighting")
+      kfi->setGiLightInfo(m_copyKeyFrame.giLightInfo());
+    else if (keys[ik] == "paths")
+      {
+        kfi->setPaths(m_copyKeyFrame.paths());
+        kfi->setPathGroups(m_copyKeyFrame.pathgroups());
+      }
+    else if (keys[ik] == "grids")
+      kfi->setGrids(m_copyKeyFrame.grids());
+    else if (keys[ik] == "crop/dissect/blend/displace")
+      kfi->setCrops(m_copyKeyFrame.crops());
+    else if (keys[ik] == "mop")
+      {
+        kfi->setPruneBuffer(m_copyKeyFrame.pruneBuffer());
+        kfi->setPruneBlend(m_copyKeyFrame.pruneBlend());
+      }
+    else if (keys[ik] == "points")
+      {
+        kfi->setPoints(m_copyKeyFrame.points(),
+           m_copyKeyFrame.barepoints(),
+           m_copyKeyFrame.pointSize(),
+           m_copyKeyFrame.pointColor());
+      }
+    else if (keys[ik] == "tag colors")
+      kfi->setTagColors(m_copyKeyFrame.tagColors());
+    else if (keys[ik] == "tick information")
+      {
+        int t0, t1;
+        QString s0, s1, s2;
+        m_copyKeyFrame.getTick(t0, t1, s0, s1, s2);
+        kfi->setTick(t0, t1, s0, s1, s2);
+      }
+    else if (keys[ik] == "mix information")
+      {
+        int mv;
+        bool mc, mo, mt;
+        m_copyKeyFrame.getMix(mv, mc, mo, mt);
+        kfi->setMix(mv, mc, mo, mt);
+      }
+    else if (keys[ik] == "transfer functions")
+      {
+        kfi->setLut(m_copyKeyFrame.lut());
+        kfi->setSplineInfo(m_copyKeyFrame.splineInfo());
+        kfi->setMorphTF(m_copyKeyFrame.morphTF());
+      }
+    else if (keys[ik] == "trisets")
+      kfi->setTrisets(m_copyKeyFrame.trisets());
+    else if (keys[ik] == "networks")
+      kfi->setNetworks(m_copyKeyFrame.networks());
+    else if (keys[ik] == "volume bounds")
+      {
+        Vec bmin, bmax;
+        m_copyKeyFrame.volumeBounds(bmin, bmax);
+        kfi->setVolumeBounds(bmin, bmax);
+      }
+  }
     }
 
   updateKeyFrameInterpolator();
@@ -1575,8 +1518,8 @@ KeyFrame::pasteFrameOnTop(int startKF, int endKF)
 {
   QMap<QString, QPair<QVariant, bool> > vmap;
   vmap = copyProperties(QString("Paste Parameters to keyframes between %1 - %2").\
-			arg(m_keyFrameInfo[startKF]->frameNumber()).\
-			arg(m_keyFrameInfo[endKF]->frameNumber()));
+      arg(m_keyFrameInfo[startKF]->frameNumber()).\
+      arg(m_keyFrameInfo[endKF]->frameNumber()));
 
   QStringList keys = vmap.keys();
   if (keys.count() == 0)
@@ -1589,101 +1532,101 @@ KeyFrame::pasteFrameOnTop(int startKF, int endKF)
       CameraPathNode *cam = m_cameraList[keyFrameNumber];
 
       for(int ik=0; ik<keys.count(); ik++)
-	{
-	  QPair<QVariant, bool> pair = vmap.value(keys[ik]);
+  {
+    QPair<QVariant, bool> pair = vmap.value(keys[ik]);
 
-	  if (pair.second)
-	    {
-	      if (keys[ik] == "axis")
-		kfi->setDrawAxis(m_copyKeyFrame.drawAxis());
-	      else if (keys[ik] == "background color")
-		kfi->setBackgroundColor(m_copyKeyFrame.backgroundColor());
-	      else if (keys[ik] == "bounding box")
-		kfi->setDrawBox(m_copyKeyFrame.drawBox());
-	      else if (keys[ik] == "brick information")
-		kfi->setBrickInfo(m_copyKeyFrame.brickInfo());
-	      else if (keys[ik] == "camera position")
-		{
-		  kfi->setPosition(m_copyKeyFrame.position());
-		  cam->setPosition(m_copyKeyFrame.position());
-		}
-	      else if (keys[ik] == "camera orientation")
-		{
-		  kfi->setOrientation(m_copyKeyFrame.orientation());
-		  cam->setOrientation(m_copyKeyFrame.orientation());
-		}
-	      else if (keys[ik] == "captions")
-		kfi->setCaptions(m_copyKeyFrame.captions());
-	      else if (keys[ik] == "colorbars")
-		kfi->setColorBars(m_copyKeyFrame.colorbars());
-	      else if (keys[ik] == "scalebars")
-		kfi->setScaleBars(m_copyKeyFrame.scalebars());
-	      else if (keys[ik] == "clip planes")
-		kfi->setClipInfo(m_copyKeyFrame.clipInfo());
-	      else if (keys[ik] == "focus")
-		{
-		  kfi->setFocusDistance(m_copyKeyFrame.focusDistance(),
-					m_copyKeyFrame.eyeSeparation());
-		}
-	      else if (keys[ik] == "lighting")
-		kfi->setLightInfo(m_copyKeyFrame.lightInfo());
-	      else if (keys[ik] == "gi lighting")
-		kfi->setGiLightInfo(m_copyKeyFrame.giLightInfo());
-	      else if (keys[ik] == "paths")
-		{
-		  kfi->setPaths(m_copyKeyFrame.paths());
-		  kfi->setPathGroups(m_copyKeyFrame.pathgroups());
-		}
-	      else if (keys[ik] == "grids")
-		kfi->setGrids(m_copyKeyFrame.grids());
-	      else if (keys[ik] == "crop/dissect/blend/displace")
-		kfi->setCrops(m_copyKeyFrame.crops());
-	      else if (keys[ik] == "mop")
-		{
-		  kfi->setPruneBuffer(m_copyKeyFrame.pruneBuffer());
-		  kfi->setPruneBlend(m_copyKeyFrame.pruneBlend());
-		}
-	      else if (keys[ik] == "points")
-		{
-		  kfi->setPoints(m_copyKeyFrame.points(),
-				 m_copyKeyFrame.barepoints(),
-				 m_copyKeyFrame.pointSize(),
-				 m_copyKeyFrame.pointColor());
-		}
-	      else if (keys[ik] == "tag colors")
-		kfi->setTagColors(m_copyKeyFrame.tagColors());
-	      else if (keys[ik] == "tick information")
-		{
-		  int t0, t1;
-		  QString s0, s1, s2;
-		  m_copyKeyFrame.getTick(t0, t1, s0, s1, s2);
-		  kfi->setTick(t0, t1, s0, s1, s2);
-		}
-	      else if (keys[ik] == "mix information")
-		{
-		  int mv;
-		  bool mc, mo, mt;
-		  m_copyKeyFrame.getMix(mv, mc, mo, mt);
-		  kfi->setMix(mv, mc, mo, mt);
-		}
-	      else if (keys[ik] == "transfer functions")
-		{
-		  kfi->setLut(m_copyKeyFrame.lut());
-		  kfi->setSplineInfo(m_copyKeyFrame.splineInfo());
-		  kfi->setMorphTF(m_copyKeyFrame.morphTF());
-		}
-	      else if (keys[ik] == "trisets")
-		kfi->setTrisets(m_copyKeyFrame.trisets());
-	      else if (keys[ik] == "networks")
-		kfi->setNetworks(m_copyKeyFrame.networks());
-	      else if (keys[ik] == "volume bounds")
-		{
-		  Vec bmin, bmax;
-		  m_copyKeyFrame.volumeBounds(bmin, bmax);
-		  kfi->setVolumeBounds(bmin, bmax);
-		}
-	    }
-	}
+    if (pair.second)
+      {
+        if (keys[ik] == "axis")
+    kfi->setDrawAxis(m_copyKeyFrame.drawAxis());
+        else if (keys[ik] == "background color")
+    kfi->setBackgroundColor(m_copyKeyFrame.backgroundColor());
+        else if (keys[ik] == "bounding box")
+    kfi->setDrawBox(m_copyKeyFrame.drawBox());
+        else if (keys[ik] == "brick information")
+    kfi->setBrickInfo(m_copyKeyFrame.brickInfo());
+        else if (keys[ik] == "camera position")
+    {
+      kfi->setPosition(m_copyKeyFrame.position());
+      cam->setPosition(m_copyKeyFrame.position());
+    }
+        else if (keys[ik] == "camera orientation")
+    {
+      kfi->setOrientation(m_copyKeyFrame.orientation());
+      cam->setOrientation(m_copyKeyFrame.orientation());
+    }
+        else if (keys[ik] == "captions")
+    kfi->setCaptions(m_copyKeyFrame.captions());
+        else if (keys[ik] == "colorbars")
+    kfi->setColorBars(m_copyKeyFrame.colorbars());
+        else if (keys[ik] == "scalebars")
+    kfi->setScaleBars(m_copyKeyFrame.scalebars());
+        else if (keys[ik] == "clip planes")
+    kfi->setClipInfo(m_copyKeyFrame.clipInfo());
+        else if (keys[ik] == "focus")
+    {
+      kfi->setFocusDistance(m_copyKeyFrame.focusDistance(),
+          m_copyKeyFrame.eyeSeparation());
+    }
+        else if (keys[ik] == "lighting")
+    kfi->setLightInfo(m_copyKeyFrame.lightInfo());
+        else if (keys[ik] == "gi lighting")
+    kfi->setGiLightInfo(m_copyKeyFrame.giLightInfo());
+        else if (keys[ik] == "paths")
+    {
+      kfi->setPaths(m_copyKeyFrame.paths());
+      kfi->setPathGroups(m_copyKeyFrame.pathgroups());
+    }
+        else if (keys[ik] == "grids")
+    kfi->setGrids(m_copyKeyFrame.grids());
+        else if (keys[ik] == "crop/dissect/blend/displace")
+    kfi->setCrops(m_copyKeyFrame.crops());
+        else if (keys[ik] == "mop")
+    {
+      kfi->setPruneBuffer(m_copyKeyFrame.pruneBuffer());
+      kfi->setPruneBlend(m_copyKeyFrame.pruneBlend());
+    }
+        else if (keys[ik] == "points")
+    {
+      kfi->setPoints(m_copyKeyFrame.points(),
+         m_copyKeyFrame.barepoints(),
+         m_copyKeyFrame.pointSize(),
+         m_copyKeyFrame.pointColor());
+    }
+        else if (keys[ik] == "tag colors")
+    kfi->setTagColors(m_copyKeyFrame.tagColors());
+        else if (keys[ik] == "tick information")
+    {
+      int t0, t1;
+      QString s0, s1, s2;
+      m_copyKeyFrame.getTick(t0, t1, s0, s1, s2);
+      kfi->setTick(t0, t1, s0, s1, s2);
+    }
+        else if (keys[ik] == "mix information")
+    {
+      int mv;
+      bool mc, mo, mt;
+      m_copyKeyFrame.getMix(mv, mc, mo, mt);
+      kfi->setMix(mv, mc, mo, mt);
+    }
+        else if (keys[ik] == "transfer functions")
+    {
+      kfi->setLut(m_copyKeyFrame.lut());
+      kfi->setSplineInfo(m_copyKeyFrame.splineInfo());
+      kfi->setMorphTF(m_copyKeyFrame.morphTF());
+    }
+        else if (keys[ik] == "trisets")
+    kfi->setTrisets(m_copyKeyFrame.trisets());
+        else if (keys[ik] == "networks")
+    kfi->setNetworks(m_copyKeyFrame.networks());
+        else if (keys[ik] == "volume bounds")
+    {
+      Vec bmin, bmax;
+      m_copyKeyFrame.volumeBounds(bmin, bmax);
+      kfi->setVolumeBounds(bmin, bmax);
+    }
+      }
+  }
 
       updateKeyFrameInterpolator();
 
@@ -1862,8 +1805,8 @@ KeyFrame::copyProperties(QString title)
 
 
   propertyEditor.set(title,
-		     plist, keys,
-		     false); // do not add reset buttons
+         plist, keys,
+         false); // do not add reset buttons
   propertyEditor.resize(300, 500);
 
 
@@ -1874,8 +1817,8 @@ KeyFrame::copyProperties(QString title)
   else
     {
       QMessageBox::information(0,
-			       title,
-			       "No parameters pasted");
+             title,
+             "No parameters pasted");
     }
 
   return vmap;
@@ -1941,15 +1884,15 @@ void KeyFrame::save(QConfigMe  &cfg) const {
 
 
 void KeyFrame::import(const QString & flnm) {
-  
+
   if (m_keyFrameInfo.count() == 0) {
       qDebug() <<  "Import KeyFrames: need atleast one keyframe in the editor before import.";
       return;
   }
-  
+
   QConfigMe cfg;
-  cfg.read(flnm);  
-  QList<KeyFrameInformation*> keyFrameInfo;  
+  cfg.read(flnm);
+  QList<KeyFrameInformation*> keyFrameInfo;
   cfg.beginGroup("KeyFrames");
   cfg.getClassArray("KeyFarameInfo", keyFrameInfo);
   cfg.endGroup();
@@ -1975,7 +1918,7 @@ void KeyFrame::import(const QString & flnm) {
   for (int i=0; i<keyFrameInfo.size(); i++)
     {
       if (i > 0)
-	lastfno += (keyFrameInfo[i]->frameNumber()-keyFrameInfo[i-1]->frameNumber());
+  lastfno += (keyFrameInfo[i]->frameNumber()-keyFrameInfo[i-1]->frameNumber());
 
       // --- add a new KeyFrameInformation node
       KeyFrameInformation *kfi = new KeyFrameInformation(m_savedKeyFrame);
@@ -1990,139 +1933,139 @@ void KeyFrame::import(const QString & flnm) {
       CameraPathNode *cam = new CameraPathNode(pos, rot);
       m_cameraList.append(cam);
       connect(cam, SIGNAL(modified()),
-	      this, SLOT(updateKeyFrameInterpolator()));
+        this, SLOT(updateKeyFrameInterpolator()));
 
       // -- now import relevant information
       KeyFrameInformation *ckf = keyFrameInfo[i];
 
       for(int ik=0; ik<keys.count(); ik++)
-	{
-	  QPair<QVariant, bool> pair = vmap.value(keys[ik]);
+  {
+    QPair<QVariant, bool> pair = vmap.value(keys[ik]);
 
-	  if (pair.second)
-	    {
-	      if (keys[ik] == "axis")
-		kfi->setDrawAxis(ckf->drawAxis());
-	      else if (keys[ik] == "background color")
-		{
-		  kfi->setBackgroundColor(ckf->backgroundColor());
-		  kfi->setInterpBGColor(ckf->interpBGColor());
-		}
-	      else if (keys[ik] == "bounding box")
-		kfi->setDrawBox(ckf->drawBox());
-	      else if (keys[ik] == "brick information")
-		{
-		  kfi->setBrickInfo(ckf->brickInfo());
-		  kfi->setInterpBrickInfo(ckf->interpBrickInfo());
-		}
-	      else if (keys[ik] == "camera position")
-		{
-		  kfi->setPosition(ckf->position());
-		  cam->setPosition(ckf->position());
-		  kfi->setInterpCameraPosition(ckf->interpCameraPosition());
-		}
-	      else if (keys[ik] == "camera orientation")
-		{
-		  kfi->setOrientation(ckf->orientation());
-		  cam->setOrientation(ckf->orientation());
-		  kfi->setInterpCameraOrientation(ckf->interpCameraOrientation());
-		}
-	      else if (keys[ik] == "captions")
-		{
-		  kfi->setCaptions(ckf->captions());
-		  kfi->setInterpCaptions(ckf->interpCaptions());
-		}
-	      else if (keys[ik] == "colorbars")
-		{
-		  kfi->setColorBars(ckf->colorbars());
-		}
-	      else if (keys[ik] == "scalebars")
-		{
-		  kfi->setScaleBars(ckf->scalebars());
-		}
-	      else if (keys[ik] == "clip planes")
-		{
-		  kfi->setClipInfo(ckf->clipInfo());
-		  kfi->setInterpClipInfo(ckf->interpClipInfo());
-		}
-	      else if (keys[ik] == "focus")
-		{
-		  kfi->setFocusDistance(ckf->focusDistance(),
-					ckf->eyeSeparation());
-		  kfi->setInterpFocus(ckf->interpFocus());
-		}
-	      else if (keys[ik] == "lighting")
-		{
-		  kfi->setLightInfo(ckf->lightInfo());
-		  kfi->setInterpLightInfo(ckf->interpLightInfo());
-		}
-	      else if (keys[ik] == "gi lighting")
-		{
-		  kfi->setGiLightInfo(ckf->giLightInfo());
-		  kfi->setInterpGiLightInfo(ckf->interpGiLightInfo());
-		}
-	      else if (keys[ik] == "paths")
-		{
-		  kfi->setPaths(ckf->paths());
-		  kfi->setPathGroups(ckf->pathgroups());
-		}
-	      else if (keys[ik] == "grids")
-		kfi->setGrids(ckf->grids());
-	      else if (keys[ik] == "points")
-		{
-		  kfi->setPoints(ckf->points(),
-				 ckf->barepoints(),
-				 ckf->pointSize(),
-				 ckf->pointColor());
-		}
-	      else if (keys[ik] == "tag colors")
-		kfi->setTagColors(ckf->tagColors());
-	      else if (keys[ik] == "tick information")
-		{
-		  int t0, t1;
-		  QString s0, s1, s2;
-		  ckf->getTick(t0, t1, s0, s1, s2);
-		  kfi->setTick(t0, t1, s0, s1, s2);
-		  kfi->setInterpTagColors(ckf->interpTagColors());
-		}
-	      else if (keys[ik] == "mix information")
-		{
-		  int mv;
-		  bool mc, mo, mt;
-		  ckf->getMix(mv, mc, mo, mt);
-		  kfi->setMix(mv, mc, mo, mt);
-		}
-	      else if (keys[ik] == "transfer functions")
-		{
-		  kfi->setLut(ckf->lut());
-		  kfi->setSplineInfo(ckf->splineInfo());
-		  kfi->setMorphTF(ckf->morphTF());
-		  kfi->setInterpTF(ckf->interpTF());
-		}
-	      else if (keys[ik] == "trisets")
-		kfi->setTrisets(ckf->trisets());
-	      else if (keys[ik] == "networks")
-		kfi->setNetworks(ckf->networks());
-	      else if (keys[ik] == "volume bounds")
-		{
-		  Vec bmin, bmax;
-		  ckf->volumeBounds(bmin, bmax);
-		  kfi->setVolumeBounds(bmin, bmax);
-		  kfi->setInterpVolumeBounds(ckf->interpVolumeBounds());
-		}
-	      else if (keys[ik] == "crop/dissect/blend/displace")
-		{
-		  kfi->setCrops(ckf->crops());
-		  kfi->setInterpCrop(ckf->interpCrop());
-		}
-	      else if (keys[ik] == "mop")
-		{
-		  kfi->setPruneBuffer(ckf->pruneBuffer());
-		  kfi->setPruneBlend(ckf->pruneBlend());
-		  kfi->setInterpMop(ckf->interpMop());
-		}
-	    }
-	}
+    if (pair.second)
+      {
+        if (keys[ik] == "axis")
+    kfi->setDrawAxis(ckf->drawAxis());
+        else if (keys[ik] == "background color")
+    {
+      kfi->setBackgroundColor(ckf->backgroundColor());
+      kfi->setInterpBGColor(ckf->interpBGColor());
+    }
+        else if (keys[ik] == "bounding box")
+    kfi->setDrawBox(ckf->drawBox());
+        else if (keys[ik] == "brick information")
+    {
+      kfi->setBrickInfo(ckf->brickInfo());
+      kfi->setInterpBrickInfo(ckf->interpBrickInfo());
+    }
+        else if (keys[ik] == "camera position")
+    {
+      kfi->setPosition(ckf->position());
+      cam->setPosition(ckf->position());
+      kfi->setInterpCameraPosition(ckf->interpCameraPosition());
+    }
+        else if (keys[ik] == "camera orientation")
+    {
+      kfi->setOrientation(ckf->orientation());
+      cam->setOrientation(ckf->orientation());
+      kfi->setInterpCameraOrientation(ckf->interpCameraOrientation());
+    }
+        else if (keys[ik] == "captions")
+    {
+      kfi->setCaptions(ckf->captions());
+      kfi->setInterpCaptions(ckf->interpCaptions());
+    }
+        else if (keys[ik] == "colorbars")
+    {
+      kfi->setColorBars(ckf->colorbars());
+    }
+        else if (keys[ik] == "scalebars")
+    {
+      kfi->setScaleBars(ckf->scalebars());
+    }
+        else if (keys[ik] == "clip planes")
+    {
+      kfi->setClipInfo(ckf->clipInfo());
+      kfi->setInterpClipInfo(ckf->interpClipInfo());
+    }
+        else if (keys[ik] == "focus")
+    {
+      kfi->setFocusDistance(ckf->focusDistance(),
+          ckf->eyeSeparation());
+      kfi->setInterpFocus(ckf->interpFocus());
+    }
+        else if (keys[ik] == "lighting")
+    {
+      kfi->setLightInfo(ckf->lightInfo());
+      kfi->setInterpLightInfo(ckf->interpLightInfo());
+    }
+        else if (keys[ik] == "gi lighting")
+    {
+      kfi->setGiLightInfo(ckf->giLightInfo());
+      kfi->setInterpGiLightInfo(ckf->interpGiLightInfo());
+    }
+        else if (keys[ik] == "paths")
+    {
+      kfi->setPaths(ckf->paths());
+      kfi->setPathGroups(ckf->pathgroups());
+    }
+        else if (keys[ik] == "grids")
+    kfi->setGrids(ckf->grids());
+        else if (keys[ik] == "points")
+    {
+      kfi->setPoints(ckf->points(),
+         ckf->barepoints(),
+         ckf->pointSize(),
+         ckf->pointColor());
+    }
+        else if (keys[ik] == "tag colors")
+    kfi->setTagColors(ckf->tagColors());
+        else if (keys[ik] == "tick information")
+    {
+      int t0, t1;
+      QString s0, s1, s2;
+      ckf->getTick(t0, t1, s0, s1, s2);
+      kfi->setTick(t0, t1, s0, s1, s2);
+      kfi->setInterpTagColors(ckf->interpTagColors());
+    }
+        else if (keys[ik] == "mix information")
+    {
+      int mv;
+      bool mc, mo, mt;
+      ckf->getMix(mv, mc, mo, mt);
+      kfi->setMix(mv, mc, mo, mt);
+    }
+        else if (keys[ik] == "transfer functions")
+    {
+      kfi->setLut(ckf->lut());
+      kfi->setSplineInfo(ckf->splineInfo());
+      kfi->setMorphTF(ckf->morphTF());
+      kfi->setInterpTF(ckf->interpTF());
+    }
+        else if (keys[ik] == "trisets")
+    kfi->setTrisets(ckf->trisets());
+        else if (keys[ik] == "networks")
+    kfi->setNetworks(ckf->networks());
+        else if (keys[ik] == "volume bounds")
+    {
+      Vec bmin, bmax;
+      ckf->volumeBounds(bmin, bmax);
+      kfi->setVolumeBounds(bmin, bmax);
+      kfi->setInterpVolumeBounds(ckf->interpVolumeBounds());
+    }
+        else if (keys[ik] == "crop/dissect/blend/displace")
+    {
+      kfi->setCrops(ckf->crops());
+      kfi->setInterpCrop(ckf->interpCrop());
+    }
+        else if (keys[ik] == "mop")
+    {
+      kfi->setPruneBuffer(ckf->pruneBuffer());
+      kfi->setPruneBlend(ckf->pruneBlend());
+      kfi->setInterpMop(ckf->interpMop());
+    }
+      }
+  }
     }
 
   for(int i=0; i<keyFrameInfo.size(); i++)

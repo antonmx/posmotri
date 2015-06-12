@@ -1,0 +1,758 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Interpolation</class>
+ <widget class="QDialog" name="Interpolation">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>566</width>
+    <height>790</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Interpolation parameters</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>volume bounds</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>focus</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>captions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>tag colors</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>tick information</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>background color</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>camera position</string>
+       </property>
+      </widget>
+     </item>
+     <item row="12" column="0">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>transfer functions</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="backgroundColor">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>camera orientation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>brick information</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>clip planes</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>gi lighting</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>lighting</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QLabel" name="label_14">
+       <property name="text">
+        <string>crop/dissect/blend/displace</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>mop</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QComboBox" name="captions">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QComboBox" name="focus">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QComboBox" name="tagColors">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QComboBox" name="tickInformation">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QComboBox" name="volumeBounds">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QComboBox" name="cameraPosition">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QComboBox" name="cameraOrientation">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QComboBox" name="brickInformation">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QComboBox" name="clipPlanes">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="10" column="1">
+      <widget class="QComboBox" name="lighting">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="11" column="1">
+      <widget class="QComboBox" name="giLighting">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="12" column="1">
+      <widget class="QComboBox" name="transferFunctions">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QComboBox" name="cdbd">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QComboBox" name="mop">
+       <item>
+        <property name="text">
+         <string>linear</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>smoothstep</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easein</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>easeout</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from script</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>from text file</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>none</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Interpolation</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Interpolation</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

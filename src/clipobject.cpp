@@ -245,7 +245,7 @@ ClipObject::clearCaption()
 
 void
 ClipObject::setCaption(QString ct, QFont cf,
-		       QColor cc, QColor chc)
+           QColor cc, QColor chc)
 {
   bool doit = false;
   if (m_captionText != ct) doit = true;
@@ -261,24 +261,24 @@ void
 ClipObject::loadCaption()
 {
   CaptionDialog cd(0,
-		   m_captionText,
-		   m_captionFont,
-		   m_captionColor,
-		   m_captionHaloColor);
+       m_captionText,
+       m_captionFont,
+       m_captionColor,
+       m_captionHaloColor);
   cd.hideOpacity(true);
   cd.move(QCursor::pos());
   if (cd.exec() != QDialog::Accepted)
     return;
 
   loadCaption(cd.text(),
-	      cd.font(),
-	      cd.color(),
-	      cd.haloColor());
+        cd.font(),
+        cd.color(),
+        cd.haloColor());
 }
 
 void
 ClipObject::loadCaption(QString ct, QFont cf,
-			QColor cc, QColor chc)
+      QColor cc, QColor chc)
 {
   m_captionText = ct;
   m_captionFont = cf;
@@ -304,8 +304,8 @@ ClipObject::loadCaption(QString ct, QFont cf,
     // we have image as ARGB, but we want RGBA
     // so switch red and blue colors here itself
     QColor penColor(m_captionHaloColor.blue(),
-		    m_captionHaloColor.green(),
-		    m_captionHaloColor.red());
+        m_captionHaloColor.green(),
+        m_captionHaloColor.red());
     // do not use alpha(),
     // opacity will be modulated using clip-plane's opacity parameter
     bpainter.setPen(penColor);
@@ -318,18 +318,18 @@ ClipObject::loadCaption(QString ct, QFont cf,
 
     for(int i=2; i<fht-2; i++)
       for(int j=2; j<fwd-2; j++)
-	{
-	  for (int k=0; k<4; k++)
-	    {
-	      int sum = 0;
+  {
+    for (int k=0; k<4; k++)
+      {
+        int sum = 0;
 
-	      for(int i0=-2; i0<=2; i0++)
-		for(int j0=-2; j0<=2; j0++)
-		  sum += dbits[4*((i+i0)*fwd+(j+j0)) + k];
+        for(int i0=-2; i0<=2; i0++)
+    for(int j0=-2; j0<=2; j0++)
+      sum += dbits[4*((i+i0)*fwd+(j+j0)) + k];
 
-	      bits[4*(i*fwd+j) + k] = sum/25;
-	    }
-	}
+        bits[4*(i*fwd+j) + k] = sum/25;
+      }
+  }
     delete [] dbits;
   }
   //-------------------
@@ -345,8 +345,8 @@ ClipObject::loadCaption(QString ct, QFont cf,
   // we have image as ARGB, but we want RGBA
   // so switch red and blue colors here itself
   QColor penColor(m_captionColor.blue(),
-		  m_captionColor.green(),
-		  m_captionColor.red());
+      m_captionColor.green(),
+      m_captionColor.red());
   // do not use alpha(),
   // opacity will be modulated using clip-plane's opacity parameter
   cpainter.setPen(penColor);
@@ -369,14 +369,14 @@ ClipObject::loadCaption(QString ct, QFont cf,
   glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_RECTANGLE_ARB,
-	       0,
-	       4,
-	       m_textureWidth,
-	       m_textureHeight,
-	       0,
-	       GL_RGBA,
-	       GL_UNSIGNED_BYTE,
-	       image);
+         0,
+         4,
+         m_textureWidth,
+         m_textureHeight,
+         0,
+         GL_RGBA,
+         GL_UNSIGNED_BYTE,
+         image);
   glDisable(GL_TEXTURE_RECTANGLE_ARB);
 
   delete [] image;
@@ -398,8 +398,8 @@ void
 ClipObject::loadImage()
 {
   QString imgFile = QFileDialog::getOpenFileName(0,
-	      QString("Load image to map on the clip plane"),
-	      Global::previousDirectory(),
+        QString("Load image to map on the clip plane"),
+        Global::previousDirectory(),
               "Image Files (*.png *.tif *.bmp *.jpg *.gif)");
 
   if (imgFile.isEmpty())
@@ -441,7 +441,7 @@ ClipObject::loadImage(QString imgFile, int imgFrame)
   VolumeInformation pvlInfo = VolumeInformation::volumeInformation();
   QFileInfo fileInfo(pvlInfo.pvlFile);
   QString absoluteImageFile = QFileInfo(fileInfo.absolutePath(),
-					m_imageName).absoluteFilePath();
+          m_imageName).absoluteFilePath();
   //----------------
 
   QFileInfo f(absoluteImageFile);
@@ -485,14 +485,14 @@ ClipObject::loadImage(QString imgFile, int imgFrame)
   glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_RECTANGLE_ARB, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_RECTANGLE_ARB,
-	       0,
-	       rgb,
-	       m_textureWidth,
-	       m_textureHeight,
-	       0,
-	       fmt,
-	       GL_UNSIGNED_BYTE,
-	       image);
+         0,
+         rgb,
+         m_textureWidth,
+         m_textureHeight,
+         0,
+         fmt,
+         GL_UNSIGNED_BYTE,
+         image);
   glDisable(GL_TEXTURE_RECTANGLE_ARB);
 
   delete [] image;
@@ -554,7 +554,7 @@ void ClipObject::normalize()
 
 void
 ClipObject::draw(QGLViewer *viewer,
-		 bool backToFront, float widgetSize)
+     bool backToFront, float widgetSize)
 {
   m_size = widgetSize;
   computeTscale();
@@ -567,10 +567,10 @@ ClipObject::draw(QGLViewer *viewer,
       (m_gridX > 0 && m_gridY > 0) )
     {
       if (m_gridX > 0 && m_gridY > 0)
-	drawGrid();
+  drawGrid();
 
       if (m_imagePresent || m_captionPresent)
-	drawCaptionImage();
+  drawCaptionImage();
 
       if (m_active) drawLines(viewer, backToFront);
     }
@@ -585,9 +585,9 @@ ClipObject::drawGrid()
   float s2 = m_tscale2;
 
   glColor4f(m_color.x*m_opacity,
-	    m_color.y*m_opacity,
-	    m_color.z*m_opacity,
-	    m_opacity);
+      m_color.y*m_opacity,
+      m_color.z*m_opacity,
+      m_opacity);
 
   Vec voxelScaling = Global::voxelScaling();
   Vec opt = vMv(m_position, voxelScaling);
@@ -628,9 +628,9 @@ ClipObject::drawCaptionImage()
   glColor4f(0, 0, 0, m_opacity);
   if (m_applyOpacity)
     glColor4f(m_opacity,
-	      m_opacity,
-	      m_opacity,
-	      m_opacity);
+        m_opacity,
+        m_opacity,
+        m_opacity);
   else
     glColor4f(1,1,1,1);
 
@@ -650,8 +650,8 @@ ClipObject::drawCaptionImage()
  glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_RECTANGLE_ARB, m_imageTex);
   glTexEnvf(GL_TEXTURE_ENV,
-	    GL_TEXTURE_ENV_MODE,
-	    GL_MODULATE);
+      GL_TEXTURE_ENV_MODE,
+      GL_MODULATE);
   glEnable(GL_TEXTURE_RECTANGLE_ARB);
 
   glEnable(GL_POLYGON_OFFSET_FILL);
@@ -677,11 +677,11 @@ ClipObject::drawCaptionImage()
     float yf = (cdist+m_thickness)*tan(fov*0.5);			\
     if (!m_viewportType)						\
       {									\
-	yf = yn = cdist*tan(fov*0.5);					\
+  yf = yn = cdist*tan(fov*0.5);					\
       }									\
     float xn = yn*aspectRatio;						\
     float xf = yf*aspectRatio;						\
-									\
+                  \
     glBegin(GL_LINE_STRIP);						\
     glVertex3fv(opt - xn*xaxis - yn*yaxis + m_thickness*tang);		\
     glVertex3fv(opt - xn*xaxis + yn*yaxis + m_thickness*tang);		\
@@ -696,7 +696,7 @@ ClipObject::drawCaptionImage()
     glVertex3fv(opt + xf*xaxis - yf*yaxis - m_thickness*tang);		\
     glVertex3fv(opt - xf*xaxis - yf*yaxis - m_thickness*tang);		\
     glEnd();								\
-									\
+                  \
     glBegin(GL_LINES);							\
     glVertex3fv(opt - xn*xaxis - yn*yaxis + m_thickness*tang);		\
     glVertex3fv(opt - xf*xaxis - yf*yaxis - m_thickness*tang);		\
@@ -713,33 +713,33 @@ ClipObject::drawCaptionImage()
   {									\
     if (!m_solidColor)							\
       {									\
-	glColor3f(m_color.x, m_color.y, m_color.z);			\
-	glBegin(GL_LINE_STRIP);						\
-	glVertex3fv(opt - s1*xaxis - s2*yaxis);				\
-	glVertex3fv(opt - s1*xaxis + s2*yaxis);				\
-	glVertex3fv(opt + s1*xaxis + s2*yaxis);				\
-	glVertex3fv(opt + s1*xaxis - s2*yaxis);				\
-	glVertex3fv(opt - s1*xaxis - s2*yaxis);				\
-	glEnd();							\
+  glColor3f(m_color.x, m_color.y, m_color.z);			\
+  glBegin(GL_LINE_STRIP);						\
+  glVertex3fv(opt - s1*xaxis - s2*yaxis);				\
+  glVertex3fv(opt - s1*xaxis + s2*yaxis);				\
+  glVertex3fv(opt + s1*xaxis + s2*yaxis);				\
+  glVertex3fv(opt + s1*xaxis - s2*yaxis);				\
+  glVertex3fv(opt - s1*xaxis - s2*yaxis);				\
+  glEnd();							\
       }									\
     else								\
       {									\
-	glColor4f(m_color.x*m_opacity,					\
-		  m_color.y*m_opacity,					\
-		  m_color.z*m_opacity,					\
-		  m_opacity);						\
-	glBegin(GL_QUADS);						\
-	glVertex3fv(opt - s1*xaxis - s2*yaxis);				\
-	glVertex3fv(opt - s1*xaxis + s2*yaxis);				\
-	glVertex3fv(opt + s1*xaxis + s2*yaxis);				\
-	glVertex3fv(opt + s1*xaxis - s2*yaxis);				\
-	glEnd();							\
+  glColor4f(m_color.x*m_opacity,					\
+      m_color.y*m_opacity,					\
+      m_color.z*m_opacity,					\
+      m_opacity);						\
+  glBegin(GL_QUADS);						\
+  glVertex3fv(opt - s1*xaxis - s2*yaxis);				\
+  glVertex3fv(opt - s1*xaxis + s2*yaxis);				\
+  glVertex3fv(opt + s1*xaxis + s2*yaxis);				\
+  glVertex3fv(opt + s1*xaxis - s2*yaxis);				\
+  glEnd();							\
       }									\
   }
 
 void
 ClipObject::drawLines(QGLViewer *viewer,
-		      bool backToFront)
+          bool backToFront)
 {
   bool noimage = !m_imagePresent && !m_captionPresent;
   bool quad = noimage && m_active;
@@ -769,9 +769,9 @@ ClipObject::drawLines(QGLViewer *viewer,
       glColor3f(m_color.x, m_color.y, m_color.z);
 
       if (m_thickness > 0 && m_showThickness)
-	DRAWTHICKNESS()
+  DRAWTHICKNESS()
       else
-	DRAWCLIPWIDGET()
+  DRAWCLIPWIDGET()
     }
 
 
@@ -786,8 +786,8 @@ ClipObject::drawLines(QGLViewer *viewer,
       cb = opt + 0.2*s2*yaxis;
       glColor4f(m_opacity, 0.5*m_opacity, 0, m_opacity);
       if (quad &&
-	  m_moveAxis >= MoveX0 &&
-	  m_moveAxis <= MoveX1) glBegin(GL_QUADS);
+    m_moveAxis >= MoveX0 &&
+    m_moveAxis <= MoveX1) glBegin(GL_QUADS);
       else glBegin(GL_LINE_STRIP);
       glVertex3fv(c0);
       glVertex3fv(ca);
@@ -802,8 +802,8 @@ ClipObject::drawLines(QGLViewer *viewer,
       cb = opt + 0.2*s1*xaxis;
       glColor4f(0.5*m_opacity, m_opacity, 0, m_opacity);
       if (quad &&
-	  m_moveAxis >= MoveY0 &&
-	  m_moveAxis <= MoveY1) glBegin(GL_QUADS);
+    m_moveAxis >= MoveY0 &&
+    m_moveAxis <= MoveY1) glBegin(GL_QUADS);
       else glBegin(GL_LINE_STRIP);
       glVertex3fv(c0);
       glVertex3fv(ca);
@@ -843,9 +843,9 @@ ClipObject::drawLines(QGLViewer *viewer,
       glColor3f(m_color.x, m_color.y, m_color.z);
 
       if (m_thickness > 0 && m_showThickness)
-	DRAWTHICKNESS()
+  DRAWTHICKNESS()
       else
-	DRAWCLIPWIDGET()
+  DRAWCLIPWIDGET()
     }
 
   if (!m_solidColor || m_active)
@@ -859,15 +859,15 @@ ClipObject::drawLines(QGLViewer *viewer,
       glEnable(GL_POINT_SMOOTH);
 
       if (m_active)
-	{
-	  glColor3f(1,0,0);
-	  glPointSize(25);
-	}
+  {
+    glColor3f(1,0,0);
+    glPointSize(25);
+  }
       else
-	{
-	  glColor3f(m_color.x, m_color.y, m_color.z);
-	  glPointSize(20);
-	}
+  {
+    glColor3f(m_color.x, m_color.y, m_color.z);
+    glPointSize(20);
+  }
       glBegin(GL_POINTS);
       glVertex3fv(opt);
       glEnd();
@@ -886,8 +886,8 @@ ClipObject::drawLines(QGLViewer *viewer,
 
 void
 ClipObject::postdraw(QGLViewer *viewer,
-		     int x, int y,
-		     bool grabsMouse)
+         int x, int y,
+         bool grabsMouse)
 {
   if (!grabsMouse)
     return;
@@ -909,9 +909,9 @@ ClipObject::postdraw(QGLViewer *viewer,
       VolumeInformation pvlInfo = VolumeInformation::volumeInformation();
       QString str;
       str = QString("clip : %1 %2 %3").\
-	arg(m_position.x).\
-	arg(m_position.y).\
-	arg(m_position.z);
+  arg(m_position.x).\
+  arg(m_position.y).\
+  arg(m_position.z);
 
       QFont font = QFont();
       QFontMetrics metric(font);
@@ -983,15 +983,15 @@ ClipObject::keyPressEvent(QKeyEvent *event)
       return true;
     }
   else if (event->key() == Qt::Key_Z &&
-	   (event->modifiers() & Qt::ControlModifier ||
-	    event->modifiers() & Qt::MetaModifier) )
+     (event->modifiers() & Qt::ControlModifier ||
+      event->modifiers() & Qt::MetaModifier) )
     {
       applyUndo();
       return true;
     }
   else if (event->key() == Qt::Key_Y &&
-	   (event->modifiers() & Qt::ControlModifier ||
-	    event->modifiers() & Qt::MetaModifier) )
+     (event->modifiers() & Qt::ControlModifier ||
+      event->modifiers() & Qt::MetaModifier) )
     {
       applyRedo();
       return true;
@@ -1014,12 +1014,12 @@ ClipObject::processCommand(QString cmd)
   if (list[0] == "mop")
     {
       if (list.size() == 2 && list[1] == "clip")
-	{
-	  m_mopClip = true;
-	  return true;
-	}
+  {
+    m_mopClip = true;
+    return true;
+  }
       else
-	return false;
+  return false;
     }
   else if (list[0] == "tfset")
     {
@@ -1036,24 +1036,24 @@ ClipObject::processCommand(QString cmd)
   else if (list[0] == "color")
     {
       QColor dcolor = QColor::fromRgbF(m_color.x,
-				       m_color.y,
-				       m_color.z);
+               m_color.y,
+               m_color.z);
       QColor color = DColorDialog::getColor(dcolor);
       if (color.isValid())
-	{
-	  float r = color.redF();
-	  float g = color.greenF();
-	  float b = color.blueF();
-	  m_color = Vec(r,g,b);
-	}
+  {
+    float r = color.redF();
+    float g = color.greenF();
+    float b = color.blueF();
+    m_color = Vec(r,g,b);
+  }
     }
   else if (list[0] == "solidcolor")
     {
       if (list.size() == 2 &&
-	  list[1] == "no")
-	m_solidColor = false;
+    list[1] == "no")
+  m_solidColor = false;
       else
-	m_solidColor = true;
+  m_solidColor = true;
       return true;
     }
   else if (list[0] == "savesliceimage")
@@ -1075,226 +1075,226 @@ ClipObject::processCommand(QString cmd)
   else if (list[0] == "grid")
     {
       if (list.size() == 1)
-	{
-	  m_gridX = m_gridY = 10;
-	}
+  {
+    m_gridX = m_gridY = 10;
+  }
       else if (list.size() == 2 && list[1] == "no")
-	{
-	  m_gridX = m_gridY = 0;
-	}
+  {
+    m_gridX = m_gridY = 0;
+  }
       else if (list.size() == 3)
-	{
-	  m_gridX = list[1].toInt();
-	  m_gridY = list[2].toInt();
-	}
+  {
+    m_gridX = list[1].toInt();
+    m_gridY = list[2].toInt();
+  }
       return true;
     }
   else if (list[0] == "image")
     {
       if (list.size() == 2 &&
-	  list[1] == "no")
-	clearImage();
+    list[1] == "no")
+  clearImage();
       else
-	loadImage();
+  loadImage();
       return true;
     }
   else if (list[0] == "imageframe")
     {
       if (list.size() == 2)
-	{
-	  int frm = list[1].toInt(&ok);
-	  if (frm >= 0)
-	    {
-	      loadImage(m_imageName, frm);
-	    }
-	  else
-	    QMessageBox::information(0, "Error",
-				     "ImageFrame not changed.  Positive values required");
-	}
+  {
+    int frm = list[1].toInt(&ok);
+    if (frm >= 0)
+      {
+        loadImage(m_imageName, frm);
+      }
+    else
+      QMessageBox::information(0, "Error",
+             "ImageFrame not changed.  Positive values required");
+  }
       else
-	QMessageBox::information(0, "Error",
-				 "Please specify ImageFrame number for the clipplane");
+  QMessageBox::information(0, "Error",
+         "Please specify ImageFrame number for the clipplane");
       return true;
     }
   else if (list[0] == "caption")
     {
       if (list.count() == 2 &&
-	  list[1] == "no")
-	clearCaption();
+    list[1] == "no")
+  clearCaption();
       else
-	loadCaption();
+  loadCaption();
 
       return true;
     }
   else if (list[0] == "vscale" ||
-	   list[0] == "scale")
+     list[0] == "scale")
     {
       if (list.size() > 1)
-	{
-	  float scl1, scl2;
-	  if (list.size() == 2)
-	    {
-	      scl1 = list[1].toFloat(&ok);
-	      scl2 = scl1;
-	    }
-	  else
-	    {
-	      scl1 = list[1].toFloat(&ok);
-	      scl2 = list[2].toFloat(&ok);
-	    }
-	  if (list[0] == "scale")
-	    {
-	      m_scale1 = -qAbs(scl1);
-	      m_scale2 = -qAbs(scl2);
-	    }
-	  else
-	    {
-	      m_scale1 = scl1;
-	      m_scale2 = scl2;
-	    }
-	}
+  {
+    float scl1, scl2;
+    if (list.size() == 2)
+      {
+        scl1 = list[1].toFloat(&ok);
+        scl2 = scl1;
+      }
+    else
+      {
+        scl1 = list[1].toFloat(&ok);
+        scl2 = list[2].toFloat(&ok);
+      }
+    if (list[0] == "scale")
+      {
+        m_scale1 = -qAbs(scl1);
+        m_scale2 = -qAbs(scl2);
+      }
+    else
+      {
+        m_scale1 = scl1;
+        m_scale2 = scl2;
+      }
+  }
       else
-	QMessageBox::information(0, "Error",
-				 "Please specify both scalings for the clipplane");
+  QMessageBox::information(0, "Error",
+         "Please specify both scalings for the clipplane");
       return true;
     }
   else if (list[0] == "opacity")
     {
       if (list.size() == 2)
-	{
-	  float scl = list[1].toFloat(&ok);
-	  if (scl >= 0 && scl <= 1)
-	    {
-	      m_opacity = scl;
-	      m_opacity = qMax(0.02f, qMin(1.0f, m_opacity));
-	    }
-	  else
-	    QMessageBox::information(0, "Error",
-				     "Opacity not changed.  Value between 0 and 1 required");
-	}
+  {
+    float scl = list[1].toFloat(&ok);
+    if (scl >= 0 && scl <= 1)
+      {
+        m_opacity = scl;
+        m_opacity = qMax(0.02f, qMin(1.0f, m_opacity));
+      }
+    else
+      QMessageBox::information(0, "Error",
+             "Opacity not changed.  Value between 0 and 1 required");
+  }
       else
-	QMessageBox::information(0, "Error",
-				 "Please specify opacity for the clipplane");
+  QMessageBox::information(0, "Error",
+         "Please specify opacity for the clipplane");
       return true;
     }
   else if (list[0] == "translate" ||
-	   list[0] == "translatex" ||
-	   list[0] == "translatey" ||
-	   list[0] == "translatez" ||
-	   list[0] == "move" ||
-	   list[0] == "movex" ||
-	   list[0] == "movey" ||
-	   list[0] == "movez")
+     list[0] == "translatex" ||
+     list[0] == "translatey" ||
+     list[0] == "translatez" ||
+     list[0] == "move" ||
+     list[0] == "movex" ||
+     list[0] == "movey" ||
+     list[0] == "movez")
     {
       Vec pos;
       float x=0,y=0,z=0;
 
       if (list[0] == "translate" || list[0] == "move")
-	{
-	  if (list.size() > 1) x = list[1].toFloat(&ok);
-	  if (list.size() > 2) y = list[2].toFloat(&ok);
-	  if (list.size() > 3) z = list[3].toFloat(&ok);
-	  pos = Vec(x,y,z);
-	}
+  {
+    if (list.size() > 1) x = list[1].toFloat(&ok);
+    if (list.size() > 2) y = list[2].toFloat(&ok);
+    if (list.size() > 3) z = list[3].toFloat(&ok);
+    pos = Vec(x,y,z);
+  }
       else
-	{
-	  float v=0;
-	  if (list.size() > 1) v = list[1].toFloat(&ok);
-	  if (list[0] == "translatex" || list[0] == "movex")
-	    pos = Vec(v,0,0);
-	  else if (list[0] == "translatey" || list[0] == "movey")
-	    pos = Vec(0,v,0);
-	  else if (list[0] == "translatez" || list[0] == "movez")
-	    pos = Vec(0,0,v);
-	}
+  {
+    float v=0;
+    if (list.size() > 1) v = list[1].toFloat(&ok);
+    if (list[0] == "translatex" || list[0] == "movex")
+      pos = Vec(v,0,0);
+    else if (list[0] == "translatey" || list[0] == "movey")
+      pos = Vec(0,v,0);
+    else if (list[0] == "translatez" || list[0] == "movez")
+      pos = Vec(0,0,v);
+  }
 
       if (list[0].contains("move"))
-	{
-	  Vec cpos = position();
-	  pos = pos + cpos;
-	}
+  {
+    Vec cpos = position();
+    pos = pos + cpos;
+  }
       setPosition(pos);
       return true;
     }
   else if (list[0] == "rotatea" ||
-	   list[0] == "rotateb" ||
-	   list[0] == "rotatec")
+     list[0] == "rotateb" ||
+     list[0] == "rotatec")
     {
       float angle = 0;
       if (list.size() > 1)
-	{
-	  angle = list[1].toFloat(&ok);
-	  if (list[0] == "rotatea") rotate(m_xaxis, angle);
-	  if (list[0] == "rotateb") rotate(m_yaxis, angle);
-	  if (list[0] == "rotatec") rotate(m_tang, angle);
-	}
+  {
+    angle = list[1].toFloat(&ok);
+    if (list[0] == "rotatea") rotate(m_xaxis, angle);
+    if (list[0] == "rotateb") rotate(m_yaxis, angle);
+    if (list[0] == "rotatec") rotate(m_tang, angle);
+  }
       else
-	{
-	  QMessageBox::information(0, "", "No angle specified");
-	}
+  {
+    QMessageBox::information(0, "", "No angle specified");
+  }
       return true;
     }
   else if (list[0] == "movea" ||
-	   list[0] == "moveb" ||
-	   list[0] == "movec")
+     list[0] == "moveb" ||
+     list[0] == "movec")
     {
       float shift = 0;
       if (list.size() > 1)
-	{
-	  shift = list[1].toFloat(&ok);
-	  if (list[0] == "movea") translate(shift*m_xaxis);
-	  if (list[0] == "moveb") translate(shift*m_yaxis);
-	  if (list[0] == "movec") translate(shift*m_tang);
-	}
+  {
+    shift = list[1].toFloat(&ok);
+    if (list[0] == "movea") translate(shift*m_xaxis);
+    if (list[0] == "moveb") translate(shift*m_yaxis);
+    if (list[0] == "movec") translate(shift*m_tang);
+  }
       else
-	{
-	  QMessageBox::information(0, "", "No distance specified");
-	}
+  {
+    QMessageBox::information(0, "", "No distance specified");
+  }
       return true;
     }
   else if (list[0] == "rotate" ||
-	   list[0] == "rotatex" ||
-	   list[0] == "rotatey" ||
-	   list[0] == "rotatez" ||
-	   list[0] == "addrotation" ||
-	   list[0] == "addrotationx" ||
-	   list[0] == "addrotationy" ||
-	   list[0] == "addrotationz")
+     list[0] == "rotatex" ||
+     list[0] == "rotatey" ||
+     list[0] == "rotatez" ||
+     list[0] == "addrotation" ||
+     list[0] == "addrotationx" ||
+     list[0] == "addrotationy" ||
+     list[0] == "addrotationz")
     {
       Quaternion rot;
       float x=0,y=0,z=0,a=0;
       if (list[0] == "rotate" || list[0] == "addrotation")
-	{
-	  if (list.size() > 1) x = list[1].toFloat(&ok);
-	  if (list.size() > 2) y = list[2].toFloat(&ok);
-	  if (list.size() > 3) z = list[3].toFloat(&ok);
-	  if (list.size() > 4) a = list[4].toFloat(&ok);
-	  rot = Quaternion(Vec(x,y,z), DEG2RAD(a));
-	}
+  {
+    if (list.size() > 1) x = list[1].toFloat(&ok);
+    if (list.size() > 2) y = list[2].toFloat(&ok);
+    if (list.size() > 3) z = list[3].toFloat(&ok);
+    if (list.size() > 4) a = list[4].toFloat(&ok);
+    rot = Quaternion(Vec(x,y,z), DEG2RAD(a));
+  }
       else
-	{
-	  float a=0;
-	  if (list.size() > 1) a = list[1].toFloat(&ok);
-	  if (list[0] == "rotatex" || list[0] == "addrotationx")
-	    rot = Quaternion(Vec(1,0,0), DEG2RAD(a));
-	  else if (list[0] == "rotatey" || list[0] == "addrotationy")
-	    rot = Quaternion(Vec(0,1,0), DEG2RAD(a));
-	  else if (list[0] == "rotatez" || list[0] == "addrotationz")
-	    rot = Quaternion(Vec(0,0,1), DEG2RAD(a));
-	}
+  {
+    float a=0;
+    if (list.size() > 1) a = list[1].toFloat(&ok);
+    if (list[0] == "rotatex" || list[0] == "addrotationx")
+      rot = Quaternion(Vec(1,0,0), DEG2RAD(a));
+    else if (list[0] == "rotatey" || list[0] == "addrotationy")
+      rot = Quaternion(Vec(0,1,0), DEG2RAD(a));
+    else if (list[0] == "rotatez" || list[0] == "addrotationz")
+      rot = Quaternion(Vec(0,0,1), DEG2RAD(a));
+  }
 
       if (list[0].contains("addrotation"))
-	{
-	  Quaternion orot = orientation();
-	  rot = rot*orot;
-	}
+  {
+    Quaternion orot = orientation();
+    rot = rot*orot;
+  }
       setOrientation(rot);
       return true;
     }
   else
     QMessageBox::information(0, "Error",
-			     QString("Cannot understand the command : ") +
-			     cmd);
+           QString("Cannot understand the command : ") +
+           cmd);
 
   return false;
 }
@@ -1307,9 +1307,9 @@ ClipObject::computeTscale()
   if (m_imagePresent || m_captionPresent)
     {
       if (m_textureHeight > m_textureWidth)
-	s1 = (float)m_textureWidth/(float)m_textureHeight;
+  s1 = (float)m_textureWidth/(float)m_textureHeight;
       else
-	s2 = (float)m_textureHeight/(float)m_textureWidth;
+  s2 = (float)m_textureHeight/(float)m_textureWidth;
     }
 
   if (m_scale1 > 0 && m_scale2 > 0)
@@ -1351,8 +1351,8 @@ ClipObject::commandEditor()
   vlist << QVariant("color");
   Vec pcolor = m_color;
   QColor dcolor = QColor::fromRgbF(pcolor.x,
-				   pcolor.y,
-				   pcolor.z);
+           pcolor.y,
+           pcolor.z);
   vlist << dcolor;
   plist["color"] = vlist;
 
@@ -1442,23 +1442,23 @@ ClipObject::commandEditor()
       QTextStream in(&helpFile);
       QString line = in.readLine();
       while (!line.isNull())
-	{
-	  if (line == "#begin")
-	    {
-	      QString keyword = in.readLine();
-	      QString helptext;
-	      line = in.readLine();
-	      while (!line.isNull())
-		{
-		  helptext += line;
-		  helptext += "\n";
-		  line = in.readLine();
-		  if (line == "#end") break;
-		}
-	      vlist << keyword << helptext;
-	    }
-	  line = in.readLine();
-	}
+  {
+    if (line == "#begin")
+      {
+        QString keyword = in.readLine();
+        QString helptext;
+        line = in.readLine();
+        while (!line.isNull())
+    {
+      helptext += line;
+      helptext += "\n";
+      line = in.readLine();
+      if (line == "#end") break;
+    }
+        vlist << keyword << helptext;
+      }
+    line = in.readLine();
+  }
     }
 
   plist["commandhelp"] = vlist;
@@ -1476,11 +1476,8 @@ ClipObject::commandEditor()
     arg(m_position.x).arg(m_position.y).arg(m_position.z);
 
   Quaternion q = orientation();
-  Vec axis;
-  qreal angle;
-  q.getAxisAngle(axis, angle);
   mesg += QString("rotation : %1 %2 %3 : %4\n").			\
-    arg(axis.x).arg(axis.y).arg(axis.z).arg(RAD2DEG(angle));
+    arg(q.axis().x).arg(q.axis().y).arg(q.axis().z).arg(RAD2DEG(q.angle()));
 
 
   mesg += QString("Red axis : %1 %2 %3\n").		\
@@ -1535,90 +1532,90 @@ ClipObject::commandEditor()
 
 
       if (pair.second)
-	{
-	  if (keys[ik] == "color")
-	    {
-	      QColor color = pair.first.value<QColor>();
-	      float r = color.redF();
-	      float g = color.greenF();
-	      float b = color.blueF();
-	      m_color = Vec(r,g,b);
-	    }
-	  else if (keys[ik] == "opacity")
-	    m_opacity = pair.first.toDouble();
-	  else if (keys[ik] == "solid color")
-	    m_solidColor = pair.first.toBool();
-	  else if (keys[ik] == "apply clipping")
-	    m_apply = pair.first.toBool();
-	  else if (keys[ik] == "show slice")
-	    m_showSlice = pair.first.toBool();
-	  else if (keys[ik] == "show thickness")
-	    m_showThickness = pair.first.toBool();
-	  else if (keys[ik] == "show other slice")
-	    m_showOtherSlice = pair.first.toBool();
-	  else if (keys[ik] == "tfset")
-	    m_tfset = pair.first.toInt();
-	  else if (keys[ik] == "thickness")
-	    m_thickness = pair.first.toInt();
-	  else if (keys[ik] == "viewport scale")
-	    m_viewportScale = pair.first.toDouble();
-	  else if (keys[ik] == "camera type")
-	    m_viewportType = (pair.first.toInt() == 1);
-	  else if (keys[ik] == "stereo")
-	    m_stereo = pair.first.toDouble();
-	  else if (keys[ik] == "viewport")
-	    {
-	      vpstr = pair.first.toString();
-	      QStringList list = vpstr.split(" ", QString::SkipEmptyParts);
-	      if (list.count() == 4)
-		{
-		  float x = list[0].toFloat();
-		  float y = list[1].toFloat();
-		  float z = list[2].toFloat();
-		  float w = list[3].toFloat();
-		  if (x < 0.0f || x > 1.0f ||
-		      y < 0.0f || y > 1.0f ||
-		      z < 0.0f || z > 1.0f ||
-		      w < 0.0f || w > 1.0f)
-		    QMessageBox::information(0, "",
-		      QString("Values for viewport must be between 0.0 and 1.0 : %1 %2 %3 %4").\
-					     arg(x).arg(y).arg(z).arg(w));
-		  else
-		    m_viewport = QVector4D(x,y,z,w);
-		}
-	      else if (list.count() == 3)
-		{
-		  float x = list[0].toFloat();
-		  float y = list[1].toFloat();
-		  float z = list[2].toFloat();
-		  if (x < 0.0f || x > 1.0f ||
-		      y < 0.0f || y > 1.0f ||
-		      z < 0.0f || z > 1.0f)
-		    QMessageBox::information(0, "",
-		      QString("Values for viewport must be between 0.0 and 1.0 : %1 %2 %3").\
-					     arg(x).arg(y).arg(z));
-		  else
-		    m_viewport = QVector4D(x,y,z,z);
-		}
-	      else if (list.count() == 2)
-		{
-		  float x = list[0].toFloat();
-		  float y = list[1].toFloat();
-		  if (x < 0.0f || x > 1.0f ||
-		      y < 0.0f || y > 1.0f)
-		    QMessageBox::information(0, "",
-		      QString("Values for viewport must be between 0.0 and 1.0 : %1 %2").\
-					     arg(x).arg(y));
-		  else
-		    m_viewport = QVector4D(x,y,0.5,0.5);
-		}
-	      else
-		{
-		  QMessageBox::information(0, "", "Switching off the viewport");
-		  m_viewport = QVector4D(-1,-1,-1,-1);
-		}
-	    }
-	}
+  {
+    if (keys[ik] == "color")
+      {
+        QColor color = pair.first.value<QColor>();
+        float r = color.redF();
+        float g = color.greenF();
+        float b = color.blueF();
+        m_color = Vec(r,g,b);
+      }
+    else if (keys[ik] == "opacity")
+      m_opacity = pair.first.toDouble();
+    else if (keys[ik] == "solid color")
+      m_solidColor = pair.first.toBool();
+    else if (keys[ik] == "apply clipping")
+      m_apply = pair.first.toBool();
+    else if (keys[ik] == "show slice")
+      m_showSlice = pair.first.toBool();
+    else if (keys[ik] == "show thickness")
+      m_showThickness = pair.first.toBool();
+    else if (keys[ik] == "show other slice")
+      m_showOtherSlice = pair.first.toBool();
+    else if (keys[ik] == "tfset")
+      m_tfset = pair.first.toInt();
+    else if (keys[ik] == "thickness")
+      m_thickness = pair.first.toInt();
+    else if (keys[ik] == "viewport scale")
+      m_viewportScale = pair.first.toDouble();
+    else if (keys[ik] == "camera type")
+      m_viewportType = (pair.first.toInt() == 1);
+    else if (keys[ik] == "stereo")
+      m_stereo = pair.first.toDouble();
+    else if (keys[ik] == "viewport")
+      {
+        vpstr = pair.first.toString();
+        QStringList list = vpstr.split(" ", QString::SkipEmptyParts);
+        if (list.count() == 4)
+    {
+      float x = list[0].toFloat();
+      float y = list[1].toFloat();
+      float z = list[2].toFloat();
+      float w = list[3].toFloat();
+      if (x < 0.0f || x > 1.0f ||
+          y < 0.0f || y > 1.0f ||
+          z < 0.0f || z > 1.0f ||
+          w < 0.0f || w > 1.0f)
+        QMessageBox::information(0, "",
+          QString("Values for viewport must be between 0.0 and 1.0 : %1 %2 %3 %4").\
+               arg(x).arg(y).arg(z).arg(w));
+      else
+        m_viewport = QVector4D(x,y,z,w);
+    }
+        else if (list.count() == 3)
+    {
+      float x = list[0].toFloat();
+      float y = list[1].toFloat();
+      float z = list[2].toFloat();
+      if (x < 0.0f || x > 1.0f ||
+          y < 0.0f || y > 1.0f ||
+          z < 0.0f || z > 1.0f)
+        QMessageBox::information(0, "",
+          QString("Values for viewport must be between 0.0 and 1.0 : %1 %2 %3").\
+               arg(x).arg(y).arg(z));
+      else
+        m_viewport = QVector4D(x,y,z,z);
+    }
+        else if (list.count() == 2)
+    {
+      float x = list[0].toFloat();
+      float y = list[1].toFloat();
+      if (x < 0.0f || x > 1.0f ||
+          y < 0.0f || y > 1.0f)
+        QMessageBox::information(0, "",
+          QString("Values for viewport must be between 0.0 and 1.0 : %1 %2").\
+               arg(x).arg(y));
+      else
+        m_viewport = QVector4D(x,y,0.5,0.5);
+    }
+        else
+    {
+      QMessageBox::information(0, "", "Switching off the viewport");
+      m_viewport = QVector4D(-1,-1,-1,-1);
+    }
+      }
+  }
     }
 
   QString cmd = propertyEditor.getCommandString();

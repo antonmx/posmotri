@@ -2,6 +2,7 @@
 #define KEYFRAME_H
 
 #include "keyframeinformation.h"
+#include "ui_interpolation.h"
 
 class KeyFrame : public QObject
 {
@@ -26,32 +27,32 @@ class KeyFrame : public QObject
   int searchCaption(QStringList);
 
   void saveProject(qglviewer::Vec, qglviewer::Quaternion,
-		   float, float,
-		   int, int, int, int,
-		   unsigned char*,
-		   LightingInformation,
-		   QList<BrickInformation>,
-		   qglviewer::Vec, qglviewer::Vec,
-		   QImage,
-		   int, int, QString, QString, QString,
-		   int, bool, bool, bool,
-		   QByteArray);
+       float, float,
+       int, int, int, int,
+       unsigned char*,
+       LightingInformation,
+       QList<BrickInformation>,
+       qglviewer::Vec, qglviewer::Vec,
+       QImage,
+       int, int, QString, QString, QString,
+       int, bool, bool, bool,
+       QByteArray);
 
   void setKeyFrame(qglviewer::Vec, qglviewer::Quaternion,
-		   float, float,
-		   int, unsigned char*,
-		   LightingInformation,
-		   QList<BrickInformation>,
-		   qglviewer::Vec, qglviewer::Vec,
-		   QImage,
-		   QList<SplineInformation>,
-		   int, int, QString, QString, QString,
-		   int, bool, bool, bool);
+       float, float,
+       int, unsigned char*,
+       LightingInformation,
+       QList<BrickInformation>,
+       qglviewer::Vec, qglviewer::Vec,
+       QImage,
+       QList<SplineInformation>,
+       int, int, QString, QString, QString,
+       int, bool, bool, bool);
 
   void interpolateAt(int, float,
-		     qglviewer::Vec&, qglviewer::Quaternion&,
-		     KeyFrameInformation&,
-		     float&);
+         qglviewer::Vec&, qglviewer::Quaternion&,
+         KeyFrameInformation&,
+         float&);
 
   int numberOfKeyFrames();
 
@@ -73,8 +74,8 @@ class KeyFrame : public QObject
 
  signals :
   void updateParameters(bool, bool, qglviewer::Vec, QString,
-			int, int, QString, QString, QString,
-			int, bool, bool, float, bool, bool);
+      int, int, QString, QString, QString,
+      int, bool, bool, float, bool, bool);
   void loadKeyframes(QList<int>, QList<QImage>);
   void updateVolInfo(int);
   void updateVolInfo(int, int);

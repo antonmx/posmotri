@@ -27,8 +27,6 @@ public :
   void paintEvent ( QPaintEvent * );
   void resizeEvent ( QResizeEvent * );
 
-  void enterEvent(QEvent*);
-  void leaveEvent(QEvent*);
   void mouseReleaseEvent(QMouseEvent*);
   void mousePressEvent(QMouseEvent*);
   void mouseMoveEvent(QMouseEvent*);
@@ -40,7 +38,7 @@ public :
   int endFrame();
   int currentFrame();
 
- signals :
+signals :
   void showMessage(QString, bool);
   void setKeyFrame(int);
   void removeKeyFrame(int);
@@ -59,7 +57,7 @@ public :
   void editFrameInterpolation(int);
   void setKeyFrameNumbers(QList<int>);
 
- public slots :
+public slots :
   void loadKeyframes(QList<int>, QList<QImage>);
   void clear();
   void setImage(int, QImage);
@@ -68,10 +66,10 @@ public :
   void setPlayFrames(bool);
   void playKeyFrames(int, int, int);
   void addKeyFrameNumbers(QList<int>);
-  void moveTo(int);
+  void moveTo(int=0);
   void setKeyFrame();
 
- private slots :
+private slots :
   void increaseFrameStep();
   void decreaseFrameStep();
   void removeKeyFrame();
@@ -79,8 +77,21 @@ public :
   void playPressed();
   void copyFrame();
   void pasteFrame();
+  void saveKeyFrame();
+  void deselect();
+  void editFrameInterpolation();
 
- private :
+protected:
+    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+
+private :
+   QAction * copy;
+   QAction * paste;
+   QAction * interpolate;
+   QAction * save;
+   QAction * remove;
+   QAction * addnew;
+   QAction * deselect;
 
   SelectRegion m_selectRegion;
   int m_lineHeight, m_tickHeight;
@@ -129,6 +140,7 @@ public :
   void applyMove(int, int);
 
   void showHelp();
+
 };
 
 

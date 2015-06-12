@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Key frame editor</string>
   </property>
   <layout class="QVBoxLayout" name="mainLayout">
    <item>
@@ -24,60 +24,6 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="setFrame">
-        <property name="text">
-         <string>Set frame</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="deleteFrame">
-        <property name="text">
-         <string>Delete frame</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="copyFrame">
-        <property name="text">
-         <string>Copy frame</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pasteFrame">
-        <property name="text">
-         <string>Paste frame</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
        <widget class="QPushButton" name="playpause">
         <property name="text">
          <string>&gt;/||</string>
@@ -88,6 +34,20 @@
        <widget class="QPushButton" name="rewind">
         <property name="text">
          <string>|&lt;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Jump to</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="goTo">
+        <property name="maximum">
+         <number>0</number>
         </property>
        </widget>
       </item>
@@ -105,9 +65,16 @@
        </spacer>
       </item>
       <item>
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Zoom</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="zoomP">
         <property name="text">
-         <string>Zoom +</string>
+         <string>+</string>
         </property>
         <property name="autoRepeat">
          <bool>true</bool>
@@ -117,7 +84,7 @@
       <item>
        <widget class="QPushButton" name="zoomM">
         <property name="text">
-         <string>Zoom -</string>
+         <string>-</string>
         </property>
         <property name="autoRepeat">
          <bool>true</bool>
