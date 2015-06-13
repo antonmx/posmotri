@@ -4,11 +4,10 @@
 #include "keyframeinformation.h"
 #include "ui_interpolation.h"
 
-class KeyFrame : public QObject
-{
-  Q_OBJECT
+class KeyFrame : public QObject {
+  Q_OBJECT;
 
- public :
+public :
   KeyFrame();
   ~KeyFrame();
 
@@ -27,36 +26,36 @@ class KeyFrame : public QObject
   int searchCaption(QStringList);
 
   void saveProject(qglviewer::Vec, qglviewer::Quaternion,
-       float, float,
-       int, int, int, int,
-       unsigned char*,
-       LightingInformation,
-       QList<BrickInformation>,
-       qglviewer::Vec, qglviewer::Vec,
-       QImage,
-       int, int, QString, QString, QString,
-       int, bool, bool, bool,
-       QByteArray);
+                   float, float,
+                   int, int, int, int,
+                   unsigned char*,
+                   LightingInformation,
+                   QList<BrickInformation>,
+                   qglviewer::Vec, qglviewer::Vec,
+                   QImage,
+                   int, int, QString, QString, QString,
+                   int, bool, bool, bool,
+                   QByteArray);
 
   void setKeyFrame(qglviewer::Vec, qglviewer::Quaternion,
-       float, float,
-       int, unsigned char*,
-       LightingInformation,
-       QList<BrickInformation>,
-       qglviewer::Vec, qglviewer::Vec,
-       QImage,
-       QList<SplineInformation>,
-       int, int, QString, QString, QString,
-       int, bool, bool, bool);
+                   float, float,
+                   int, unsigned char*,
+                   LightingInformation,
+                   QList<BrickInformation>,
+                   qglviewer::Vec, qglviewer::Vec,
+                   QImage,
+                   QList<SplineInformation>,
+                   int, int, QString, QString, QString,
+                   int, bool, bool, bool);
 
   void interpolateAt(int, float,
-         qglviewer::Vec&, qglviewer::Quaternion&,
-         KeyFrameInformation&,
-         float&);
+                     qglviewer::Vec&, qglviewer::Quaternion&,
+                     KeyFrameInformation&,
+                     float&);
 
   int numberOfKeyFrames();
 
- public slots :
+public slots :
   void playFrameNumber(int);
   void updateKeyFrameInterpolator();
   void removeKeyFrame(int);
@@ -72,10 +71,10 @@ class KeyFrame : public QObject
   void replaceKeyFrameImage(int, QImage);
   void playSavedKeyFrame();
 
- signals :
+signals :
   void updateParameters(bool, bool, qglviewer::Vec, QString,
-      int, int, QString, QString, QString,
-      int, bool, bool, float, bool, bool);
+                        int, int, QString, QString, QString,
+                        int, bool, bool, float, bool, bool);
   void loadKeyframes(QList<int>, QList<QImage>);
   void updateVolInfo(int);
   void updateVolInfo(int, int);
@@ -98,7 +97,7 @@ class KeyFrame : public QObject
   void replaceKeyFrameImage(int);
   void addKeyFrameNumbers(QList<int>);
 
- private :
+private :
   QList<CameraPathNode*> m_cameraList;
   QList<KeyFrameInformation*> m_keyFrameInfo;
 

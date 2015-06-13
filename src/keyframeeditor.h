@@ -78,7 +78,7 @@ private slots :
   void copyFrame();
   void pasteFrame();
   void saveKeyFrame();
-  void deselect();
+  void clearRegion();
   void editFrameInterpolation();
 
 protected:
@@ -94,7 +94,8 @@ private :
    QAction * deselect;
 
   SelectRegion m_selectRegion;
-  int m_lineHeight, m_tickHeight;
+  int m_lineHeight;
+  const int m_tickHeight;
   int m_tickStep;
   QPoint m_p0, m_p1;
   const int m_imgSize, m_imgSpacer;
@@ -105,7 +106,6 @@ private :
   int m_currFrame;
   bool m_draggingCurrFrame;
   int m_selected;
-  int m_pressed;
   int m_pressedMinFrame;
   bool m_playFrames;
   bool m_hiresMode;
@@ -126,18 +126,8 @@ private :
   void calcRect();
   void calcMaxFrame();
   void updateSelectRegion();
-  void drawSelectRegion(QPainter*);
-  void drawVisibleRange(QPainter*);
-  void drawTicks(QPainter*);
-  void drawKeyFrames(QPainter*);
-  void drawkeyframe(QPainter*, QColor, QColor, int, QRect, QImage);
-  void drawCurrentFrame(QPainter*);
   int frameUnderPoint(QPoint);
   void moveCurrentFrame(QPoint);
-  void moveGrid(int);
-  void preShift();
-  void applyShift();
-  void applyMove(int, int);
 
   void showHelp();
 
