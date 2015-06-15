@@ -31,13 +31,12 @@ public :
 KeyFrameEditor::KeyFrameEditor(QWidget *parent)
   : QWidget(parent)
   , ui(new Ui::KeyFrameEditor)
-  , copy(new QAction("Copy frame", this))
-  , paste(new QAction("Paste frame", this))
-  , save(new QAction("Save frame", this))
-  , remove(new QAction("Remove frame", this))
-  , addnew(new QAction("Add new frame", this))
-  , interpolate(new QAction("Change interpolation", this))
-  , deselect(new QAction("Clear selection", this))
+  , copyAct(new QAction("Copy frame", this))
+  , pasteAct(new QAction("Paste frame", this))
+  , removeAct(new QAction("Remove frame", this))
+  , setAct(new QAction("Set frame", this))
+  , interpolateAct(new QAction("Change interpolation", this))
+  , deselectAct(new QAction("Clear selection", this))
   , m_tickHeight(10)
   , m_tickStep(50)
   , m_imgSpacer(35)
@@ -63,13 +62,12 @@ KeyFrameEditor::KeyFrameEditor(QWidget *parent)
   calcMaxFrame();
   clear();
 
-  connect(copy, SIGNAL(triggered()), SLOT(copyFrame()));
-  connect(paste, SIGNAL(triggered()), SLOT(pasteFrame()));
-  connect(interpolate, SIGNAL(triggered()), SLOT(editFrameInterpolation()));
-  connect(save, SIGNAL(triggered()), SLOT(saveKeyFrame()));
-  connect(remove, SIGNAL(triggered()), SLOT(removeKeyFrame()));
-  connect(addnew, SIGNAL(triggered()), SLOT(setKeyFrame()));
-  connect(deselect, SIGNAL(triggered()), SLOT(clearRegion()));
+  connect(copyAct, SIGNAL(triggered()), SLOT(copyFrame()));
+  connect(pasteAct, SIGNAL(triggered()), SLOT(pasteFrame()));
+  connect(interpolateAct, SIGNAL(triggered()), SLOT(editFrameInterpolation()));
+  connect(removeAct, SIGNAL(triggered()), SLOT(removeKeyFrame()));
+  connect(setAct, SIGNAL(triggered()), SLOT(setKeyFrame()));
+  connect(deselectAct, SIGNAL(triggered()), SLOT(clearRegion()));
 
   connect(ui->zoomP, SIGNAL(pressed()), SLOT(decreaseFrameStep()));
   connect(ui->zoomM, SIGNAL(pressed()), SLOT(increaseFrameStep()));
@@ -82,11 +80,30 @@ KeyFrameEditor::KeyFrameEditor(QWidget *parent)
 
 
 void KeyFrameEditor::contextMenuEvent(QContextMenuEvent *event) {
+
+  if (!m_hiresMode) {
+    emit showMessage("Keyframe operation available only in Hires Mode", true);
+    qApp->processEvents();
+    return;
+  }
+
   QMenu menu(this);
-  menu.addAction(cutAct);
-  menu.addAction(copyAct);
-  menu.addAction(pasteAct);
-  menu.exec(event->globalPos());
+
+  if (m_copyFno >= 0  &&  m_selected < m_fno.count() )
+    menu.addAction(pasteAct);
+  if (m_selected >=0) {
+    menu.addAction(copyAct);
+    menu.addAction(interpolateAct);
+  }
+  if (m_selectRegion.valid || m_selected>=0)
+    menu.addAction(removeAct);
+  menu.addAction(setAct);
+  if (m_selectRegion.valid && m_selectRegion.frame1 > m_selectRegion.frame0)
+    menu.addAction(deselectAct);
+
+  if (!menu.isEmpty())
+    menu.exec(event->globalPos());
+
 }
 
 
@@ -104,6 +121,12 @@ int KeyFrameEditor::currentFrame() {
   return m_currFrame;
 }
 
+void KeyFrameEditor::setCurrentFrame(int cf) {
+  if (cf<0)
+    return;
+  ui->goTo->setValue(cf);
+  m_currFrame=cf;
+}
 
 
 void KeyFrameEditor::setHiresMode(bool flag) {
@@ -113,7 +136,7 @@ void KeyFrameEditor::setHiresMode(bool flag) {
 
 
 void KeyFrameEditor::resetCurrentFrame() {
-  m_currFrame = startFrame();
+  setCurrentFrame(startFrame());
   m_minFrame = qMax(1, m_currFrame);
   calcMaxFrame();
   setPlayFrames(false);
@@ -140,6 +163,7 @@ void KeyFrameEditor::setPlayFrames(bool flag) {
   qApp->processEvents();
 }
 
+
 void KeyFrameEditor::playKeyFrames(int start, int end, int step) {
 
   if ( m_fno.count() <= 1  || start > m_fno[m_fno.count()-1] ) {
@@ -153,6 +177,7 @@ void KeyFrameEditor::playKeyFrames(int start, int end, int step) {
   m_playFrames = true;
 
   for (m_currFrame=start; m_currFrame<=end; m_currFrame+=step)  {
+    setCurrentFrame(m_currFrame);
 
     if (m_currFrame > m_maxFrame) {
       m_minFrame = qMax(1, m_currFrame-1);
@@ -179,7 +204,7 @@ void KeyFrameEditor::playKeyFrames() {
     return;
 
   if (m_currFrame < m_fno[0])
-    m_currFrame = m_fno[0];
+    setCurrentFrame(m_fno[0]);
 
   int startFrame = m_currFrame;
   int endFrame = m_fno[m_fno.count()-1];
@@ -225,7 +250,7 @@ void KeyFrameEditor::calcRect() {
 
 
 void KeyFrameEditor::calcMaxFrame() {
-  m_maxFrame = m_minFrame + m_frameStep*(m_p1.x()-m_p0.x())/(float)m_tickStep;
+  m_maxFrame = m_minFrame + m_frameStep*(m_p1.x()-m_p0.x())/m_tickStep;
   calcRect();
 }
 
@@ -365,11 +390,12 @@ void KeyFrameEditor::paintEvent(QPaintEvent *event) {
 
   // draw current frame
 
+
   if (m_currFrame >= m_minFrame  &&  m_currFrame <= m_maxFrame) {
 
     p.setFont(QFont("Helvetica", 10));
     p.setPen(QPen(QColor(30, 100, 60),2));
-    const int tick = m_p0.x() + (m_currFrame-m_minFrame)*m_tickStep/(m_frameStep);
+    const int tick = m_p0.x() + (m_currFrame-m_minFrame)*m_tickStep/m_frameStep;
     p.drawLine(tick, m_lineHeight-m_tickHeight-5, tick, m_lineHeight+m_tickHeight+5);
 
     int tk = tick-10;
@@ -426,6 +452,7 @@ void KeyFrameEditor::paintEvent(QPaintEvent *event) {
 
 }
 
+
 void KeyFrameEditor::resizeEvent(QResizeEvent *event) {
   m_lineHeight = 30 + ui->spacer->geometry().top();
   m_p0 = QPoint(60, m_lineHeight);
@@ -447,6 +474,7 @@ static inline int frameStep2tickStep(int frameStep) {
   return 20;
 }
 
+
 void KeyFrameEditor::increaseFrameStep() {
   if (m_frameStep == 1)
     m_frameStep = 10;
@@ -459,6 +487,7 @@ void KeyFrameEditor::increaseFrameStep() {
   calcMaxFrame();
   update();
 }
+
 
 void KeyFrameEditor::decreaseFrameStep() {
   if (m_frameStep > 100)
@@ -479,12 +508,12 @@ int KeyFrameEditor::frameUnderPoint(QPoint pos) {
     return m_minFrame;
   if (pos.x() >= m_p1.x())
     return m_maxFrame;
-  return m_minFrame + (m_maxFrame-m_minFrame)*(pos.x()-m_p0.x())/(float)(m_p1.x()-m_p0.x());
+  return m_minFrame + (m_maxFrame-m_minFrame)*(pos.x()-m_p0.x())/(m_p1.x()-m_p0.x());
 }
 
 
 void KeyFrameEditor::moveCurrentFrame(QPoint pos) {
-  m_currFrame = frameUnderPoint(pos);
+  setCurrentFrame(frameUnderPoint(pos));
   update();
   emit playFrameNumber(m_currFrame);
   qApp->processEvents();
@@ -583,6 +612,7 @@ void KeyFrameEditor::copyFrame() {
   emit showMessage(QString("frame at %1 copied").arg(m_copyFno), false);
 }
 
+
 void KeyFrameEditor::pasteFrame() {
 
   if (m_copyFno < 0)  {
@@ -636,10 +666,7 @@ void KeyFrameEditor::keyPressEvent(QKeyEvent *event) {
     return;
   }
 
-  if   (event->key() == Qt::Key_Left)
-    m_currFrame = qMax(m_currFrame-1, 1);
-  else
-    m_currFrame--;
+  setCurrentFrame( (event->key() == Qt::Key_Left)  ?  qMax(m_currFrame-1, 1)  :  m_currFrame+1);
 
   m_selected = -1;
   for(int f=0; f<m_fno.count(); f++) {
@@ -804,7 +831,7 @@ void KeyFrameEditor::mouseMoveEvent(QMouseEvent *event) {
 
     }
 
-    m_currFrame = m_fno[m_selected];
+    setCurrentFrame(m_fno[m_selected]);
 
     update();
 
@@ -835,20 +862,23 @@ void KeyFrameEditor::mouseReleaseEvent(QMouseEvent *event) {
 
 void KeyFrameEditor::mousePressEvent(QMouseEvent *event) {
 
-  QPoint clickPos = event->pos();
   const int pressed_but = event->button();
+
+  if (pressed_but != Qt::LeftButton) {
+    QWidget::mousePressEvent(event);
+    return;
+  }
+
+  QPoint clickPos = event->pos();
   m_pressedMinFrame = m_minFrame;
   m_draggingCurrFrame = false;
   m_modifiers = event->modifiers();
-
-  if (pressed_but == Qt::RightButton)
-    m_selectRegion.valid = false;
-
   m_selected = -1;
+
   for(int i=m_fno.count()-1; i>=0; i--)  {
     if (m_fRect[i].contains(clickPos)) {
       m_selected = i;
-      m_currFrame = m_fno[m_selected];
+      setCurrentFrame(m_fno[m_selected]);
 
       if (m_selectRegion.valid) { // pre shift
 
@@ -931,15 +961,19 @@ void KeyFrameEditor::setKeyFrame() {
     qApp->processEvents();
     return;
   }
-  m_fno.append(m_currFrame);
-  m_fRect.append(QRect(-10,-10,1,1));
-  QImage img(100,100, QImage::Format_RGB32);
-  m_fImage.append(img);
-  m_minFrame = qMax(1, m_fno[m_fno.count()-1]-3*m_frameStep);
-  calcMaxFrame();
-  calcRect();
-  update();
+
+  if ( ! m_fno.contains(m_currFrame) ) {
+    m_fno.append(m_currFrame);
+    m_fRect.append(QRect(-10,-10,1,1));
+    QImage img(100,100, QImage::Format_RGB32);
+    m_fImage.append(img);
+    //m_minFrame = qMax(1, m_fno.last()-3*m_frameStep);
+    calcMaxFrame();
+  }
+
   emit setKeyFrame(m_currFrame);
+  update();
+
 }
 
 
@@ -983,6 +1017,7 @@ void KeyFrameEditor::removeKeyFrame() {
 
 }
 
+
 void KeyFrameEditor::reorder() {
 
   m_reordered = true;
@@ -1021,24 +1056,26 @@ void KeyFrameEditor::reorder() {
 
 }
 
+
 void KeyFrameEditor::loadKeyframes(QList<int> framenumbers, QList<QImage> images) {
   clear();
   m_fno += framenumbers;
   m_fImage += images;
   for(int i=0; i<framenumbers.size(); i++)
     m_fRect.append(QRect(-10,-10,1,1));
-  m_currFrame = 1;
+  setCurrentFrame(1);
   calcMaxFrame();
   reorder();
   update();
 }
+
 
 void KeyFrameEditor::moveTo(int fno) {
   if (!fno)
     fno = ui->goTo->value();
   if (m_currFrame==fno)
     return;
-  m_currFrame = fno;
+  setCurrentFrame(fno);
   if (m_currFrame < m_minFrame)
     m_minFrame = m_currFrame;
   if (m_currFrame > m_maxFrame)
@@ -1051,13 +1088,14 @@ void KeyFrameEditor::moveTo(int fno) {
 
 
 void KeyFrameEditor::clearRegion() {
-  m_selectRegion.frame0 = frameUnderPoint(clickPos);
+  m_selectRegion.frame0 = ui->goTo->value();
   m_selectRegion.frame1 = m_selectRegion.frame0;
   m_selectRegion.valid = true;
+  update();
 }
 
 void KeyFrameEditor::editFrameInterpolation() {
-  emit editFrameInterpolation(frameUnderPoint(mapTo(window(), clickPos)));
+  emit editFrameInterpolation(m_selected);
 }
 
 

@@ -3,6 +3,7 @@
 
 #include "global.h"
 
+
 class SelectRegion {
 public :
     bool valid;
@@ -32,8 +33,6 @@ public :
   void mouseMoveEvent(QMouseEvent*);
   void keyPressEvent(QKeyEvent*);
 
-  QSize sizeHint() const;
-
   int startFrame();
   int endFrame();
   int currentFrame();
@@ -58,6 +57,7 @@ signals :
   void setKeyFrameNumbers(QList<int>);
 
 public slots :
+  void setCurrentFrame(int);
   void loadKeyframes(QList<int>, QList<QImage>);
   void clear();
   void setImage(int, QImage);
@@ -77,7 +77,6 @@ private slots :
   void playPressed();
   void copyFrame();
   void pasteFrame();
-  void saveKeyFrame();
   void clearRegion();
   void editFrameInterpolation();
 
@@ -85,13 +84,12 @@ protected:
     void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private :
-   QAction * copy;
-   QAction * paste;
-   QAction * interpolate;
-   QAction * save;
-   QAction * remove;
-   QAction * addnew;
-   QAction * deselect;
+   QAction * copyAct;
+   QAction * pasteAct;
+   QAction * interpolateAct;
+   QAction * removeAct;
+   QAction * setAct;
+   QAction * deselectAct;
 
   SelectRegion m_selectRegion;
   int m_lineHeight;
