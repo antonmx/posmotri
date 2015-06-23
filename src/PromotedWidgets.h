@@ -30,6 +30,7 @@
 #include <QGLViewer/quaternion.h>
 # include <QDebug>
 #include <QBrush>
+#include <QAbstractItemModel>
 
 
 class QSpinSlide : public QObject {
@@ -259,6 +260,43 @@ public:
 };
 
 
+
+class InfoItem {
+private:
+  QHash<QString, InfoItem> m_children;
+  QString m_data;
+  QString m_type;
+public:
+  explicit InfoItem(const QString & data = QString(), const QString & type = QString() );
+  void setChild(const QString & key, const InfoItem & _child);
+  const InfoItem & child(const QString & key) const ;
+  int children() const;
+  int offsprings() const;
+  QStringList keys();
+  const QString & data() const;
+  const QString & type() const;
+};
+
+
+
+class InfoModel : public QAbstractItemModel  {
+  Q_OBJECT;
+
+private:
+  const InfoItem root;
+
+public:
+  explicit InfoModel(const InfoItem & info, QObject *parent = 0);
+
+  QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
+  //Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+  QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+  QModelIndex index(int row, int column,  const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+  QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+  int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+  int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+
+};
 
 
 

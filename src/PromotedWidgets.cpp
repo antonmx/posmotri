@@ -395,3 +395,112 @@ bool QConfigMe::contains(const QString & key) const {
 
 
 
+
+
+
+
+
+
+InfoItem::InfoItem(const QString & data, const QString & type)
+  : m_data(data)
+  , m_type(type)
+{}
+
+
+void InfoItem::setChild(const QString & key, const InfoItem & _child) {
+  m_children[key]=_child;
+}
+
+const InfoItem & InfoItem::child(const QString & key) const  {
+  return m_children[key];
+}
+
+int InfoItem::children() const {
+  return m_children.size();
+}
+
+int InfoItem::offsprings() const {
+  int counter=0;
+  foreach (const InfoItem & item, m_children)
+    counter += 1 + item.children();
+  return counter;
+}
+
+QStringList InfoItem::keys() {
+  return m_children.keys();
+}
+
+const QString & InfoItem::data() const {
+  return m_data;
+}
+
+const QString & InfoItem::type() const {
+  return m_type;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+InfoModel::InfoModel(const InfoItem & info, QObject *parent)
+  : QAbstractItemModel(parent)
+  , root(info)
+{}
+
+
+QVariant InfoModel::data(const QModelIndex &index, int role) const {
+
+}
+
+
+QVariant InfoModel::headerData(int section, Qt::Orientation orientation, int role) const {
+  if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+    switch (section) {
+    case 0:
+      return QString("Name");
+    case 1:
+      return QString("Type");
+    default:
+      return QString("Data");
+    }
+  return QVariant();
+}
+
+QModelIndex InfoModel::index(int row, int column,  const QModelIndex &parent) const {
+  if (!hasIndex(row, column, parent))
+    return QModelIndex();
+
+  const InfoItem * parentItem = parent.isValid() ?
+        static_cast<InfoItem*>(parent.internalPointer()) :
+        &root;
+
+  QString key; // must be a function of coordinates
+  const InfoItem * childItem = &parentItem->child(key);
+  if (childItem)
+    return createIndex(row, column, (void*) childItem);
+  else
+    return QModelIndex();
+
+}
+
+QModelIndex InfoModel::parent(const QModelIndex &index) const {
+
+}
+
+int InfoModel::rowCount(const QModelIndex &parent) const {
+  return 1+root.offsprings();
+}
+
+int InfoModel::columnCount(const QModelIndex &parent) const {
+  return 3;
+}
+
+

@@ -24,48 +24,49 @@ private:
 
 public :
   KeyFrameEditor ( QWidget *parent=0 );
+  int startFrame();
+  int endFrame();
+  int currentFrame();
+
+protected:
 
   void paintEvent ( QPaintEvent * );
   void resizeEvent ( QResizeEvent * );
-
+  void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
   void mouseReleaseEvent(QMouseEvent*);
   void mousePressEvent(QMouseEvent*);
   void mouseMoveEvent(QMouseEvent*);
   void keyPressEvent(QKeyEvent*);
 
-  int startFrame();
-  int endFrame();
-  int currentFrame();
-
 signals :
-  void showMessage(QString, bool);
-  void setKeyFrame(int);
-  void removeKeyFrame(int);
-  void removeKeyFrames(int, int);
-  void reorder(QList<int>);
-  void setKeyFrameNumber(int, int);
-  void setPlay(bool);
-  void playFrameNumber(int);
-  void updateGL();
+  void showMessage(const QString &, bool);
   void startPlay();
   void endPlay();
+  void playFrameNumber(int);
   void copyFrame(int);
-  void pasteFrame(int);
-  void pasteFrameOnTop(int);
   void pasteFrameOnTop(int, int);
+  void pasteFrameOnTop(int);
+  void pasteFrame(int);
+  void setKeyFrame(int);
+  void setKeyFrameNumber(int, int);
+  void setKeyFrameNumbers(const QList<int> &);
+  void removeKeyFrame(int);
+  void removeKeyFrames(int, int);
+  void updateGL();
+  void reorder(const QList<int> &);
+  void setPlay(bool);
   void editFrameInterpolation(int);
-  void setKeyFrameNumbers(QList<int>);
 
 public slots :
   void setCurrentFrame(int);
-  void loadKeyframes(QList<int>, QList<QImage>);
+  void loadKeyframes(const QList<int> &, const QList<QImage> &);
   void clear();
-  void setImage(int, QImage);
+  void setImage(int, const QImage &);
   void setHiresMode(bool);
   void resetCurrentFrame();
   void setPlayFrames(bool);
   void playKeyFrames(int, int, int);
-  void addKeyFrameNumbers(QList<int>);
+  void addKeyFrameNumbers(const QList<int> &);
   void moveTo(int=0);
   void setKeyFrame();
 
@@ -79,9 +80,6 @@ private slots :
   void pasteFrame();
   void clearRegion();
   void editFrameInterpolation();
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
 
 private :
    QAction * copyAct;

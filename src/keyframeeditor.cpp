@@ -513,10 +513,16 @@ int KeyFrameEditor::frameUnderPoint(QPoint pos) {
 
 
 void KeyFrameEditor::moveCurrentFrame(QPoint pos) {
-  setCurrentFrame(frameUnderPoint(pos));
-  update();
-  emit playFrameNumber(m_currFrame);
-  qApp->processEvents();
+  static int frameToEmit = -1; // will be updated on each entrance
+  static int lastEmited = -1; // will be updated only on play
+  frameToEmit = frameUnderPoint(pos);
+  qApp->processEvents(); // pick the latest frameToEmit
+  if (lastEmited != frameToEmit) {
+    lastEmited = frameToEmit;
+    setCurrentFrame(lastEmited);
+    update();
+    emit playFrameNumber(lastEmited);
+  }
 }
 
 
@@ -905,8 +911,8 @@ void KeyFrameEditor::mousePressEvent(QMouseEvent *event) {
       if (m_playFrames)
         setPlayFrames(false);
 
-      update();
       emit playFrameNumber(m_currFrame);
+      update();
       return;
     }
   }
@@ -928,7 +934,7 @@ void KeyFrameEditor::mousePressEvent(QMouseEvent *event) {
 }
 
 
-void KeyFrameEditor::setImage(int fno, QImage img) {
+void KeyFrameEditor::setImage(int fno, const QImage & img) {
   if (fno >= m_fImage.size()) {
     emit showMessage(QString("Cannot setImage : %1 %2").arg(fno).arg(m_fImage.size()), true);
     qApp->processEvents();
@@ -941,7 +947,7 @@ void KeyFrameEditor::setImage(int fno, QImage img) {
 }
 
 
-void KeyFrameEditor::addKeyFrameNumbers(QList<int> fnos) {
+void KeyFrameEditor::addKeyFrameNumbers(const QList<int> & fnos) {
   for(int i=0; i<fnos.count(); i++) {
     m_fno.append(fnos[i]);
     m_fRect.append(QRect(-10,-10,1,1));
@@ -967,7 +973,6 @@ void KeyFrameEditor::setKeyFrame() {
     m_fRect.append(QRect(-10,-10,1,1));
     QImage img(100,100, QImage::Format_RGB32);
     m_fImage.append(img);
-    //m_minFrame = qMax(1, m_fno.last()-3*m_frameStep);
     calcMaxFrame();
   }
 
@@ -1057,7 +1062,7 @@ void KeyFrameEditor::reorder() {
 }
 
 
-void KeyFrameEditor::loadKeyframes(QList<int> framenumbers, QList<QImage> images) {
+void KeyFrameEditor::loadKeyframes(const QList<int> & framenumbers, const QList<QImage> & images) {
   clear();
   m_fno += framenumbers;
   m_fImage += images;

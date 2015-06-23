@@ -77,7 +77,6 @@ class KeyFrameInformation
   bool hasCaption(QStringList);
   bool drawBox();
   bool drawAxis();
-  qglviewer::Vec backgroundColor();
   QString backgroundImageFile();
   int frameNumber();
   float focusDistance();
@@ -86,6 +85,8 @@ class KeyFrameInformation
   int volumeNumber2();
   int volumeNumber3();
   int volumeNumber4();
+
+  qglviewer::Vec backgroundColor();
   qglviewer::Vec position();
   qglviewer::Quaternion orientation();
   uchar* lut();
